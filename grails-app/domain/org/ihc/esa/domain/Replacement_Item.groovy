@@ -12,8 +12,10 @@ class Replacement_Item {
 	String updated_by
 
 	static mapping = {
+		id generator:'sequence', params:[sequence:'REPLACEMENT_ITEM_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
 
     static constraints = {

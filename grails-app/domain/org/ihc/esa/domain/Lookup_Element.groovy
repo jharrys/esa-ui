@@ -13,8 +13,10 @@ class Lookup_Element {
 	String updated_by
 
 	static mapping = {
+		id generator:'sequence', params:[sequence:'LOOKUP_ELEMENT_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
 
     static constraints = {

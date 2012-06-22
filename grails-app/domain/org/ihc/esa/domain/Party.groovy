@@ -21,9 +21,11 @@ class Party {
 	static hasMany = [addresses: Address]
 	
 	static mapping = {
+		id generator:'sequence', params:[sequence:'PARTY_SEQ']
 		addresses column: 'Address_Id', joinTable: 'PARTY_ADDRESS'
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
 	
     static constraints = {

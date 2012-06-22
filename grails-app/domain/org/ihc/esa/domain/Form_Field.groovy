@@ -8,7 +8,7 @@ class Form_Field {
 	String question
 	String data_type
 	String multi_select
-	Lookup_List lookup_list
+	Integer lookup_list_id	//TODO error here should be FK
 	Date dateCreated
 	Date lastUpdated
 	String created_by
@@ -19,8 +19,11 @@ class Form_Field {
 	static hasMany = [question_response: Question_Response]
 
 	static mapping = {
+		id generator:'sequence', params:[sequence:'FORM_FIELD_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
+		version false
 	}
 
     static constraints = {

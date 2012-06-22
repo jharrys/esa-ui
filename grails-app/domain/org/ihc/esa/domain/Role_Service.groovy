@@ -2,22 +2,22 @@ package org.ihc.esa.domain
 
 import java.util.Date;
 
-class Application_Service {
+class Role_Service {
 
-	String service_name
-	String service_type
+	Role role
+	Service service	
 	Date dateCreated
 	Date lastUpdated
 	String created_by
 	String updated_by
 	
-	static hasMany = [role_privileges: Role_Privileges]
-
 	static mapping = {
+		id generator:'sequence', params:[sequence:'ROLE_SERVICE_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
-	
+
     static constraints = {
     }
 }

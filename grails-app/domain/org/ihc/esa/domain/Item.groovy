@@ -7,6 +7,7 @@ class Item {
 	String external_id
 	String source_system
 	String standard
+	Integer vendor_party_id		//TODO needs to be fixed in DB as FK
 	String mmis_item_number
 	String name
 	String description
@@ -20,29 +21,29 @@ class Item {
 	Integer manufacturer_part_id
 	String manufacturer_catalog_number
 	String purchasing_unit_of_measure
-	Integer purchasing_unit_price
+	Float purchasing_unit_price
 	String unspsc_number	
 	Date dateCreated
 	Date lastUpdated
 	String created_by
 	String updated_by
-	// TODO: figure out this relationship
-//	Party vendor_party
 	
 	static belongsTo = [contract: Contract]
 	
 	static hasMany = [catalog_items: Catalog_Item, item_units_conversion: Item_Units_Conversion]
 	
 	static mapping = {
+		id generator:'sequence', params:[sequence:'ITEM_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
 
     static constraints = {
 		external_id nullable: true
 		source_system nullable: true
 		standard nullable: true
-//		vendor_party_id nullable: true
+		vendor_party_id nullable: true	//TODO error? check with Stuart
 		mmis_item_number nullable: true
 		name nullable: true
 		description nullable: true

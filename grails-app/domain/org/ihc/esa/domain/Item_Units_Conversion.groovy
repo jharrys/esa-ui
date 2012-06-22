@@ -15,8 +15,10 @@ class Item_Units_Conversion {
 	static belongsTo = [item: Item]
 
 	static mapping = {
+		id generator:'sequence', params:[sequence:'ITEM_UNITS_CONVERSION_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
 
     static constraints = {

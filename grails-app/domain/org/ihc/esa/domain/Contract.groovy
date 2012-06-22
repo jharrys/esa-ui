@@ -11,8 +11,10 @@ class Contract {
 	String updated_by
 
 	static mapping = {
+		id generator:'sequence', params:[sequence:'CONTRACT_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
 
     static constraints = {

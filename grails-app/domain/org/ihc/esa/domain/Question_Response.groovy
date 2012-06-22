@@ -4,7 +4,7 @@ import java.util.Date;
 
 class Question_Response {
 
-	Form_Field form_field
+	Form_Field form_field	//TODO fix spelling error in database
 	Document document
 	String string_value
 	Float float_value
@@ -15,8 +15,10 @@ class Question_Response {
 	String updated_by
 
 	static mapping = {
+		id generator:'sequence', params:[sequence:'QUESTION_RESPONSE_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
 
     static constraints = {

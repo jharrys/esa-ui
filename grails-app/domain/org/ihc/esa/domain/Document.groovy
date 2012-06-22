@@ -9,7 +9,7 @@ class Document {
 	String owner
 	String owner_email
 	String justification
-	Integer vendor_representative_party_id	// TODO: Stuart needs to fix should be FK
+	Integer vendor_representative_party_id	// TODO Stuart needs to fix should be FK
 	Date dateCreated
 	Date lastUpdated
 	String created_by
@@ -19,8 +19,10 @@ class Document {
 	static hasMany = [question_response: Question_Response]
 
 	static mapping = {
+		id generator:'sequence', params:[sequence:'DOCUMENT_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
 
     static constraints = {

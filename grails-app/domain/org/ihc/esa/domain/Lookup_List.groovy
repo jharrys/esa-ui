@@ -15,8 +15,10 @@ class Lookup_List {
 	String updated_by
 
 	static mapping = {
+		id generator:'sequence', params:[sequence:'LOOKUP_LIST_SEQ']
 		dateCreated column: 'CREATION_DATE'
 		lastUpdated column: 'UPDATE_DATE'
+		version false
 	}
 
     static constraints = {
