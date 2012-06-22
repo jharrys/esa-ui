@@ -10,7 +10,7 @@ class Application_Role {
 	String created_by
 	String updated_by
 	
-	static hasMany = [role_privleges: Role_Privliges]
+	static hasMany = [role_privileges: Role_Privileges]
 
 	static mapping = {
 		dateCreated column: 'CREATION_DATE'

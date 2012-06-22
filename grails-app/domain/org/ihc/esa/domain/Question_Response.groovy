@@ -4,7 +4,7 @@ import java.util.Date;
 
 class Question_Response {
 
-	Form_Field form_field	//TODO fix spelling error in database
+	Form_Field form_field
 	Document document
 	String string_value
 	Float float_value

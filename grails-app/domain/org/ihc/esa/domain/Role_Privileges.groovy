@@ -2,7 +2,7 @@ package org.ihc.esa.domain
 
 import java.util.Date;
 
-class Role_Privliges {
+class Role_Privileges {
 
 	Application_Role granted_application_role
 	Application_Service granted_application_service	

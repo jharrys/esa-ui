@@ -7,7 +7,6 @@ class Item {
 	String external_id
 	String source_system
 	String standard
-	Integer vendor_party_id		//TODO needs to be fixed in DB as FK
 	String mmis_item_number
 	String name
 	String description
@@ -27,6 +26,8 @@ class Item {
 	Date lastUpdated
 	String created_by
 	String updated_by
+	// TODO: figure out this relationship
+//	Party vendor_party
 	
 	static belongsTo = [contract: Contract]
 	
@@ -41,7 +42,7 @@ class Item {
 		external_id nullable: true
 		source_system nullable: true
 		standard nullable: true
-		vendor_party_id nullable: true	//TODO error? check with Stuart
+//		vendor_party_id nullable: true
 		mmis_item_number nullable: true
 		name nullable: true
 		description nullable: true

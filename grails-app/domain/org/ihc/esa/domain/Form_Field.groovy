@@ -8,7 +8,7 @@ class Form_Field {
 	String question
 	String data_type
 	String multi_select
-	Integer lookup_list_id	//TODO error here should be FK
+	Lookup_List lookup_list
 	Date dateCreated
 	Date lastUpdated
 	String created_by

@@ -6,7 +6,7 @@ class Item_Version {
 
 	String version_number
 	Date ihc_actual_decomisison
-	String ihc_proposed_decomissioned //TODO check type with Stuart
+	Date ihc_proposed_decomissioned
 	Date vendor_decomission	
 	Date dateCreated
 	Date lastUpdated

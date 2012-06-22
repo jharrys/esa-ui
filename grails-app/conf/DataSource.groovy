@@ -13,10 +13,10 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "validate" // one of 'create', 'create-drop', 'update', 'validate', ''
+            dbCreate = "create" // one of 'create', 'create-drop', 'update', 'validate', ''
 			driverClassName = "oracle.jdbc.OracleDriver"
-			username = "esa"
-			password = "esa"
+			username = "scott"
+			password = "diddley12"
 			dialect = "org.hibernate.dialect.Oracle10gDialect"
 			url = "jdbc:oracle:thin:@192.168.56.101:1521:esa"
             //url = "jdbc:h2:mem:devDb;MVCC=TRUE"

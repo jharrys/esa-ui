@@ -7,8 +7,9 @@ class Catalog_Item {
 	Item item
 	Item_Version item_version
 	Catalog catalog
-//	Party party			TODO Stuart forgot this one
-//	Integer item_version_id	TODO Stuart forgot this one too
+	//TODO: Need to modify DB with the correct FK constraints below for Party and Item_Version
+//	Party party
+//	Integer item_version_id
 	Date dateCreated
 	Date lastUpdated
 	String created_by
