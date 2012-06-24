@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main"/>
-		<title>Welcome to Grails</title>
+		<title>Enterprise Information System Architecture</title>
 		<style type="text/css" media="screen">
 			#status {
 				background-color: #eee;
@@ -51,8 +51,12 @@
 			}
 
 			p {
-				line-height: 1.5;
+<%--				line-height: 1.5; TODO Remove --%>
 				margin: 0.25em 0;
+			}
+			
+			ul {
+				padding-left: 1.5em;
 			}
 
 			#controller-list ul {
@@ -83,10 +87,11 @@
 	<body>
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div id="status" role="complementary">
-			<h1>Application Status</h1>
+			<h1>EISA</h1>
 			<ul>
-				<li>App version: <g:meta name="app.version"/></li>
-				<li>Grails version: <g:meta name="app.grails.version"/></li>
+				<li>Query Standards Database</li>
+				<li>Exception Request Status</li>
+				<!-- 
 				<li>Groovy version: ${org.codehaus.groovy.runtime.InvokerHelper.getVersion()}</li>
 				<li>JVM version: ${System.getProperty('java.version')}</li>
 				<li>Reloading active: ${grails.util.Environment.reloadingAgentEnabled}</li>
@@ -94,6 +99,7 @@
 				<li>Domains: ${grailsApplication.domainClasses.size()}</li>
 				<li>Services: ${grailsApplication.serviceClasses.size()}</li>
 				<li>Tag Libraries: ${grailsApplication.tagLibClasses.size()}</li>
+				-->
 			</ul>
 			<h1>Installed Plugins</h1>
 			<ul>
@@ -103,12 +109,40 @@
 			</ul>
 		</div>
 		<div id="page-body" role="main">
-			<h1>Welcome to Grails</h1>
-			<p>Congratulations, you have successfully started your first Grails application! At the moment
-			   this is the default page, feel free to modify it to either redirect to a controller or display whatever
-			   content you may choose. Below is a list of controllers that are currently deployed in this application,
-			   click on each to execute its default action:</p>
-
+			<h1>Enterprise Information Systems Architecture</h1>
+			<p>
+				The EISA web site is a central knowledge and content store for Information Technology architecture. The architectural
+				content and processes are specific to Intermountain Healthcare and SelectHealth. IT at Intermountain Healthcare has a long-standing
+				tradition for developing world class systems. We want to continue this tradition, but with shorter release cycles. This means we will
+				not have all the features we want, but we will deliver one or two features every couple of weeks. So please visit back often.
+			</p>
+			<br/>
+			<p>
+				<b>Features available today:</b>
+				<ul id="indented-list">
+					<li>Query for existing software standards</li>
+					<li>Query for existing hardware standards (including clinical hardware)</li>
+					<li>Browse or query for Enterprise Architecture Review Board meetings and notes</li>
+					<li>Read and learn about IT architectural processes at Intermountain Healthcare and SelectHealth</li>
+				</ul>
+			</p>
+			<br/>
+			<p>
+				<b>Features we want to release soon:</b>
+				<ul>
+					<li>Automate Exception work flow process</li>
+					<li>Find status of an Exception</li>
+					<li>Find status of a Standard</li>
+					<li>Submit standard recommendations to the EARB</li>
+					<li>Innovation Lab</li>
+				</ul>
+			</p>
+			<br/>
+			<p>
+				Idea: add 1st year anniversary of ESA, Enterprise Solutions Architecture (do some marketing)
+			</p>
+			<br>
+			<%--
 			<div id="controller-list" role="navigation">
 				<h2>Available Controllers:</h2>
 				<ul>
@@ -117,6 +151,7 @@
 					</g:each>
 				</ul>
 			</div>
+			--%>
 		</div>
 	</body>
 </html>
