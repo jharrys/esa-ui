@@ -39,6 +39,7 @@
 # "temporary" build files
 /target
 /target-eclipse
+/.link*
 
 # other
 *.iws
