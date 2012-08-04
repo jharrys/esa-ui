@@ -1,7 +1,6 @@
 package org.ihc.esa.domain
 
 import java.util.Date
-import java.math.BigDecimal
 
 class CatalogItem {
 
