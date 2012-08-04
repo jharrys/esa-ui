@@ -24,13 +24,13 @@
 				<thead>
 					<tr>
 					
-						<g:sortableColumn property="address_line1" title="${message(code: 'address.address_line1.label', default: 'Addressline1')}" />
+						<g:sortableColumn property="addressLine1" title="${message(code: 'address.addressLine1.label', default: 'Address Line1')}" />
 					
-						<g:sortableColumn property="address_line2" title="${message(code: 'address.address_line2.label', default: 'Addressline2')}" />
+						<g:sortableColumn property="addressLine2" title="${message(code: 'address.addressLine2.label', default: 'Address Line2')}" />
 					
-						<g:sortableColumn property="address_line3" title="${message(code: 'address.address_line3.label', default: 'Addressline3')}" />
+						<g:sortableColumn property="addressLine3" title="${message(code: 'address.addressLine3.label', default: 'Address Line3')}" />
 					
-						<g:sortableColumn property="address_line4" title="${message(code: 'address.address_line4.label', default: 'Addressline4')}" />
+						<g:sortableColumn property="addressLine4" title="${message(code: 'address.addressLine4.label', default: 'Address Line4')}" />
 					
 						<g:sortableColumn property="city" title="${message(code: 'address.city.label', default: 'City')}" />
 					
@@ -42,13 +42,13 @@
 				<g:each in="${addressInstanceList}" status="i" var="addressInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${addressInstance.id}">${fieldValue(bean: addressInstance, field: "address_line1")}</g:link></td>
+						<td><g:link action="show" id="${addressInstance.id}">${fieldValue(bean: addressInstance, field: "addressLine1")}</g:link></td>
 					
-						<td>${fieldValue(bean: addressInstance, field: "address_line2")}</td>
+						<td>${fieldValue(bean: addressInstance, field: "addressLine2")}</td>
 					
-						<td>${fieldValue(bean: addressInstance, field: "address_line3")}</td>
+						<td>${fieldValue(bean: addressInstance, field: "addressLine3")}</td>
 					
-						<td>${fieldValue(bean: addressInstance, field: "address_line4")}</td>
+						<td>${fieldValue(bean: addressInstance, field: "addressLine4")}</td>
 					
 						<td>${fieldValue(bean: addressInstance, field: "city")}</td>
 					

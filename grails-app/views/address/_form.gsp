@@ -2,36 +2,36 @@
 
 
 
-<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'address_line1', 'error')} ">
-	<label for="address_line1">
-		<g:message code="address.address_line1.label" default="Addressline1" />
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'addressLine1', 'error')} ">
+	<label for="addressLine1">
+		<g:message code="address.addressLine1.label" default="Address Line1" />
 		
 	</label>
-	<g:textField name="address_line1" value="${addressInstance?.address_line1}"/>
+	<g:textField name="addressLine1" value="${addressInstance?.addressLine1}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'address_line2', 'error')} ">
-	<label for="address_line2">
-		<g:message code="address.address_line2.label" default="Addressline2" />
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'addressLine2', 'error')} ">
+	<label for="addressLine2">
+		<g:message code="address.addressLine2.label" default="Address Line2" />
 		
 	</label>
-	<g:textField name="address_line2" value="${addressInstance?.address_line2}"/>
+	<g:textField name="addressLine2" value="${addressInstance?.addressLine2}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'address_line3', 'error')} ">
-	<label for="address_line3">
-		<g:message code="address.address_line3.label" default="Addressline3" />
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'addressLine3', 'error')} ">
+	<label for="addressLine3">
+		<g:message code="address.addressLine3.label" default="Address Line3" />
 		
 	</label>
-	<g:textField name="address_line3" value="${addressInstance?.address_line3}"/>
+	<g:textField name="addressLine3" value="${addressInstance?.addressLine3}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'address_line4', 'error')} ">
-	<label for="address_line4">
-		<g:message code="address.address_line4.label" default="Addressline4" />
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'addressLine4', 'error')} ">
+	<label for="addressLine4">
+		<g:message code="address.addressLine4.label" default="Address Line4" />
 		
 	</label>
-	<g:textField name="address_line4" value="${addressInstance?.address_line4}"/>
+	<g:textField name="addressLine4" value="${addressInstance?.addressLine4}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'city', 'error')} ">
@@ -58,27 +58,52 @@
 	<g:textField name="zip" value="${addressInstance?.zip}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'created_by', 'error')} ">
-	<label for="created_by">
-		<g:message code="address.created_by.label" default="Createdby" />
-		
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'creationDate', 'error')} required">
+	<label for="creationDate">
+		<g:message code="address.creationDate.label" default="Creation Date" />
+		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="created_by" value="${addressInstance?.created_by}"/>
+	<g:datePicker name="creationDate" precision="day"  value="${addressInstance?.creationDate}"  />
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'parties', 'error')} ">
-	<label for="parties">
-		<g:message code="address.parties.label" default="Parties" />
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'createdBy', 'error')} ">
+	<label for="createdBy">
+		<g:message code="address.createdBy.label" default="Created By" />
+		
+	</label>
+	<g:textField name="createdBy" value="${addressInstance?.createdBy}"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'updateDate', 'error')} required">
+	<label for="updateDate">
+		<g:message code="address.updateDate.label" default="Update Date" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:datePicker name="updateDate" precision="day"  value="${addressInstance?.updateDate}"  />
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'updatedBy', 'error')} ">
+	<label for="updatedBy">
+		<g:message code="address.updatedBy.label" default="Updated By" />
+		
+	</label>
+	<g:textField name="updatedBy" value="${addressInstance?.updatedBy}"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'partyAddressAddress', 'error')} ">
+	<label for="partyAddressAddress">
+		<g:message code="address.partyAddressAddress.label" default="Party Address Address" />
 		
 	</label>
 	
-</div>
+<ul class="one-to-many">
+<g:each in="${addressInstance?.partyAddressAddress?}" var="p">
+    <li><g:link controller="partyAddress" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link></li>
+</g:each>
+<li class="add">
+<g:link controller="partyAddress" action="create" params="['address.id': addressInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'partyAddress.label', default: 'PartyAddress')])}</g:link>
+</li>
+</ul>
 
-<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'updated_by', 'error')} ">
-	<label for="updated_by">
-		<g:message code="address.updated_by.label" default="Updatedby" />
-		
-	</label>
-	<g:textField name="updated_by" value="${addressInstance?.updated_by}"/>
 </div>
 

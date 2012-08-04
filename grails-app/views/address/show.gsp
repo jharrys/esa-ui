@@ -23,38 +23,38 @@
 			</g:if>
 			<ol class="property-list address">
 			
-				<g:if test="${addressInstance?.address_line1}">
+				<g:if test="${addressInstance?.addressLine1}">
 				<li class="fieldcontain">
-					<span id="address_line1-label" class="property-label"><g:message code="address.address_line1.label" default="Addressline1" /></span>
+					<span id="addressLine1-label" class="property-label"><g:message code="address.addressLine1.label" default="Address Line1" /></span>
 					
-						<span class="property-value" aria-labelledby="address_line1-label"><g:fieldValue bean="${addressInstance}" field="address_line1"/></span>
+						<span class="property-value" aria-labelledby="addressLine1-label"><g:fieldValue bean="${addressInstance}" field="addressLine1"/></span>
 					
 				</li>
 				</g:if>
 			
-				<g:if test="${addressInstance?.address_line2}">
+				<g:if test="${addressInstance?.addressLine2}">
 				<li class="fieldcontain">
-					<span id="address_line2-label" class="property-label"><g:message code="address.address_line2.label" default="Addressline2" /></span>
+					<span id="addressLine2-label" class="property-label"><g:message code="address.addressLine2.label" default="Address Line2" /></span>
 					
-						<span class="property-value" aria-labelledby="address_line2-label"><g:fieldValue bean="${addressInstance}" field="address_line2"/></span>
+						<span class="property-value" aria-labelledby="addressLine2-label"><g:fieldValue bean="${addressInstance}" field="addressLine2"/></span>
 					
 				</li>
 				</g:if>
 			
-				<g:if test="${addressInstance?.address_line3}">
+				<g:if test="${addressInstance?.addressLine3}">
 				<li class="fieldcontain">
-					<span id="address_line3-label" class="property-label"><g:message code="address.address_line3.label" default="Addressline3" /></span>
+					<span id="addressLine3-label" class="property-label"><g:message code="address.addressLine3.label" default="Address Line3" /></span>
 					
-						<span class="property-value" aria-labelledby="address_line3-label"><g:fieldValue bean="${addressInstance}" field="address_line3"/></span>
+						<span class="property-value" aria-labelledby="addressLine3-label"><g:fieldValue bean="${addressInstance}" field="addressLine3"/></span>
 					
 				</li>
 				</g:if>
 			
-				<g:if test="${addressInstance?.address_line4}">
+				<g:if test="${addressInstance?.addressLine4}">
 				<li class="fieldcontain">
-					<span id="address_line4-label" class="property-label"><g:message code="address.address_line4.label" default="Addressline4" /></span>
+					<span id="addressLine4-label" class="property-label"><g:message code="address.addressLine4.label" default="Address Line4" /></span>
 					
-						<span class="property-value" aria-labelledby="address_line4-label"><g:fieldValue bean="${addressInstance}" field="address_line4"/></span>
+						<span class="property-value" aria-labelledby="addressLine4-label"><g:fieldValue bean="${addressInstance}" field="addressLine4"/></span>
 					
 				</li>
 				</g:if>
@@ -86,49 +86,49 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${addressInstance?.created_by}">
+				<g:if test="${addressInstance?.creationDate}">
 				<li class="fieldcontain">
-					<span id="created_by-label" class="property-label"><g:message code="address.created_by.label" default="Createdby" /></span>
+					<span id="creationDate-label" class="property-label"><g:message code="address.creationDate.label" default="Creation Date" /></span>
 					
-						<span class="property-value" aria-labelledby="created_by-label"><g:fieldValue bean="${addressInstance}" field="created_by"/></span>
+						<span class="property-value" aria-labelledby="creationDate-label"><g:formatDate date="${addressInstance?.creationDate}" /></span>
 					
 				</li>
 				</g:if>
 			
-				<g:if test="${addressInstance?.dateCreated}">
+				<g:if test="${addressInstance?.createdBy}">
 				<li class="fieldcontain">
-					<span id="dateCreated-label" class="property-label"><g:message code="address.dateCreated.label" default="Date Created" /></span>
+					<span id="createdBy-label" class="property-label"><g:message code="address.createdBy.label" default="Created By" /></span>
 					
-						<span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${addressInstance?.dateCreated}" /></span>
+						<span class="property-value" aria-labelledby="createdBy-label"><g:fieldValue bean="${addressInstance}" field="createdBy"/></span>
 					
 				</li>
 				</g:if>
 			
-				<g:if test="${addressInstance?.lastUpdated}">
+				<g:if test="${addressInstance?.updateDate}">
 				<li class="fieldcontain">
-					<span id="lastUpdated-label" class="property-label"><g:message code="address.lastUpdated.label" default="Last Updated" /></span>
+					<span id="updateDate-label" class="property-label"><g:message code="address.updateDate.label" default="Update Date" /></span>
 					
-						<span class="property-value" aria-labelledby="lastUpdated-label"><g:formatDate date="${addressInstance?.lastUpdated}" /></span>
+						<span class="property-value" aria-labelledby="updateDate-label"><g:formatDate date="${addressInstance?.updateDate}" /></span>
 					
 				</li>
 				</g:if>
 			
-				<g:if test="${addressInstance?.parties}">
+				<g:if test="${addressInstance?.updatedBy}">
 				<li class="fieldcontain">
-					<span id="parties-label" class="property-label"><g:message code="address.parties.label" default="Parties" /></span>
+					<span id="updatedBy-label" class="property-label"><g:message code="address.updatedBy.label" default="Updated By" /></span>
 					
-						<g:each in="${addressInstance.parties}" var="p">
-						<span class="property-value" aria-labelledby="parties-label"><g:link controller="party" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="updatedBy-label"><g:fieldValue bean="${addressInstance}" field="updatedBy"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${addressInstance?.partyAddressAddress}">
+				<li class="fieldcontain">
+					<span id="partyAddressAddress-label" class="property-label"><g:message code="address.partyAddressAddress.label" default="Party Address Address" /></span>
+					
+						<g:each in="${addressInstance.partyAddressAddress}" var="p">
+						<span class="property-value" aria-labelledby="partyAddressAddress-label"><g:link controller="partyAddress" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link></span>
 						</g:each>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${addressInstance?.updated_by}">
-				<li class="fieldcontain">
-					<span id="updated_by-label" class="property-label"><g:message code="address.updated_by.label" default="Updatedby" /></span>
-					
-						<span class="property-value" aria-labelledby="updated_by-label"><g:fieldValue bean="${addressInstance}" field="updated_by"/></span>
 					
 				</li>
 				</g:if>
