@@ -1,40 +1,78 @@
 package org.ihc.esa.domain
 
-import java.util.Date;
-
+import java.util.Date
+import java.math.BigDecimal
 
 class Party {
 
-	String external_id
-	String type
-	String name
-	String email_address
-	String mobile_phone_number
-	String work_phone_number
-	String home_phone_number
-	String web_site_url
-	Date dateCreated
-	Date lastUpdated
-	String created_by
-	String updated_by
+    String externalId
+    String type
+    String name
+    String emailAddress
+    String mobilePhoneNumber
+    String workPhoneNumber
+    String homePhoneNumber
+    String webSiteUrl
+    Date dateCreated
+    String createdBy
+    Date lastUpdated
+    String updatedBy
+
+    static hasMany = [
+        vendorRepresentative: Document,
+        vendorItem: Item,
+        partyAddressParty: PartyAddress,
+        partyRelationshipParty: PartyRelationship,
+        partyRelationshipParty1: PartyRelationship
+    ]
 	
-	static hasMany = [addresses: Address]
-	
-	static mapping = {
-		id generator:'sequence', params:[sequence:'PARTY_SEQ']
-		addresses column: 'Address_Id', joinTable: 'PARTY_ADDRESS'
-		dateCreated column: 'CREATION_DATE'
-		lastUpdated column: 'UPDATE_DATE'
-		version false
-	}
-	
-    static constraints = {
-		external_id nullable: true
-		type nullable: true
-		email_address nullable: true
-		mobile_phone_number nullable: true
-		work_phone_number nullable: true
-		home_phone_number nullable: true
-		web_site_url nullable: true
+	static mappedBy = [
+		partyRelationshipParty:"parentParty",
+		partyRelationshipParty1:"childParty"
+	]
+
+    static mapping = {
+
+        id generator:'sequence', params:[sequence:'PARTY_SEQ']
+        table 'PARTY'
+        version false
+
+        vendorRepresentative joinTable: [ name: 'DOCUMENT', key: 'VENDOR_REPRESENTATIVE_PARTY_ID']
+        vendorItem joinTable: [ name: 'ITEM', key: 'VENDOR_PARTY_ID']
+        partyAddressParty joinTable: [ name: 'PARTY_ADDRESS', key: 'PARTY_ID']
+        partyRelationshipParty joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'PARENT_PARTY_ID']
+        partyRelationshipParty1 joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'CHILD_PARTY_ID']
+
+        externalId column: 'EXTERNAL_ID'
+        type column: 'TYPE'
+        name column: 'NAME'
+        emailAddress column: 'EMAIL_ADDRESS'
+        mobilePhoneNumber column: 'MOBILE_PHONE_NUMBER'
+        workPhoneNumber column: 'WORK_PHONE_NUMBER'
+        homePhoneNumber column: 'HOME_PHONE_NUMBER'
+        webSiteUrl column: 'WEB_SITE_URL'
+        dateCreated column: 'DATE_CREATED'
+        createdBy column: 'CREATED_BY'
+        lastUpdated column: 'LAST_UPDATED'
+        updatedBy column: 'UPDATED_BY'
+
     }
+
+    static constraints = {
+
+        externalId nullable: true
+        type nullable: false
+        name nullable: true
+        emailAddress nullable: true
+        mobilePhoneNumber nullable: true
+        workPhoneNumber nullable: true
+        homePhoneNumber nullable: true
+        webSiteUrl nullable: true
+        dateCreated nullable: false
+        createdBy nullable: false
+        lastUpdated nullable: false
+        updatedBy nullable: false
+
+    }
+
 }

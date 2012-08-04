@@ -1,26 +1,49 @@
 package org.ihc.esa.domain
 
-import java.util.Date;
+import java.util.Date
+import java.math.BigDecimal
 
 class Form {
 
-	String name
-	String description	
-	Date dateCreated
-	Date lastUpdated
-	String created_by
-	String updated_by
-	
-	static hasMany = [documents: Document]
+    String name
+    String description
+    Date dateCreated
+    String createdBy
+    Date lastUpdated
+    String updatedBy
 
-	static mapping = {
-		id generator:'sequence', params:[sequence:'FORM_SEQ']
-		dateCreated column: 'CREATION_DATE'
-		lastUpdated column: 'UPDATE_DATE'
-		version false
-	}
+    static hasMany = [
+        anInstanceOfForm: Document,
+        formFields: FormField
+    ]
+
+    static mapping = {
+
+        id generator:'sequence', params:[sequence:'FORM_SEQ']
+        table 'FORM'
+        version false
+
+        anInstanceOfForm joinTable: [ name: 'DOCUMENT', key: 'FORM_ID']
+        formFields joinTable: [ name: 'FORM_FIELD', key: 'FORM_ID']
+
+        name column: 'NAME'
+        description column: 'DESCRIPTION'
+        dateCreated column: 'DATE_CREATED'
+        createdBy column: 'CREATED_BY'
+        lastUpdated column: 'LAST_UPDATED'
+        updatedBy column: 'UPDATED_BY'
+
+    }
 
     static constraints = {
-		description nullable: true
+
+        name nullable: false
+        description nullable: true
+        dateCreated nullable: false
+        createdBy nullable: false
+        lastUpdated nullable: false
+        updatedBy nullable: false
+
     }
+
 }

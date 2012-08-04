@@ -1,22 +1,44 @@
 package org.ihc.esa.domain
 
-import java.util.Date;
+import java.util.Date
+import java.math.BigDecimal
 
 class Contract {
 
-	String contract_number	
-	Date dateCreated
-	Date lastUpdated
-	String created_by
-	String updated_by
+    String contractNumber
+    Date dateCreated
+    String createdBy
+    Date lastUpdated
+    String updatedBy
 
-	static mapping = {
-		id generator:'sequence', params:[sequence:'CONTRACT_SEQ']
-		dateCreated column: 'CREATION_DATE'
-		lastUpdated column: 'UPDATE_DATE'
-		version false
-	}
+    static hasMany = [
+        itemContract: Item
+    ]
+
+    static mapping = {
+
+        id generator:'sequence', params:[sequence:'CONTRACT_SEQ']
+        table 'CONTRACT'
+        version false
+
+        itemContract joinTable: [ name: 'ITEM', key: 'CONTRACT_ID']
+
+        contractNumber column: 'CONTRACT_NUMBER'
+        dateCreated column: 'DATE_CREATED'
+        createdBy column: 'CREATED_BY'
+        lastUpdated column: 'LAST_UPDATED'
+        updatedBy column: 'UPDATED_BY'
+
+    }
 
     static constraints = {
+
+        contractNumber nullable: false
+        dateCreated nullable: false
+        createdBy nullable: false
+        lastUpdated nullable: false
+        updatedBy nullable: false
+
     }
+
 }

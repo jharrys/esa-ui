@@ -3,29 +3,37 @@ package org.ihc.esa.domain
 import java.util.Date
 import java.math.BigDecimal
 
-class Catalog {
+class LookupList {
 
     String name
+    String prompt
     String description
+    String listType
+    String sqlStatement
     Date dateCreated
     String createdBy
     Date lastUpdated
     String updatedBy
 
     static hasMany = [
-        hasCatalogItems: CatalogItem
+        fieldLookup: FormField,
+        lookupElementLookupList: LookupElement
     ]
 
     static mapping = {
 
-        id generator:'sequence', params:[sequence:'CATALOG_SEQ']
-        table 'CATALOG'
+        id generator:'sequence', params:[sequence:'LOOKUP_LIST_SEQ']
+        table 'LOOKUP_LIST'
         version false
 
-        hasCatalogItems joinTable: [ name: 'CATALOG_ITEM', key: 'CATALOG_ID']
+        fieldLookup joinTable: [ name: 'FORM_FIELD', key: 'LOOKUP_LIST_ID']
+        lookupElementLookupList joinTable: [ name: 'LOOKUP_ELEMENT', key: 'LOOKUP_LIST_ID']
 
         name column: 'NAME'
+        prompt column: 'PROMPT'
         description column: 'DESCRIPTION'
+        listType column: 'LIST_TYPE'
+        sqlStatement column: 'SQL_STATEMENT'
         dateCreated column: 'DATE_CREATED'
         createdBy column: 'CREATED_BY'
         lastUpdated column: 'LAST_UPDATED'
@@ -36,7 +44,10 @@ class Catalog {
     static constraints = {
 
         name nullable: false
+        prompt nullable: false
         description nullable: true
+        listType nullable: false
+        sqlStatement nullable: true
         dateCreated nullable: false
         createdBy nullable: false
         lastUpdated nullable: false

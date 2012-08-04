@@ -1,64 +1,128 @@
 package org.ihc.esa.domain
 
-import java.util.Date;
+import java.util.Date
 
 class Item {
 
-	String external_id
-	String source_system
-	String standard
-	Integer vendor_party_id		//TODO needs to be fixed in DB as FK
-	String mmis_item_number
-	String name
-	String description
-	String general_ledger_code
-	String product_group
-	String technology_group
-	Date available_date
-	Date ihc_actual_decomissioned
-	Date ihc_proposed_decomissioned
-	Date vendor_decomissioned
-	Integer manufacturer_part_id
-	String manufacturer_catalog_number
-	String purchasing_unit_of_measure
-	Float purchasing_unit_price
-	String unspsc_number	
-	Date dateCreated
-	Date lastUpdated
-	String created_by
-	String updated_by
+    String externalId
+    String sourceSystem
+    String standard
+    BigDecimal vendorPartyId
+    BigDecimal intermountainItemNumber
+    String name
+    String description
+    String generalLedgerCode
+    String productGroup
+    String technologyGroup
+    BigDecimal contractId
+    Date availableDate
+    Date ihcActualDecomissioned
+    Date ihcProposedDecomissioned
+    Date vendorDecomissioned
+    String vendorCatalogNumber
+    BigDecimal manufacturerPartId
+    String manufacturerCatalogNumber
+    String purchasingUnitOfMeasure
+    BigDecimal purchasingUnitPrice
+    String unspscNumber
+    Date dateCreated
+    String createdBy
+    Date lastUpdated
+    String updatedBy
+
+    static hasMany = [
+        belongsToCatalogs: CatalogItem,
+        configurationElements: ConfigurationCatalog,
+        partOfConfigurations: ConfigurationCatalog,
+        itemConversions: ItemUnitsConversion,
+        itemVersions: ItemVersion,
+        replacementForItems: ReplacementItem,
+        replacementItems: ReplacementItem
+    ]
 	
-	static belongsTo = [contract: Contract]
-	
-	static hasMany = [catalog_items: Catalog_Item, item_units_conversion: Item_Units_Conversion]
-	
-	static mapping = {
-		id generator:'sequence', params:[sequence:'ITEM_SEQ']
-		dateCreated column: 'CREATION_DATE'
-		lastUpdated column: 'UPDATE_DATE'
-		version false
-	}
+	static mappedBy = [
+		configurationElements:"parentItem",
+		partOfConfigurations:"elementItem",
+		replacementForItems:"replacementItem",
+		replacementItems:"item"
+	]
+
+    static belongsTo = [
+        contract: Contract,
+        vendorParty: Party
+    ]
+
+    static mapping = {
+
+        id generator:'sequence', params:[sequence:'ITEM_SEQ']
+        table 'ITEM'
+        version false
+
+        belongsToCatalogs joinTable: [ name: 'CATALOG_ITEM', key: 'ITEM_ID']
+        configurationElements joinTable: [ name: 'CONFIGURATION_CATALOG', key: 'ELEMENT_ITEM_ID']
+        partOfConfigurations joinTable: [ name: 'CONFIGURATION_CATALOG', key: 'PARENT_ITEM_ID']
+        itemConversions joinTable: [ name: 'ITEM_UNITS_CONVERSION', key: 'ITEM_ID']
+        itemVersions joinTable: [ name: 'ITEM_VERSION', key: 'ITEM_ID']
+        replacementForItems joinTable: [ name: 'REPLACEMENT_ITEM', key: 'ITEM_ID']
+        replacementItems joinTable: [ name: 'REPLACEMENT_ITEM', key: 'REPLACEMENT_ITEM_ID']
+
+        contract joinTable: [ name:'CONTRACT', key: 'CONTRACT_ID' ]
+        vendorParty joinTable: [ name:'PARTY', key: 'VENDOR_PARTY_ID' ]
+
+        externalId column: 'EXTERNAL_ID'
+        sourceSystem column: 'SOURCE_SYSTEM'
+        standard column: 'STANDARD'
+        vendorPartyId column: 'VENDOR_PARTY_ID'
+        intermountainItemNumber column: 'INTERMOUNTAIN_ITEM_NUMBER'
+        name column: 'NAME'
+        description column: 'DESCRIPTION'
+        generalLedgerCode column: 'GENERAL_LEDGER_CODE'
+        productGroup column: 'PRODUCT_GROUP'
+        technologyGroup column: 'TECHNOLOGY_GROUP'
+        contractId column: 'CONTRACT_ID'
+        availableDate column: 'AVAILABLE_DATE'
+        ihcActualDecomissioned column: 'IHC_ACTUAL_DECOMISSIONED'
+        ihcProposedDecomissioned column: 'IHC_PROPOSED_DECOMISSIONED'
+        vendorDecomissioned column: 'VENDOR_DECOMISSIONED'
+        vendorCatalogNumber column: 'VENDOR_CATALOG_NUMBER'
+        manufacturerPartId column: 'MANUFACTURER_PART_ID'
+        manufacturerCatalogNumber column: 'MANUFACTURER_CATALOG_NUMBER'
+        purchasingUnitOfMeasure column: 'PURCHASING_UNIT_OF_MEASURE'
+        purchasingUnitPrice column: 'PURCHASING_UNIT_PRICE'
+        unspscNumber column: 'UNSPSC_NUMBER'
+        dateCreated column: 'DATE_CREATED'
+        createdBy column: 'CREATED_BY'
+        lastUpdated column: 'LAST_UPDATED'
+        updatedBy column: 'UPDATED_BY'
+
+    }
 
     static constraints = {
-		external_id nullable: true
-		source_system nullable: true
-		standard nullable: true
-		vendor_party_id nullable: true	//TODO error? check with Stuart
-		mmis_item_number nullable: true
-		name nullable: true
-		description nullable: true
-		general_ledger_code nullable: true
-		product_group nullable: true
-		technology_group nullable: true
-		available_date nullable: true
-		ihc_actual_decomissioned nullable: true
-		ihc_proposed_decomissioned nullable: true
-		vendor_decomissioned nullable: true
-		manufacturer_part_id nullable: true
-		manufacturer_catalog_number nullable: true
-		purchasing_unit_price nullable: true
-		unspsc_number nullable: true
-		purchasing_unit_of_measure nullable: true
-		contract nullable: true
+
+        externalId nullable: true
+        sourceSystem nullable: true
+        standard nullable: true
+        intermountainItemNumber nullable: true
+        name nullable: true
+        description nullable: true
+        generalLedgerCode nullable: true
+        productGroup nullable: true
+        technologyGroup nullable: true
+        availableDate nullable: true
+        ihcActualDecomissioned nullable: true
+        ihcProposedDecomissioned nullable: true
+        vendorDecomissioned nullable: true
+        vendorCatalogNumber nullable: true
+        manufacturerPartId nullable: true
+        manufacturerCatalogNumber nullable: true
+        purchasingUnitOfMeasure nullable: true
+        purchasingUnitPrice nullable: true
+        unspscNumber nullable: true
+        dateCreated nullable: false
+        createdBy nullable: false
+        lastUpdated nullable: false
+        updatedBy nullable: false
+
     }
+
 }

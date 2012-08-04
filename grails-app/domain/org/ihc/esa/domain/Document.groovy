@@ -1,30 +1,70 @@
 package org.ihc.esa.domain
 
-import java.util.Date;
+import java.util.Date
+import java.math.BigDecimal
 
 class Document {
 
-	String requestor
-	String requestor_email
-	String owner
-	String owner_email
-	String justification
-	Integer vendor_representative_party_id	// TODO Stuart needs to fix should be FK
-	Date dateCreated
-	Date lastUpdated
-	String created_by
-	String updated_by
-	
-	static belongsTo = [form: Form]
-	static hasMany = [question_response: Question_Response]
+    BigDecimal formId
+    String requestor
+    String requestorEmail
+    String owner
+    String ownerEmail
+    String justification
+    BigDecimal vendorRepresentativePartyId
+    Date dateCreated
+    String createdBy
+    Date lastUpdated
+    String updatedBy
 
-	static mapping = {
-		id generator:'sequence', params:[sequence:'DOCUMENT_SEQ']
-		dateCreated column: 'CREATION_DATE'
-		lastUpdated column: 'UPDATE_DATE'
-		version false
-	}
+    static hasMany = [
+        partOfDocument: QuestionResponse
+    ]
+
+    static belongsTo = [
+        form: Form,
+        vendorRepresentativeParty: Party
+    ]
+
+    static mapping = {
+
+        id generator:'sequence', params:[sequence:'DOCUMENT_SEQ']
+        table 'DOCUMENT'
+        version false
+
+        partOfDocument joinTable: [ name: 'QUESTION_RESPONSE', key: 'DOCUMENT_ID']
+
+        form joinTable: [ name:'FORM', key: 'FORM_ID' ]
+        vendorRepresentativeParty joinTable: [ name:'PARTY', key: 'VENDOR_REPRESENTATIVE_PARTY_ID' ]
+
+        formId column: 'FORM_ID'
+        requestor column: 'REQUESTOR'
+        requestorEmail column: 'REQUESTOR_EMAIL'
+        owner column: 'OWNER'
+        ownerEmail column: 'OWNER_EMAIL'
+        justification column: 'JUSTIFICATION'
+        vendorRepresentativePartyId column: 'VENDOR_REPRESENTATIVE_PARTY_ID'
+        dateCreated column: 'DATE_CREATED'
+        createdBy column: 'CREATED_BY'
+        lastUpdated column: 'LAST_UPDATED'
+        updatedBy column: 'UPDATED_BY'
+
+    }
 
     static constraints = {
+
+        formId nullable: false
+        requestor nullable: false
+        requestorEmail nullable: false
+        owner nullable: false
+        ownerEmail nullable: false
+        justification nullable: false
+        vendorRepresentativePartyId nullable: false
+        dateCreated nullable: false
+        createdBy nullable: false
+        lastUpdated nullable: false
+        updatedBy nullable: false
+
     }
+
 }

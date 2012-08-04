@@ -3,29 +3,31 @@ package org.ihc.esa.domain
 import java.util.Date
 import java.math.BigDecimal
 
-class Catalog {
+class ReplacementItem {
 
-    String name
-    String description
+    BigDecimal itemId
+    BigDecimal replacementItemId
     Date dateCreated
     String createdBy
     Date lastUpdated
     String updatedBy
 
-    static hasMany = [
-        hasCatalogItems: CatalogItem
+    static belongsTo = [
+        replacementItem: Item,
+        item: Item
     ]
 
     static mapping = {
 
-        id generator:'sequence', params:[sequence:'CATALOG_SEQ']
-        table 'CATALOG'
+        id generator:'sequence', params:[sequence:'REPLACEMENT_ITEM_SEQ']
+        table 'REPLACEMENT_ITEM'
         version false
 
-        hasCatalogItems joinTable: [ name: 'CATALOG_ITEM', key: 'CATALOG_ID']
+        replacementItem joinTable: [ name:'ITEM', key: 'REPLACEMENT_ITEM_ID' ]
+        item joinTable: [ name:'ITEM', key: 'ITEM_ID' ]
 
-        name column: 'NAME'
-        description column: 'DESCRIPTION'
+        itemId column: 'ITEM_ID'
+        replacementItemId column: 'REPLACEMENT_ITEM_ID'
         dateCreated column: 'DATE_CREATED'
         createdBy column: 'CREATED_BY'
         lastUpdated column: 'LAST_UPDATED'
@@ -35,8 +37,8 @@ class Catalog {
 
     static constraints = {
 
-        name nullable: false
-        description nullable: true
+        itemId nullable: false
+        replacementItemId nullable: false
         dateCreated nullable: false
         createdBy nullable: false
         lastUpdated nullable: false
