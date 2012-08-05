@@ -38,9 +38,7 @@ class PartyAddress {
 
         partyId nullable: false
         addressId nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

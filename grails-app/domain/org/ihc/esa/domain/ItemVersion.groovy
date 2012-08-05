@@ -60,9 +60,7 @@ class ItemVersion {
         ihcActualDecomission nullable: true
         ihcProposedDecomissioned nullable: true
         vendorDecomission nullable: true
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

@@ -36,9 +36,7 @@ class Catalog {
 
         name nullable: false
         description nullable: true
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

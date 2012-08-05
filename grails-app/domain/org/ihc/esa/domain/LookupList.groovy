@@ -47,9 +47,7 @@ class LookupList {
         description nullable: true
         listType nullable: false
         sqlStatement nullable: true
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

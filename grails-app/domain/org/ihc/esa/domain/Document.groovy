@@ -59,9 +59,7 @@ class Document {
         ownerEmail nullable: false
         justification nullable: false
         vendorRepresentativePartyId nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

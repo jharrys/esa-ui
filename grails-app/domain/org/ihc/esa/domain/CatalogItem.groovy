@@ -42,9 +42,7 @@ class CatalogItem {
 
         itemId nullable: false
         catalogId nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

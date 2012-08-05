@@ -42,9 +42,7 @@ class QuestionResponse {
 
     static constraints = {
 
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
         stringValue nullable: true
         floatValue nullable: true

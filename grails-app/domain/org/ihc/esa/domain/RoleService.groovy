@@ -38,9 +38,7 @@ class RoleService {
 
         roleId nullable: false
         serviceId nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

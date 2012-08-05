@@ -55,9 +55,7 @@ class FormField {
         question nullable: false
         dataType nullable: false
         multiSelect nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

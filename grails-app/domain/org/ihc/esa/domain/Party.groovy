@@ -67,9 +67,7 @@ class Party {
         workPhoneNumber nullable: true
         homePhoneNumber nullable: true
         webSiteUrl nullable: true
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

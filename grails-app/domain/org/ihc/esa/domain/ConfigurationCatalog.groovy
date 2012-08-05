@@ -46,9 +46,7 @@ class ConfigurationCatalog {
 
         parentItemId nullable: false
         elementItemId nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

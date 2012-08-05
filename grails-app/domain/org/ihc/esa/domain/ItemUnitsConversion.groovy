@@ -41,9 +41,7 @@ class ItemUnitsConversion {
         value nullable: true
         units nullable: true
         perUnits nullable: true
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

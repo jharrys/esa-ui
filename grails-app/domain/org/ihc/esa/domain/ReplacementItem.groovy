@@ -38,9 +38,7 @@ class ReplacementItem {
 
         itemId nullable: false
         replacementItemId nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

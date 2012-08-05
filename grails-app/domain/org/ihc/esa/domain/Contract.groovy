@@ -33,9 +33,7 @@ class Contract {
     static constraints = {
 
         contractNumber nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

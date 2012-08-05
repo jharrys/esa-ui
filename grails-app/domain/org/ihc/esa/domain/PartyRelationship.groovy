@@ -41,9 +41,7 @@ class PartyRelationship {
         parentPartyId nullable: false
         childPartyId nullable: false
         relationshipType nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }

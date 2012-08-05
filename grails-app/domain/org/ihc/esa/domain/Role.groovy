@@ -33,9 +33,7 @@ class Role {
     static constraints = {
 
         name nullable: false
-        dateCreated nullable: false
         createdBy nullable: false
-        lastUpdated nullable: false
         updatedBy nullable: false
 
     }
