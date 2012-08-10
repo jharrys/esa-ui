@@ -1,7 +1,11 @@
 package org.ihc.esa.domain
 
-import java.util.Date
+/***************************************************************************
+	Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
+	Copyright 2012 by Intermountain Healthcare
+***************************************************************************/
 
+import java.util.Date
 class Party {
 
     String externalId
