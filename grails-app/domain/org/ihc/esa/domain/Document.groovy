@@ -1,7 +1,7 @@
 package org.ihc.esa.domain
 
 /***************************************************************************
-	Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
+	Generated code by GenGroovyObjects [20-Aug-2012 15:47:33 -0600]
 	Copyright 2012 by Intermountain Healthcare
 ***************************************************************************/
 
@@ -9,6 +9,7 @@ import java.util.Date
 class Document {
 
     BigDecimal formId
+    String sirpId
     String requestor
     String requestorEmail
     String owner
@@ -21,6 +22,7 @@ class Document {
     String updatedBy
 
     static hasMany = [
+        exceptionDocument: Item,
         partOfDocument: QuestionResponse
     ]
 
@@ -35,12 +37,14 @@ class Document {
         table 'DOCUMENT'
         version false
 
+        exceptionDocument joinTable: [ name: 'ITEM', key: 'DOCUMENT_ID']
         partOfDocument joinTable: [ name: 'QUESTION_RESPONSE', key: 'DOCUMENT_ID']
 
         form joinTable: [ name:'FORM', key: 'FORM_ID' ]
         vendorRepresentativeParty joinTable: [ name:'PARTY', key: 'VENDOR_REPRESENTATIVE_PARTY_ID' ]
 
         formId column: 'FORM_ID'
+        sirpId column: 'SIRP_ID'
         requestor column: 'REQUESTOR'
         requestorEmail column: 'REQUESTOR_EMAIL'
         owner column: 'OWNER'
@@ -57,6 +61,7 @@ class Document {
     static constraints = {
 
         formId nullable: false
+        sirpId nullable: true
         requestor nullable: false
         requestorEmail nullable: false
         owner nullable: false

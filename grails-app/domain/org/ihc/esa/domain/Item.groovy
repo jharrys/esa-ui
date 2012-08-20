@@ -1,7 +1,7 @@
 package org.ihc.esa.domain
 
 /***************************************************************************
-	Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
+	Generated code by GenGroovyObjects [20-Aug-2012 15:47:33 -0600]
 	Copyright 2012 by Intermountain Healthcare
 ***************************************************************************/
 
@@ -11,6 +11,7 @@ class Item {
     String externalId
     String sourceSystem
     String standard
+    BigDecimal documentId
     BigDecimal vendorPartyId
     BigDecimal intermountainItemNumber
     String name
@@ -35,13 +36,13 @@ class Item {
     String updatedBy
 
     static hasMany = [
-        belongsToCatalogs: CatalogItem,
-        configurationElements: ConfigurationCatalog,
-        partOfConfigurations: ConfigurationCatalog,
         itemConversions: ItemUnitsConversion,
         itemVersions: ItemVersion,
         replacementForItems: ReplacementItem,
-        replacementItems: ReplacementItem
+        replacementItems: ReplacementItem,
+        belongsToCatalogs: CatalogItem,
+        configurationElements: ConfigurationCatalog,
+        partOfConfigurations: ConfigurationCatalog
     ]
 	
 	static mappedBy = [
@@ -53,6 +54,7 @@ class Item {
 
     static belongsTo = [
         contract: Contract,
+        document: Document,
         vendorParty: Party
     ]
 
@@ -62,20 +64,22 @@ class Item {
         table 'ITEM'
         version false
 
-        belongsToCatalogs joinTable: [ name: 'CATALOG_ITEM', key: 'ITEM_ID']
-        configurationElements joinTable: [ name: 'CONFIGURATION_CATALOG', key: 'ELEMENT_ITEM_ID']
-        partOfConfigurations joinTable: [ name: 'CONFIGURATION_CATALOG', key: 'PARENT_ITEM_ID']
         itemConversions joinTable: [ name: 'ITEM_UNITS_CONVERSION', key: 'ITEM_ID']
         itemVersions joinTable: [ name: 'ITEM_VERSION', key: 'ITEM_ID']
         replacementForItems joinTable: [ name: 'REPLACEMENT_ITEM', key: 'ITEM_ID']
         replacementItems joinTable: [ name: 'REPLACEMENT_ITEM', key: 'REPLACEMENT_ITEM_ID']
+        belongsToCatalogs joinTable: [ name: 'CATALOG_ITEM', key: 'ITEM_ID']
+        configurationElements joinTable: [ name: 'CONFIGURATION_CATALOG', key: 'ELEMENT_ITEM_ID']
+        partOfConfigurations joinTable: [ name: 'CONFIGURATION_CATALOG', key: 'PARENT_ITEM_ID']
 
         contract joinTable: [ name:'CONTRACT', key: 'CONTRACT_ID' ]
+        document joinTable: [ name:'DOCUMENT', key: 'DOCUMENT_ID' ]
         vendorParty joinTable: [ name:'PARTY', key: 'VENDOR_PARTY_ID' ]
 
         externalId column: 'EXTERNAL_ID'
         sourceSystem column: 'SOURCE_SYSTEM'
         standard column: 'STANDARD'
+        documentId column: 'DOCUMENT_ID'
         vendorPartyId column: 'VENDOR_PARTY_ID'
         intermountainItemNumber column: 'INTERMOUNTAIN_ITEM_NUMBER'
         name column: 'NAME'

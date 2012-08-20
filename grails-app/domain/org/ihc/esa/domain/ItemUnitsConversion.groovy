@@ -1,7 +1,7 @@
 package org.ihc.esa.domain
 
 /***************************************************************************
-	Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
+	Generated code by GenGroovyObjects [20-Aug-2012 15:47:33 -0600]
 	Copyright 2012 by Intermountain Healthcare
 ***************************************************************************/
 
