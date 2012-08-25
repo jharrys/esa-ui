@@ -8,12 +8,10 @@ package org.ihc.esa.domain
 import java.util.Date
 class FormField {
 
-    BigDecimal formId
     BigDecimal sectionNumber
     String question
     String dataType
     String multiSelect
-    BigDecimal lookupListId
     Date dateCreated
     String createdBy
     Date lastUpdated
@@ -34,17 +32,12 @@ class FormField {
         table 'FORM_FIELD'
         version false
 
-        responseToQuestion joinTable: [ name: 'QUESTION_RESPONSE', key: 'FORM_FIELD_ID']
-
-        form joinTable: [ name:'FORM', key: 'FORM_ID' ]
-        lookupList joinTable: [ name:'LOOKUP_LIST', key: 'LOOKUP_LIST_ID' ]
-
-        formId column: 'FORM_ID'
+        form column: 'FORM_ID'
         sectionNumber column: 'SECTION_NUMBER'
         question column: 'QUESTION'
         dataType column: 'DATA_TYPE'
         multiSelect column: 'MULTI_SELECT'
-        lookupListId column: 'LOOKUP_LIST_ID'
+        lookupList column: 'LOOKUP_LIST_ID'
         dateCreated column: 'DATE_CREATED'
         createdBy column: 'CREATED_BY'
         lastUpdated column: 'LAST_UPDATED'
@@ -54,7 +47,7 @@ class FormField {
 
     static constraints = {
 
-        formId nullable: false
+        form nullable: false
         sectionNumber nullable: true
         question nullable: false
         dataType nullable: false

@@ -1,5 +1,6 @@
-package org.ihc.esa.domain
+package org.ihc.esa.controllers
 
+import org.ihc.esa.domain.Address;
 import org.springframework.dao.DataIntegrityViolationException
 
 class AddressController {

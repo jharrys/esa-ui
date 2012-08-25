@@ -19,7 +19,7 @@ environments {
 			password = "esa"
 			dialect = "org.hibernate.dialect.Oracle10gDialect"
 			url = "jdbc:oracle:thin:@192.168.56.101:1521:esa"
-            //url = "jdbc:h2:mem:devDb;MVCC=TRUE"
+            logSql = true
         }
     }
     test {

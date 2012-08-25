@@ -8,14 +8,12 @@ package org.ihc.esa.domain
 import java.util.Date
 class Document {
 
-    BigDecimal formId
     String sirpId
     String requestor
     String requestorEmail
     String owner
     String ownerEmail
     String justification
-    BigDecimal vendorRepresentativePartyId
     Date dateCreated
     String createdBy
     Date lastUpdated
@@ -43,14 +41,14 @@ class Document {
         form joinTable: [ name:'FORM', key: 'FORM_ID' ]
         vendorRepresentativeParty joinTable: [ name:'PARTY', key: 'VENDOR_REPRESENTATIVE_PARTY_ID' ]
 
-        formId column: 'FORM_ID'
+        form column: 'FORM_ID'
         sirpId column: 'SIRP_ID'
         requestor column: 'REQUESTOR'
         requestorEmail column: 'REQUESTOR_EMAIL'
         owner column: 'OWNER'
         ownerEmail column: 'OWNER_EMAIL'
         justification column: 'JUSTIFICATION'
-        vendorRepresentativePartyId column: 'VENDOR_REPRESENTATIVE_PARTY_ID'
+        vendorRepresentativeParty column: 'VENDOR_REPRESENTATIVE_PARTY_ID'
         dateCreated column: 'DATE_CREATED'
         createdBy column: 'CREATED_BY'
         lastUpdated column: 'LAST_UPDATED'
@@ -60,14 +58,14 @@ class Document {
 
     static constraints = {
 
-        formId nullable: false
+        form nullable: false
         sirpId nullable: true
         requestor nullable: false
         requestorEmail nullable: false
         owner nullable: false
         ownerEmail nullable: false
         justification nullable: false
-        vendorRepresentativePartyId nullable: false
+        vendorRepresentativeParty nullable: false
         createdBy nullable: false
         updatedBy nullable: false
 

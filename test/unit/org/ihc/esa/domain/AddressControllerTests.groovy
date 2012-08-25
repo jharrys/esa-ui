@@ -2,6 +2,7 @@ package org.ihc.esa.domain
 
 
 
+import org.ihc.esa.controllers.AddressController;
 import org.junit.*
 import grails.test.mixin.*
 

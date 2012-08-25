@@ -58,12 +58,12 @@
 	<g:textField name="zip" value="${addressInstance?.zip}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'creationDate', 'error')} required">
-	<label for="creationDate">
-		<g:message code="address.creationDate.label" default="Creation Date" />
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'dateCreated', 'error')} required">
+	<label for="dateCreated">
+		<g:message code="address.dateCreated.label" default="Creation Date" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:datePicker name="creationDate" precision="day"  value="${addressInstance?.creationDate}"  />
+	<g:datePicker name="dateCreated" precision="day"  value="${addressInstance?.dateCreated}"  />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'createdBy', 'error')} ">
@@ -74,12 +74,12 @@
 	<g:textField name="createdBy" value="${addressInstance?.createdBy}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'updateDate', 'error')} required">
-	<label for="updateDate">
-		<g:message code="address.updateDate.label" default="Update Date" />
+<div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'lastUpdated', 'error')} required">
+	<label for="lastUpdated">
+		<g:message code="address.lastUpdated.label" default="Update Date" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:datePicker name="updateDate" precision="day"  value="${addressInstance?.updateDate}"  />
+	<g:datePicker name="lastUpdated" precision="day"  value="${addressInstance?.lastUpdated}"  />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: addressInstance, field: 'updatedBy', 'error')} ">
