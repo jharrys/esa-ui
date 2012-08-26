@@ -20,7 +20,7 @@ class LookupList {
 
     static hasMany = [
         fieldLookup: FormField,
-        lookupElementLookupList: LookupElement
+        elements: LookupElement
     ]
 
     static mapping = {
@@ -28,9 +28,6 @@ class LookupList {
         id generator:'sequence', params:[sequence:'LOOKUP_LIST_SEQ']
         table 'LOOKUP_LIST'
         version false
-
-        fieldLookup joinTable: [ name: 'FORM_FIELD', key: 'LOOKUP_LIST_ID']
-        lookupElementLookupList joinTable: [ name: 'LOOKUP_ELEMENT', key: 'LOOKUP_LIST_ID']
 
         name column: 'NAME'
         prompt column: 'PROMPT'

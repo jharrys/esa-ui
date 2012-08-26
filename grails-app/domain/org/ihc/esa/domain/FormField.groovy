@@ -16,14 +16,14 @@ class FormField {
     String createdBy
     Date lastUpdated
     String updatedBy
+	LookupList lookupList
 
     static hasMany = [
         responseToQuestion: QuestionResponse
     ]
 
     static belongsTo = [
-        form: Form,
-        lookupList: LookupList
+        form: Form
     ]
 
     static mapping = {

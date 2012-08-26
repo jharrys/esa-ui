@@ -1,4 +1,8 @@
 <%@ page import="org.ihc.esa.domain.Document" %>
+<%@ page import="org.ihc.esa.domain.Form" %>
+<%@ page import="org.ihc.esa.domain.FormField" %>
+<%@ page import="org.ihc.esa.domain.LookupList" %>
+<%@ page import="org.ihc.esa.domain.LookupElement" %>
 <!doctype html>
 <html>
 	<head>

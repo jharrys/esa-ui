@@ -8,7 +8,6 @@ package org.ihc.esa.domain
 import java.util.Date
 class LookupElement {
 
-    BigDecimal lookupListId
     String value
     String display
     Date dateCreated
@@ -26,9 +25,7 @@ class LookupElement {
         table 'LOOKUP_ELEMENT'
         version false
 
-        lookupList joinTable: [ name:'LOOKUP_LIST', key: 'LOOKUP_LIST_ID' ]
-
-        lookupListId column: 'LOOKUP_LIST_ID'
+        lookupList column: 'LOOKUP_LIST_ID'
         value column: 'VALUE'
         display column: 'DISPLAY'
         dateCreated column: 'DATE_CREATED'
