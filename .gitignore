@@ -43,3 +43,6 @@
 
 # other
 *.iws
+
+# not sure what this is used for
+/.groovy
