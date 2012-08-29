@@ -16,6 +16,7 @@
 			<ul>
 				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
 				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
+				<li>Section ${section }</li>
 			</ul>
 		</div>
 		<div id="create-document" class="content scaffold-create" role="main">
@@ -30,12 +31,14 @@
 				</g:eachError>
 			</ul>
 			</g:hasErrors>
-			<g:form action="save" >
+            <%-- need to wrap g:form action in an if statement so that if sectionStack.empty() == true then change action to save() --%>
+			<g:form action="create_next" params="${[document: documentInstance, formid: formid, sectionStack: sectionStack] }" >
 				<fieldset class="form">
 					<g:render template="/form/form"/>
 				</fieldset>
 				<fieldset class="buttons">
-					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
+				    <%-- need to wrap g:submitButton action in an if statement so that if sectionStack.empty() == true then change action to save() --%>
+					<g:submitButton name="create_next" class="next" value="${message(code: 'default.button.next.label', default: 'Next')}" />
 				</fieldset>
 			</g:form>
 		</div>
