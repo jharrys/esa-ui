@@ -12,6 +12,7 @@ class FormField {
 	BigDecimal orderNumber
 	String question
 	String dataType
+	String cssClass
 	String multiSelect
 	Date dateCreated
 	String createdBy
@@ -39,6 +40,7 @@ class FormField {
 		orderNumber column: 'ORDER_NUMBER'
 		question column: 'QUESTION'
 		dataType column: 'DATA_TYPE'
+		cssClass column: 'CSS_CLASS'
 		multiSelect column: 'MULTI_SELECT'
 		lookupList column: 'LOOKUP_LIST_ID'
 		dateCreated column: 'DATE_CREATED'
@@ -55,6 +57,7 @@ class FormField {
 		orderNumber nullable: true
 		question nullable: false
 		dataType nullable: false
+		cssClass nullable: true
 		multiSelect nullable: false
 		createdBy nullable: false
 		updatedBy nullable: false
