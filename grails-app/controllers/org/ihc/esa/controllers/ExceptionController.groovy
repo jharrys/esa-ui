@@ -18,6 +18,10 @@ class ExceptionController {
 		[documentInstanceList: Document.list(params), documentInstanceTotal: Document.count()]
 	}
 	
+	def bpgrid() {
+		[hello: "remove after testing"]
+	}
+	
 	def create() {
 		// TODO fix hard coded form for exception
 		// TODO add error trapping for when form 1 is not found
