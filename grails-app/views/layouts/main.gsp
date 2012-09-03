@@ -14,8 +14,8 @@
 <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
 <link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
 <link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
-<%--<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">--%>
-<%--<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">--%>
+<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
+<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
 <r:require modules="blueprint" />
 <g:layoutHead />
 <r:layoutResources />
@@ -25,29 +25,21 @@
 	<!-- begin blueprint container -->
 	<div class="container">
 
-		<!-- begin header row 24 columns wide -->
-		<div id="header" class="span-24" role="banner">
+		<div id="header" class="header" role="banner">
 			<a href="http://eisa-repository.co.ihc.com"><img src="${resource(dir: 'images', file: 'eisa_logo.png')}" alt="EISA" /></a>
 		</div>
-		<!-- end header row -->
 
-		<!-- begin content row 24 columns wide -->
-		<div id="content" class="span-24">
+		<div id="content" class="content">
 			<g:layoutBody />
 		</div>
-		<!-- end content row 24 columns wide -->
 
-		<!-- begin footer row 24 columns wide -->
-		<div id="footer" class="footer span-24" role="contentinfo">
+		<div id="footer" class="footer" role="contentinfo">
 			(c) 2012
 		</div>
-		<!-- end footer row 24 columns wide -->
 
-		<!-- begin spinner row 24 columns wide -->
-		<div id="spinner" class="spinner span-24" style="display: none;">
+		<div id="spinner" class="spinner" style="display: none;">
 			<g:message code="spinner.alt" default="Loading&hellip;" />
 		</div>
-		<!-- end spinner row 24 columns wide -->
 		
 	</div>
 	<!-- end blueprint container -->

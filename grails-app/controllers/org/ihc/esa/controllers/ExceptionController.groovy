@@ -22,6 +22,10 @@ class ExceptionController {
 		[hello: "remove after testing"]
 	}
 	
+	def tester() {
+		[bye: "remove me after testing"]
+	}
+	
 	def create() {
 		// TODO fix hard coded form for exception
 		// TODO add error trapping for when form 1 is not found
@@ -33,8 +37,10 @@ class ExceptionController {
 		} else {
 			def query = 'select distinct ff.sectionNumber from FormField ff where ff.form=' + f.id + ' order by ff.sectionNumber asc'
 			ArrayDeque sectionStack = FormField.executeQuery(query)
+			System.out.println(sectionStack);
 			def currentSection = sectionStack.pop()
-			[documentInstance: new Document(params), formid: f.id, section: currentSection, sectionStack: sectionStack, formFields: FormField.findAllByFormAndSectionNumber(f, currentSection)]
+			[documentInstance: new Document(params), formid: f.id, section: currentSection, sectionStack: sectionStack, 
+				formFields: FormField.findAllByFormAndSectionNumber(f, currentSection, [sort: "id"])]
 		}
 	}
 	
@@ -45,10 +51,13 @@ class ExceptionController {
 		def form = Form.get(params.formid)
 		// TODO NPE check needed here
 		ArrayDeque sectionStack = new ArrayDeque(params.list("sectionStack"))
-		def currentSection = sectionStack.pop()
-		// TODO in gsp add check for sectionStack.peek() == null OR sectionStack.empty() ... if null or empty then set form button to save.
-		
-		render(view: "create", model: [document: document, formid: form.id, section: currentSection, sectionStack: sectionStack, formFields: FormField.findAllByFormAndSectionNumber(form, currentSection)])
+		if (!sectionStack.isEmpty()) {
+			def currentSection = sectionStack.pop()
+			render(view: "create", model: [document: document, formid: form.id, section: currentSection, sectionStack: sectionStack, 
+				formFields: FormField.findAllByFormAndSectionNumber(form, currentSection, [sort: "id"])])
+		} else {
+			render("Form Submitted!")
+		}
 	}
 	
 	def save() {
