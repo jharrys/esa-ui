@@ -5,13 +5,15 @@ package org.ihc.esa.domain
  Copyright 2012 by Intermountain Healthcare
  ***************************************************************************/
 
-class FormField {
+class FormField
+{
 	
 	BigDecimal pageNumber
 	BigDecimal sectionNumber
 	BigDecimal orderNumber
 	String question
 	String dataType
+	String formInputType
 	String cssClass
 	String multiSelect
 	Date dateCreated
@@ -28,7 +30,8 @@ class FormField {
 		form: Form
 	]
 	
-	static mapping = {
+	static mapping =
+	{
 		
 		id generator:'sequence', params:[sequence:'FORM_FIELD_SEQ']
 		table 'FORM_FIELD'
@@ -40,6 +43,7 @@ class FormField {
 		orderNumber column: 'ORDER_NUMBER'
 		question column: 'QUESTION'
 		dataType column: 'DATA_TYPE'
+		formInputType column: 'FORM_INPUT_TYPE'
 		cssClass column: 'CSS_CLASS'
 		multiSelect column: 'MULTI_SELECT'
 		lookupList column: 'LOOKUP_LIST_ID'
@@ -49,7 +53,8 @@ class FormField {
 		updatedBy column: 'UPDATED_BY'
 	}
 	
-	static constraints = {
+	static constraints =
+	{
 		
 		form nullable: false
 		pageNumber nullable: true
@@ -57,6 +62,7 @@ class FormField {
 		orderNumber nullable: true
 		question nullable: false
 		dataType nullable: false
+		formInputType nullable: true
 		cssClass nullable: true
 		multiSelect nullable: false
 		createdBy nullable: false
