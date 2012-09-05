@@ -1,50 +1,44 @@
 package org.ihc.esa.domain
 
 /***************************************************************************
-	Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
-	Copyright 2012 by Intermountain Healthcare
-***************************************************************************/
+ Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
+ Copyright 2012 by Intermountain Healthcare
+ ***************************************************************************/
 
-import java.util.Date
-class ReplacementItem {
-
-    BigDecimal itemId
-    BigDecimal replacementItemId
-    Date dateCreated
-    String createdBy
-    Date lastUpdated
-    String updatedBy
-
-    static belongsTo = [
-        replacementItem: Item,
-        item: Item
-    ]
-
-    static mapping = {
-
-        id generator:'sequence', params:[sequence:'REPLACEMENT_ITEM_SEQ']
-        table 'REPLACEMENT_ITEM'
-        version false
-
-        replacementItem joinTable: [ name:'ITEM', key: 'REPLACEMENT_ITEM_ID' ]
-        item joinTable: [ name:'ITEM', key: 'ITEM_ID' ]
-
-        itemId column: 'ITEM_ID'
-        replacementItemId column: 'REPLACEMENT_ITEM_ID'
-        dateCreated column: 'DATE_CREATED'
-        createdBy column: 'CREATED_BY'
-        lastUpdated column: 'LAST_UPDATED'
-        updatedBy column: 'UPDATED_BY'
-
-    }
-
-    static constraints = {
-
-        itemId nullable: false
-        replacementItemId nullable: false
-        createdBy nullable: false
-        updatedBy nullable: false
-
-    }
-
+class ReplacementItem
+{
+	
+	Date dateCreated
+	String createdBy
+	Date lastUpdated
+	String updatedBy
+	
+	static belongsTo = [
+		replacementItem: Item,
+		item: Item
+	]
+	
+	static mapping =
+	{
+		
+		id generator:'sequence', params:[sequence:'REPLACEMENT_ITEM_SEQ']
+		table 'REPLACEMENT_ITEM'
+		version false
+		
+		item column: 'ITEM_ID'
+		replacementItem column: 'REPLACEMENT_ITEM_ID'
+		dateCreated column: 'DATE_CREATED'
+		createdBy column: 'CREATED_BY'
+		lastUpdated column: 'LAST_UPDATED'
+		updatedBy column: 'UPDATED_BY'
+	}
+	
+	static constraints =
+	{
+		
+		item nullable: false
+		replacementItem nullable: false
+		createdBy nullable: false
+		updatedBy nullable: false
+	}
 }

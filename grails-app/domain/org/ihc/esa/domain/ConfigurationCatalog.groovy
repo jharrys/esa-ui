@@ -1,58 +1,50 @@
 package org.ihc.esa.domain
 
 /***************************************************************************
-	Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
-	Copyright 2012 by Intermountain Healthcare
-***************************************************************************/
+ Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
+ Copyright 2012 by Intermountain Healthcare
+ ***************************************************************************/
 
-import java.util.Date
-class ConfigurationCatalog {
-
-    BigDecimal parentItemId
-    BigDecimal parentItemVersionId
-    BigDecimal elementItemId
-    BigDecimal elementItemVersionId
-    Date dateCreated
-    String createdBy
-    Date lastUpdated
-    String updatedBy
-
-    static belongsTo = [
-        parentItem: Item,
-        elementItem: Item,
-        elementItemVersion: ItemVersion,
-        parentItemVersion: ItemVersion
-    ]
-
-    static mapping = {
-
-        id generator:'sequence', params:[sequence:'CONFIGURATION_CATALOG_SEQ']
-        table 'CONFIGURATION_CATALOG'
-        version false
-
-        parentItem joinTable: [ name:'ITEM', key: 'PARENT_ITEM_ID' ]
-        elementItem joinTable: [ name:'ITEM', key: 'ELEMENT_ITEM_ID' ]
-        elementItemVersion joinTable: [ name:'ITEM_VERSION', key: 'ELEMENT_ITEM_VERSION_ID' ]
-        parentItemVersion joinTable: [ name:'ITEM_VERSION', key: 'PARENT_ITEM_VERSION_ID' ]
-
-        parentItemId column: 'PARENT_ITEM_ID'
-        parentItemVersionId column: 'PARENT_ITEM_VERSION_ID'
-        elementItemId column: 'ELEMENT_ITEM_ID'
-        elementItemVersionId column: 'ELEMENT_ITEM_VERSION_ID'
-        dateCreated column: 'DATE_CREATED'
-        createdBy column: 'CREATED_BY'
-        lastUpdated column: 'LAST_UPDATED'
-        updatedBy column: 'UPDATED_BY'
-
-    }
-
-    static constraints = {
-
-        parentItemId nullable: false
-        elementItemId nullable: false
-        createdBy nullable: false
-        updatedBy nullable: false
-
-    }
-
+class ConfigurationCatalog
+{
+	
+	Date dateCreated
+	String createdBy
+	Date lastUpdated
+	String updatedBy
+	
+	static belongsTo = [
+		parentItem: Item,
+		parentItemVersion: ItemVersion,
+		elementItem: Item,
+		elementItemVersion: ItemVersion
+	]
+	
+	static mapping =
+	{
+		
+		id generator:'sequence', params:[sequence:'CONFIGURATION_CATALOG_SEQ']
+		table 'CONFIGURATION_CATALOG'
+		version false
+		
+		parentItem column: 'PARENT_ITEM_ID'
+		parentItemVersion column: 'PARENT_ITEM_VERSION_ID'
+		elementItem column: 'ELEMENT_ITEM_ID'
+		elementItemVersion column: 'ELEMENT_ITEM_VERSION_ID'
+		dateCreated column: 'DATE_CREATED'
+		createdBy column: 'CREATED_BY'
+		lastUpdated column: 'LAST_UPDATED'
+		updatedBy column: 'UPDATED_BY'
+	}
+	
+	static constraints =
+	{
+		
+		parentItem nullable: false
+		parentItemVersion nullable: true
+		elementItem nullable: false
+		elementItemVersion nullable: true
+		createdBy nullable: false
+		updatedBy nullable: false
+	}
 }
