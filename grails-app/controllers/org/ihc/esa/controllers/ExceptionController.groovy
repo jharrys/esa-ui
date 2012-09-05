@@ -32,8 +32,8 @@ class ExceptionController {
 		def f = Form.get(1)	// 1 is seeded in the FORM table as the exception form
 		// use a deque for thisFormSectionList so you can pop of each one as they come through. will need to order by desc because of LIFO
 		if (f == null) {
-			flash.message = "Failed to find Form 1, which is the Exception Form"
-			//render(status: 503, text: 'Failed to find Form 1, designated as the Exception Form')
+			//flash.message = "Failed to find Form 1, which is the Exception Form"
+			render(status: 503, text: 'Failed to find Form 1, designated as the Exception Form')
 		} else {
 			def query = 'select distinct ff.sectionNumber from FormField ff where ff.form=' + f.id + ' order by ff.sectionNumber asc'
 			ArrayDeque sectionStack = FormField.executeQuery(query)
