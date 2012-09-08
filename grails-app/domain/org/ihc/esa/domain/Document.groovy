@@ -19,6 +19,12 @@ class Document
 	Date lastUpdated
 	String updatedBy
 	
+	String getTitle() {
+		owner + " - " + requestor
+	}
+	
+	static transients = ['title']
+	
 	static hasMany = [
 		items: Item,
 		responses: QuestionResponse
@@ -63,5 +69,9 @@ class Document
 		vendorRepresentativeParty nullable: true
 		createdBy nullable: true
 		updatedBy nullable: true
+	}
+	
+	String toString() {
+		this.getTitle()
 	}
 }

@@ -1,3 +1,4 @@
+
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
 
@@ -60,20 +61,49 @@ grails.exceptionresolver.params.exclude = ['password']
 grails.hibernate.cache.queries = true
 
 // set per-environment serverURL stem for creating absolute links
-environments {
+Environments {
     development {
         grails.logging.jul.usebridge = true
 		
 		// spring-security-mock plugin
+		// for user details service see conf/spring/resources.groovy
 		grails.plugins.springsecurity.mock.active = true
 		grails.plugins.springsecurity.mock.fullName = "Mock Mockster"
 		grails.plugins.springsecurity.mock.email = "harris.johnny@gmail.com"
 		grails.plugins.springsecurity.mock.username =  "mmockster"
 		grails.plugins.springsecurity.mock.roles = [ 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_EXCEPTION' ]
 		grails.plugins.springsecurity.ipRestrictions = [ '/**': ['127.0.0.0/8', '::1/128'] ]
+		
+		// All 3 of these must be set to true if you want spring-security-mock to load roles from ldap rather than mock.roles setting
+		grails.plugins.springsecurity.ldap.active = false
+		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = false
+		// the full DN will be equivalent to "cn=${username},${userDnBase}"
+		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
     }
+	test {
+		grails.logging.jul.usebridge = true
+		
+		// spring-security-mock exposes a large security hole
+		grails.plugins.springsecurity.mock.active = false
+		
+		// All 3 of these must be set to true if you want spring-security-mock to load roles from ldap rather than mock.roles setting
+		grails.plugins.springsecurity.ldap.active = true
+		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = true
+		// the full DN will be equivalent to "cn=${username},${userDnBase}"
+		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = true
+	}
     production {
         grails.logging.jul.usebridge = false
+		
+		// spring-security-mock exposes a large security hole
+		grails.plugins.springsecurity.mock.active = false
+		
+		// All 3 of these must be set to true if you want spring-security-mock to load roles from ldap rather than mock.roles setting
+		grails.plugins.springsecurity.ldap.active = true
+		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = true
+		// the full DN will be equivalent to "cn=${username},${userDnBase}"
+		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = true
+		
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }

@@ -98,13 +98,15 @@ class Item
 		
 		externalId nullable: true
 		sourceSystem nullable: true
-		standard nullable: true
+		standard (inList: ["Y", "N"], nullable: true)
+		document nullable: true
 		intermountainItemNumber nullable: true
 		name nullable: true
 		description nullable: true
 		generalLedgerCode nullable: true
 		productGroup nullable: true
 		technologyGroup nullable: true
+		contract nullable: true
 		availableDate nullable: true
 		ihcActualDecomissioned nullable: true
 		ihcProposedDecomissioned nullable: true
@@ -117,5 +119,6 @@ class Item
 		unspscNumber nullable: true
 		createdBy nullable: false
 		updatedBy nullable: false
+		vendorParty nullable: true
 	}
 }

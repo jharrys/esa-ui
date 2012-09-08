@@ -41,7 +41,7 @@ class ExceptionController {
 			ArrayDeque sectionStack = FormField.executeQuery(query)
 			System.out.println(sectionStack);
 			def currentSection = sectionStack.pop()
-			Document doc = new Document(form:f, requestor: "john", requestorEmail: "john@imail.org", owner: "jj", ownerEmail: "jj@imail.org")
+			Document doc = new Document(form:f, requestor: "john", requestorEmail: "john@imail.org", owner: "jj", ownerEmail: "jj@imail.org", createdBy: "J", updatedBy: "J")
 			doc.save()
 			[documentInstance: doc, formid: f.id, section: currentSection, sectionStack: sectionStack, 
 				formFields: FormField.findAllByFormAndSectionNumber(f, currentSection, [sort: "id"])]
