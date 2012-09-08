@@ -1,5 +1,6 @@
 package org.ihc.esa.controllers
 
+import org.ihc.esa.domain.ConfigurationCatalog
 import org.ihc.esa.domain.Document
 import org.ihc.esa.domain.Form
 import org.ihc.esa.domain.FormField
@@ -23,7 +24,8 @@ class ExceptionController {
 	}
 	
 	def tester() {
-		[bye: "remove me after testing"]
+		def rootList = ConfigurationCatalog.executeQuery("from Item where id not in (select distinct elementItem from ConfigurationCatalog) order by id asc")
+		[rootList: rootList]
 	}
 	
 	def create() {

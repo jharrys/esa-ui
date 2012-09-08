@@ -16,7 +16,7 @@ class ConfigurationCatalog
 	static belongsTo = [
 		parentItem: Item,
 		parentItemVersion: ItemVersion,
-		elementItem: Item,
+		elementItem: Item,		// TODO should this be a hasMany relationship?
 		elementItemVersion: ItemVersion
 	]
 	
