@@ -103,6 +103,7 @@ ul {
 			<li><g:link class="manage" controller="itemVersion" action="list">Manage Item Versions</g:link></li>
 			<li><g:link class="manage" controller="lookupList" action="list">Manage Lookup Lists</g:link></li>
 			<li><g:link class="manage" controller="document" action="list">Manage Documents</g:link></li>
+			<li><g:link class="manage" controller="secure" action="index">Secure Area (testing)</g:link></li>
 		</ul>
 	</div>
 	<div id="page-body" role="main">

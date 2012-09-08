@@ -143,3 +143,8 @@ log4j = {
     	additivity = true
     }
 }
+
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.ihc.esa.domain.EsaUser'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.ihc.esa.domain.EsaUserEsaRole'
+grails.plugins.springsecurity.authority.className = 'org.ihc.esa.domain.EsaRole'
