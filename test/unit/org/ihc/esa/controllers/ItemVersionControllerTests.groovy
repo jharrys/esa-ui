@@ -1,8 +1,9 @@
-package org.ihc.esa.domain
+package org.ihc.esa.controllers
 
 
 
 import org.ihc.esa.controllers.ItemVersionController;
+import org.ihc.esa.domain.ItemVersion;
 import org.junit.*
 import grails.test.mixin.*
 

@@ -10,10 +10,10 @@ class BootStrap
 		def adminRole = new EsaRole(authority: 'ROLE_ADMIN').save(flush: true)
 		def userRole = new EsaRole(authority: 'ROLE_USER').save(flush: true)
 		
-		def testUser = new EsaUser(username: 'me', enabled: true, password: 'password')
-		testUser.save(flush: true)
+		def manager = new EsaUser(username: 'john', enabled: true, password: 'esa')
+		manager.save(flush: true)
 		
-		EsaUserEsaRole.create testUser, adminRole, true
+		EsaUserEsaRole.create manager, adminRole, true
 		
 		assert EsaUser.count() == 1
 		assert EsaRole.count() == 2

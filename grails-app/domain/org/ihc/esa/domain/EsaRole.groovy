@@ -1,14 +1,15 @@
 package org.ihc.esa.domain
 
-class EsaRole {
-
+class EsaRole
+{
+	
 	String authority
-
-	static mapping = {
-		cache true
-	}
-
-	static constraints = {
+	
+	static mapping =
+	{ cache true }
+	
+	static constraints =
+	{
 		authority blank: false, unique: true
 	}
 }

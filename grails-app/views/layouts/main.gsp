@@ -34,7 +34,8 @@
 		</div>
 
 		<div id="footer" class="footer" role="contentinfo">
-			(c) 2012
+			&copy; 2012
+			 Intermountain Healthcare. All Rights Reserved.
 		</div>
 
 		<div id="spinner" class="spinner" style="display: none;">
