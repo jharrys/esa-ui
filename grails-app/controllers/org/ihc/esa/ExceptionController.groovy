@@ -1,9 +1,5 @@
 package org.ihc.esa
 
-import org.ihc.esa.ConfigurationCatalog
-import org.ihc.esa.Document
-import org.ihc.esa.Form
-import org.ihc.esa.FormField
 import org.springframework.dao.DataIntegrityViolationException
 
 class ExceptionController {
@@ -41,7 +37,8 @@ class ExceptionController {
 			ArrayDeque sectionStack = FormField.executeQuery(query)
 			System.out.println(sectionStack);
 			def currentSection = sectionStack.pop()
-			Document doc = new Document(form:f, requestor: "john", requestorEmail: "john@imail.org", owner: "jj", ownerEmail: "jj@imail.org", createdBy: "J", updatedBy: "J")
+			Document doc = new Document(form:f, requestor: "john", requestorEmail: "john@imail.org", owner: "jj", ownerEmail: "jj@imail.org", 
+				createdBy: "J", updatedBy: "J", justification: "to be modified")
 			doc.save()
 			[documentInstance: doc, formid: f.id, section: currentSection, sectionStack: sectionStack, 
 				formFields: FormField.findAllByFormAndSectionNumber(f, currentSection, [sort: "id"])]
