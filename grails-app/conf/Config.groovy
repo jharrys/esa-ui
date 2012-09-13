@@ -35,7 +35,6 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
 // What URL patterns should be processed by the resources plugin
 grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
 
-
 // The default codec used to encode data with ${}
 grails.views.default.codec = "none" // none, html, base64
 grails.views.gsp.encoding = "UTF-8"
@@ -60,7 +59,6 @@ grails.exceptionresolver.params.exclude = ['password']
 // enable query caching by default
 grails.hibernate.cache.queries = true
 
-// set per-environment serverURL stem for creating absolute links
 Environments {
     development {
         grails.logging.jul.usebridge = true
@@ -80,6 +78,7 @@ Environments {
 		// the full DN will be equivalent to "cn=${username},${userDnBase}"
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
     }
+	
 	test {
 		grails.logging.jul.usebridge = true
 		
@@ -92,6 +91,7 @@ Environments {
 		// the full DN will be equivalent to "cn=${username},${userDnBase}"
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = true
 	}
+	
     production {
         grails.logging.jul.usebridge = false
 		
@@ -108,7 +108,6 @@ Environments {
     }
 }
 
-// log4j configuration
 log4j = {
     // Example of changing the log pattern for the default console
     // appender:
@@ -134,7 +133,8 @@ log4j = {
    			'grails.app.service',
 			'grails.app.domain',
 			'grails.app',
-			'org.hibernate.SQL'
+			'org.hibernate.SQL',
+			'grails.plugins.twitterbootstrap'
    
    trace	'org.hibernate.type'
 
@@ -143,6 +143,28 @@ log4j = {
     	additivity = true
     }
 }
+
+// Added by the Joda-Time plugin:
+grails.gorm.default.mapping = {
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentDateMidnight, class: org.joda.time.DateMidnight
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentDateTime, class: org.joda.time.DateTime
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentDateTimeZoneAsString, class: org.joda.time.DateTimeZone
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentDurationAsString, class: org.joda.time.Duration
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentInstantAsMillisLong, class: org.joda.time.Instant
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentInterval, class: org.joda.time.Interval
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentLocalDate, class: org.joda.time.LocalDate
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime, class: org.joda.time.LocalDateTime
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentLocalTime, class: org.joda.time.LocalTime
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentPeriodAsString, class: org.joda.time.Period
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentTimeOfDay, class: org.joda.time.TimeOfDay
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentYearMonthDay, class: org.joda.time.YearMonthDay
+	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentYears, class: org.joda.time.Years
+}
+
+jodatime.format.html5 = true
+
+grails.plugins.twitterbootstrap.fixtaglib = true
+grails.plugins.twitterbootstrap.defaultBundle = 'bundle_bootstrap'
 
 // Added by the Spring Security Core plugin:
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.ihc.esa.domain.EsaUser'

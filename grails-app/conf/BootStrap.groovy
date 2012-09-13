@@ -19,6 +19,7 @@ class BootStrap
 		assert EsaRole.count() == 2
 		assert EsaUserEsaRole.count() == 1
 	}
+	
 	def destroy =
 	{
 	}

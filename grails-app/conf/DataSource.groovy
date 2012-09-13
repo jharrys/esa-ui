@@ -5,37 +5,49 @@ dataSource
 	username = "sa"
 	password = ""
 }
+
 hibernate
 {
 	cache.use_second_level_cache = true
 	cache.use_query_cache = false
 	cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
 }
-// environment specific settings
-environments {
-	development {
-		dataSource {
-			dbCreate = "validate" // one of 'create', 'create-drop', 'update', 'validate', ''
+
+environments
+{
+	development
+	{
+		dataSource
+		{
+			// one of 'create', 'create-drop', 'update', 'validate', ''
+			dbCreate = "validate"
 			driverClassName = "oracle.jdbc.OracleDriver"
 			username = "esa"
 			password = "esa"
 			dialect = "org.hibernate.dialect.Oracle10gDialect"
 			url = "jdbc:oracle:thin:@192.168.56.101:1521:esa"
-			//            logSql = true
+			// logSql = true
 		}
 	}
-	test {
-		dataSource {
+	
+	test
+	{
+		dataSource
+		{
 			dbCreate = "update"
 			url = "jdbc:h2:mem:testDb;MVCC=TRUE"
 		}
 	}
-	production {
-		dataSource {
+	
+	production
+	{
+		dataSource
+		{
 			dbCreate = "update"
 			url = "jdbc:h2:prodDb;MVCC=TRUE"
 			pooled = true
-			properties {
+			properties
+			{
 				maxActive = -1
 				minEvictableIdleTimeMillis=1800000
 				timeBetweenEvictionRunsMillis=1800000
