@@ -1,8 +1,8 @@
-<%@ page import="org.ihc.esa.domain.Document"%>
-<%@ page import="org.ihc.esa.domain.Form"%>
-<%@ page import="org.ihc.esa.domain.FormField"%>
-<%@ page import="org.ihc.esa.domain.LookupList"%>
-<%@ page import="org.ihc.esa.domain.LookupElement"%>
+<%@ page import="org.ihc.esa.Document"%>
+<%@ page import="org.ihc.esa.Form"%>
+<%@ page import="org.ihc.esa.FormField"%>
+<%@ page import="org.ihc.esa.LookupList"%>
+<%@ page import="org.ihc.esa.LookupElement"%>
 <g:each in="${formFields }" var="field">
 	<%-- variables --%>
 	<g:set var="question_id" value="${field.id }" />

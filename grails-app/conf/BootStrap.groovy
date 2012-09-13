@@ -1,6 +1,6 @@
-import org.ihc.esa.domain.EsaRole
-import org.ihc.esa.domain.EsaUser
-import org.ihc.esa.domain.EsaUserEsaRole
+import org.ihc.esa.EsaRole
+import org.ihc.esa.EsaUser
+import org.ihc.esa.EsaUserEsaRole
 
 class BootStrap
 {

@@ -1,4 +1,4 @@
-<%@ page import="org.ihc.esa.domain.EsaUser" %>
+<%@ page import="org.ihc.esa.EsaUser" %>
 
 
 

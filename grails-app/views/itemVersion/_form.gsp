@@ -1,4 +1,4 @@
-<%@ page import="org.ihc.esa.domain.ItemVersion" %>
+<%@ page import="org.ihc.esa.ItemVersion" %>
 
 
 
@@ -7,7 +7,7 @@
 		<g:message code="itemVersion.item.label" default="Item" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="item" name="item.id" from="${org.ihc.esa.domain.Item.list()}" optionKey="id" required="" value="${itemVersionInstance?.item?.id}" class="many-to-one"/>
+	<g:select id="item" name="item.id" from="${org.ihc.esa.Item.list()}" optionKey="id" required="" value="${itemVersionInstance?.item?.id}" class="many-to-one"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemVersionInstance, field: 'versionNumber', 'error')} ">

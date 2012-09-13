@@ -1,4 +1,4 @@
-<%@ page import="org.ihc.esa.domain.LookupElement" %>
+<%@ page import="org.ihc.esa.LookupElement" %>
 
 
 
@@ -39,6 +39,6 @@
 		<g:message code="lookupElement.lookupList.label" default="Lookup List" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="lookupList" name="lookupList.id" from="${org.ihc.esa.domain.LookupList.list()}" optionKey="id" required="" value="${lookupElementInstance?.lookupList?.id}" class="many-to-one"/>
+	<g:select id="lookupList" name="lookupList.id" from="${org.ihc.esa.LookupList.list()}" optionKey="id" required="" value="${lookupElementInstance?.lookupList?.id}" class="many-to-one"/>
 </div>
 

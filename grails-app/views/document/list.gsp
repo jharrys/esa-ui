@@ -1,5 +1,5 @@
 
-<%@ page import="org.ihc.esa.domain.Document" %>
+<%@ page import="org.ihc.esa.Document" %>
 <!doctype html>
 <html>
 	<head>

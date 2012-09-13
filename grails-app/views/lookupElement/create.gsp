@@ -1,4 +1,4 @@
-<%@ page import="org.ihc.esa.domain.LookupElement" %>
+<%@ page import="org.ihc.esa.LookupElement" %>
 <!doctype html>
 <html>
 	<head>

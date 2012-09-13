@@ -1,5 +1,5 @@
 
-<%@ page import="org.ihc.esa.domain.ItemVersion" %>
+<%@ page import="org.ihc.esa.ItemVersion" %>
 <!doctype html>
 <html>
 	<head>

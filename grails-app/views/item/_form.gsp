@@ -1,4 +1,4 @@
-<%@ page import="org.ihc.esa.domain.Item" %>
+<%@ page import="org.ihc.esa.Item" %>
 
 
 
@@ -31,7 +31,7 @@
 		<g:message code="item.document.label" default="Document" />
 		
 	</label>
-	<g:select id="document" name="document.id" from="${org.ihc.esa.domain.Document.list()}" optionKey="id" value="${itemInstance?.document?.id}" class="many-to-one" noSelection="['null': '']"/>
+	<g:select id="document" name="document.id" from="${org.ihc.esa.Document.list()}" optionKey="id" value="${itemInstance?.document?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'intermountainItemNumber', 'error')} ">
@@ -87,7 +87,7 @@
 		<g:message code="item.contract.label" default="Contract" />
 		
 	</label>
-	<g:select id="contract" name="contract.id" from="${org.ihc.esa.domain.Contract.list()}" optionKey="id" value="${itemInstance?.contract?.id}" class="many-to-one" noSelection="['null': '']"/>
+	<g:select id="contract" name="contract.id" from="${org.ihc.esa.Contract.list()}" optionKey="id" value="${itemInstance?.contract?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'availableDate', 'error')} ">
@@ -191,7 +191,7 @@
 		<g:message code="item.vendorParty.label" default="Vendor Party" />
 		
 	</label>
-	<g:select id="vendorParty" name="vendorParty.id" from="${org.ihc.esa.domain.Party.list()}" optionKey="id" value="${itemInstance?.vendorParty?.id}" class="many-to-one" noSelection="['null': '']"/>
+	<g:select id="vendorParty" name="vendorParty.id" from="${org.ihc.esa.Party.list()}" optionKey="id" value="${itemInstance?.vendorParty?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'belongsToCatalogs', 'error')} ">

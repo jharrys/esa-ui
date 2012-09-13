@@ -1,4 +1,4 @@
-<%@ page import="org.ihc.esa.domain.Document" %>
+<%@ page import="org.ihc.esa.Document" %>
 
 
 
@@ -7,7 +7,7 @@
 		<g:message code="document.form.label" default="Form" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="form" name="form.id" from="${org.ihc.esa.domain.Form.list()}" optionKey="id" required="" value="${documentInstance?.form?.id}" class="many-to-one"/>
+	<g:select id="form" name="form.id" from="${org.ihc.esa.Form.list()}" optionKey="id" required="" value="${documentInstance?.form?.id}" class="many-to-one"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: documentInstance, field: 'sirpId', 'error')} ">
@@ -63,7 +63,7 @@
 		<g:message code="document.vendorRepresentativeParty.label" default="Vendor Representative Party" />
 		
 	</label>
-	<g:select id="vendorRepresentativeParty" name="vendorRepresentativeParty.id" from="${org.ihc.esa.domain.Party.list()}" optionKey="id" value="${documentInstance?.vendorRepresentativeParty?.id}" class="many-to-one" noSelection="['null': '']"/>
+	<g:select id="vendorRepresentativeParty" name="vendorRepresentativeParty.id" from="${org.ihc.esa.Party.list()}" optionKey="id" value="${documentInstance?.vendorRepresentativeParty?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: documentInstance, field: 'createdBy', 'error')} ">

@@ -1,4 +1,4 @@
-<%@ page import="org.ihc.esa.domain.*"%>
+<%@ page import="org.ihc.esa.*"%>
 <!doctype html>
 <html>
 <head>

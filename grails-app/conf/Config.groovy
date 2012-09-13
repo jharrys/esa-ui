@@ -167,6 +167,6 @@ grails.plugins.twitterbootstrap.fixtaglib = true
 grails.plugins.twitterbootstrap.defaultBundle = 'bundle_bootstrap'
 
 // Added by the Spring Security Core plugin:
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.ihc.esa.domain.EsaUser'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.ihc.esa.domain.EsaUserEsaRole'
-grails.plugins.springsecurity.authority.className = 'org.ihc.esa.domain.EsaRole'
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.ihc.esa.EsaUser'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.ihc.esa.EsaUserEsaRole'
+grails.plugins.springsecurity.authority.className = 'org.ihc.esa.EsaRole'

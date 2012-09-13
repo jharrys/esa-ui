@@ -1,4 +1,4 @@
-<%@ page import="org.ihc.esa.domain.LookupList" %>
+<%@ page import="org.ihc.esa.LookupList" %>
 
 
 
