@@ -4,7 +4,7 @@
 <!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
 <!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!-->
-<html lang="en" class="no-js">
+<html lang="en">
 <!--<![endif]-->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14,15 +14,12 @@
 <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
 <link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
 <link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
-<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
-<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
-<r:require modules="blueprint" />
+<r:require modules="bootstrap" />
 <g:layoutHead />
 <r:layoutResources />
 </head>
 <body>
 
-	<!-- begin blueprint container -->
 	<div class="container">
 
 		<div id="header" class="header" role="banner">
@@ -43,7 +40,6 @@
 		</div>
 		
 	</div>
-	<!-- end blueprint container -->
 	
 	<g:javascript library="application" />
 	<r:layoutResources />
