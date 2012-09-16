@@ -23,6 +23,9 @@ class Document
 		owner + " - " + requestor
 	}
 	
+	// part of searchable plugin
+	static searchable = true
+	
 	static transients = ['title']
 	
 	static hasMany = [
@@ -69,9 +72,5 @@ class Document
 		vendorRepresentativeParty nullable: true
 		createdBy nullable: true
 		updatedBy nullable: true
-	}
-	
-	String toString() {
-		this.getTitle()
 	}
 }

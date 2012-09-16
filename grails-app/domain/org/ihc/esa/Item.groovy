@@ -35,6 +35,9 @@ class Item
 	Date lastUpdated
 	String updatedBy
 	
+	// part of searchable plugin
+	static searchable = true
+	
 	static hasMany = [
 		itemConversions: ItemUnitsConversion,
 		itemVersions: ItemVersion,
