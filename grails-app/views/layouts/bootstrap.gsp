@@ -43,9 +43,10 @@
 					<div class="nav-collapse">
 						<ul class="nav">							
 							<li<%= request.forwardURI == "${createLink(uri: '/')}" ? ' class="active"' : '' %>><a href="${createLink(uri: '/')}">Home</a></li>
-							<li class="active"><g:link controller="exception">Exception</g:link></li>
-							<li class="active"><g:link controller="item">Items</g:link></li>
-							<li class="active"><g:link controller="lookupList">Lookup Lists</g:link></li>
+							<li><g:link controller="exception">Exception</g:link></li>
+							<li><g:link controller="item">Items</g:link></li>
+							<li><g:link controller="lookupList">Lookup Lists</g:link></li>
+							<li><g:link controller="esa">Request An Architect (RAA!)</g:link></li>
 						</ul>
 					</div>
 				</div>

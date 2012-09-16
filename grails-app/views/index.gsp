@@ -12,17 +12,16 @@
 			<div class="well sidebar-nav">
 				<h3>EISA</h3>
 				<ul>
-					<li>Standards Database</li>
-					<li><g:link class="manage" controller="exception" action="list">Exception Requests</g:link></li>
+					<li><g:link controller="standards" action="index">Browse Standards</g:link></li>
+					<li><g:link controller="exception" action="list">Exception Requests</g:link></li>
 				</ul>
 				<h3>Administrative</h3>
 				<ul>
-					<li><g:link class="manage" controller="item" action="list">Manage Items</g:link></li>
-					<li><g:link class="manage" controller="itemVersion" action="list">Manage Item Versions</g:link></li>
-					<li><g:link class="manage" controller="lookupList" action="list">Manage Lookup Lists</g:link></li>
-					<li><g:link class="manage" controller="document" action="list">Manage Documents</g:link></li>
+					<li><g:link controller="item" action="list">Manage Items</g:link></li>
+					<li><g:link controller="itemVersion" action="list">Manage Item Versions</g:link></li>
+					<li><g:link controller="lookupList" action="list">Manage Lookup Lists</g:link></li>
+					<li><g:link controller="document" action="list">Manage Documents</g:link></li>
 					<li><a href="<g:createLink controller='user' action='search'/>" target="_blank">Manage Users</a></li>
-					<li><g:link class="manage" controller="esaRole" action="list">Manage Roles</g:link></li>
 				</ul>
 			</div>
 
@@ -58,17 +57,6 @@
 						<li>Find status of a Standard</li>
 						<li>Submit standard recommendations to the EARB</li>
 						<li>Innovation Lab</li>
-					</ul>
-					<p>Idea: add 1st year anniversary of ESA, Enterprise Solutions Architecture (do some marketing)</p>
-				</div>
-
-				<div class="span4">
-					<ul class="nav nav-list">
-						<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-							<li><g:link controller="${c.logicalPropertyName}">
-									${c.naturalName}
-								</g:link></li>
-						</g:each>
 					</ul>
 				</div>
 
