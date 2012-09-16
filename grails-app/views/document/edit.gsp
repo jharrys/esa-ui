@@ -29,7 +29,6 @@
 			</g:hasErrors>
 			<g:form method="post" >
 				<g:hiddenField name="id" value="${documentInstance?.id}" />
-				<g:hiddenField name="version" value="${documentInstance?.version}" />
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>

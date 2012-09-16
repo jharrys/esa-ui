@@ -1,6 +1,5 @@
 package org.ihc.esa
 
-import org.ihc.esa.Document;
 import org.springframework.dao.DataIntegrityViolationException
 
 class DocumentController {
@@ -53,22 +52,12 @@ class DocumentController {
         [documentInstance: documentInstance]
     }
 
-    def update(Long id, Long version) {
+    def update(Long id) {
         def documentInstance = Document.get(id)
         if (!documentInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), id])
             redirect(action: "list")
             return
-        }
-
-        if (version != null) {
-            if (documentInstance.version > version) {
-                documentInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'document.label', default: 'Document')] as Object[],
-                          "Another user has updated this Document while you were editing")
-                render(view: "edit", model: [documentInstance: documentInstance])
-                return
-            }
         }
 
         documentInstance.properties = params
