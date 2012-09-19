@@ -7,6 +7,7 @@ class EsaUser
 	
 	String username
 	String password
+	String email_address
 	boolean enabled
 	boolean accountExpired
 	boolean accountLocked
@@ -16,6 +17,7 @@ class EsaUser
 	{
 		username blank: false, unique: true
 		password blank: false
+		email_address blank: false, email: true
 	}
 	
 	static mapping =

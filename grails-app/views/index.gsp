@@ -11,12 +11,13 @@
 
 			<div class="well sidebar-nav">
 				<h3>EISA</h3>
-				<ul>
+				<ul class="nav nav-pills nav-stacked">
 					<li><g:link controller="standards" action="index">Browse Standards</g:link></li>
 					<li><g:link controller="exception" action="list">Exception Requests</g:link></li>
+					<li><g:link controller="standards" action="definitions">Definitions</g:link></li>
 				</ul>
 				<h3>Administrative</h3>
-				<ul>
+				<ul class="nav nav-pills nav-stacked">
 					<li><g:link controller="item" action="list">Manage Items</g:link></li>
 					<li><g:link controller="itemVersion" action="list">Manage Item Versions</g:link></li>
 					<li><g:link controller="lookupList" action="list">Manage Lookup Lists</g:link></li>

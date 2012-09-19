@@ -1,4 +1,3 @@
-import grails.plugins.springsecurity.SecurityConfigType
 
 
 // locations to search for config files that get merged into the main config
@@ -172,7 +171,7 @@ grails.plugins.twitterbootstrap.defaultBundle = 'bundle_bootstrap'
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.ihc.esa.EsaUser'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.ihc.esa.EsaUserEsaRole'
 grails.plugins.springsecurity.authority.className = 'org.ihc.esa.EsaRole'
-grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
-grails.plugins.springsecurity.interceptUrlMap = [
-	'/user/**':		['ROLE_ADMIN', 'IS_AUTHENTICATED_FULLY']	
-]
+//grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
+//grails.plugins.springsecurity.interceptUrlMap = [
+//	'/user/**':		['ROLE_ADMIN', 'IS_AUTHENTICATED_FULLY']	
+//]

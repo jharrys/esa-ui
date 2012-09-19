@@ -1,11 +1,13 @@
 package org.ihc.esa
 
-import org.ihc.esa.Item;
+import org.compass.core.engine.SearchEngineQueryParseException
 import org.springframework.dao.DataIntegrityViolationException
 
 class ItemController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+	
+	def searchableService
 
     def index() {
         redirect(action: "list", params: params)
@@ -15,6 +17,17 @@ class ItemController {
         params.max = Math.min(max ?: 10, 100)
         [itemInstanceList: Item.list(params), itemInstanceTotal: Item.count()]
     }
+	
+	def itemSearch() {
+		if (!params.q?.trim()) {
+			return [:]
+		}
+		try {
+			return [searchResult: searchableService.search(params.q, params)]
+		} catch (SearchEngineQueryParseException ex) {
+			return [parseException: true]
+		}
+	}
 
     def create() {
         [itemInstance: new Item(params)]

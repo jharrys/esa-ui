@@ -1,51 +1,76 @@
 package org.ihc.esa
 
+import grails.plugins.springsecurity.Secured
+
 import org.springframework.dao.DataIntegrityViolationException
 
-class ExceptionController {
+class ExceptionController
+{
+	private final static int EXCEPTION_FORM=1
 	
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	
-	def index() {
+	def springSecurityService
+	
+	def index()
+	{
 		redirect(action: "list", params: params)
 	}
 	
-	def list() {
+	def list()
+	{
+		def exceptionForm = Form.get(EXCEPTION_FORM)
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
-		[documentInstanceList: Document.list(params), documentInstanceTotal: Document.count()]
+		[documentInstanceList: Document.findAllByForm(exceptionForm, [max: params.max, offset: params.offset, sort: "id"]), documentInstanceTotal: Document.count()]
 	}
 	
-	def bpgrid() {
-		[hello: "remove after testing"]
+	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
+	def create()
+	{
+		// do something here if needed.
 	}
 	
-	def tester() {
-		def rootList = ConfigurationCatalog.executeQuery("from Item where id not in (select distinct elementItem from ConfigurationCatalog) order by id asc")
-		[rootList: rootList]
-	}
-	
-	def create() {
+	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
+	def old_create()
+	{
 		// TODO fix hard coded form for exception
 		// TODO add error trapping for when form 1 is not found
-		def f = Form.get(1)	// 1 is seeded in the FORM table as the exception form
+		def exceptionForm = Form.get(1)	// 1 is seeded in the FORM table as the exception form
 		// use a deque for thisFormSectionList so you can pop of each one as they come through. will need to order by desc because of LIFO
-		if (f == null) {
+		if (exceptionForm == null) {
 			//flash.message = "Failed to find Form 1, which is the Exception Form"
 			render(status: 503, text: 'Failed to find Form 1, designated as the Exception Form')
 		} else {
-			def query = 'select distinct ff.sectionNumber from FormField ff where ff.form=' + f.id + ' order by ff.sectionNumber asc'
-			ArrayDeque sectionStack = FormField.executeQuery(query)
-			System.out.println(sectionStack);
+		
+			// setup section numbers
+			def listOfSectionNumbers = 'select distinct ff.sectionNumber from FormField ff where ff.form=' + exceptionForm.id + ' order by ff.sectionNumber asc'
+			ArrayDeque sectionStack = FormField.executeQuery(listOfSectionNumbers)
 			def currentSection = sectionStack.pop()
-			Document doc = new Document(form:f, requestor: "john", requestorEmail: "john@imail.org", owner: "jj", ownerEmail: "jj@imail.org", 
-				createdBy: "J", updatedBy: "J", justification: "to be modified")
+			
+			// setup new exception document
+			String requestorString = "-individual filling out this form-"					// Get from spring-security
+			String requestorEmailString = "-email of individual filling out this form-"		// Get from spring-security
+			String createdByString = requestorString										// Get from spring-security
+			String updatedByString = requestorString										// Get from spring-security
+			String ownerString = "-owner of the system-"									// Needs a preliminary screen
+			String ownerEmailString = "-email of owner of the system-"						// Needs a preliminary screen
+			String justificationString = "-this needs to be modified-"
+			
+			Party party = Party.get(1)
+			
+			Document doc = new Document(form:exceptionForm, requestor: requestorString, requestorEmail: requestorEmailString, owner: ownerString, 
+				ownerEmail: ownerEmailString, createdBy: createdByString, updatedBy: updatedByString, justification: justificationString, 
+				vendorRepresentativeParty: party)
 			doc.save()
-			[documentInstance: doc, formid: f.id, section: currentSection, sectionStack: sectionStack, 
-				formFields: FormField.findAllByFormAndSectionNumber(f, currentSection, [sort: "id"])]
+			
+			
+			[documentInstance: doc, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
+				formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"])]
 		}
 	}
 	
-	def create_next() {
+	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
+	def save_section() {
 		// TODO NPE check needed here
 		def document = params.document
 		// TODO NPE check needed here
@@ -54,14 +79,39 @@ class ExceptionController {
 		ArrayDeque sectionStack = new ArrayDeque(params.list("sectionStack"))
 		if (!sectionStack.isEmpty()) {
 			def currentSection = sectionStack.pop()
-			render(view: "create", model: [document: document, formid: form.id, section: currentSection, sectionStack: sectionStack, 
+			render(view: "create", model: [document: document, formid: form.id, section: currentSection, sectionStack: sectionStack,
 				formFields: FormField.findAllByFormAndSectionNumber(form, currentSection, [sort: "id"])])
 		} else {
 			render("Form Submitted!")
 		}
 	}
 	
+	/**
+	 * this saves a brand new @see org.ihc.esa.Document
+	 * and nothing else.
+	 */
+	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def save() {
+		def exceptionForm = Form.get(1) // TODO fix this
+		def party = Party.get(1) 		// TODO remove this requirement
+		Document doc = null
+		
+		if (exceptionForm == null) {
+			//flash.message = "Failed to find Form 1, which is the Exception Form"
+			render(status: 503, text: 'Failed to find Form 1, designated as the Exception Form')
+			return
+		}
+		
+		def user = springSecurityService.currentUser
+		doc = new Document(form: exceptionForm, requestor: params.requestor, requestorEmail: params.requestorEmail, owner: params.owner,
+			ownerEmail: params.ownerEmail, createdBy: user.username, updatedBy: user.username, justification: params.justification,
+			vendorRepresentativeParty: party)
+		doc.save()
+		render(text: "Succeeded!")
+	}
+	
+	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
+	def old_save() {
 		def documentInstance = new Document(params)
 		if (!documentInstance.save(flush: true)) {
 			render(view: "create", model: [documentInstance: documentInstance])

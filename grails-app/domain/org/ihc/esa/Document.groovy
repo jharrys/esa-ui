@@ -20,7 +20,7 @@ class Document
 	String updatedBy
 	
 	String getTitle() {
-		owner + " - " + requestor
+		id + "-" + requestor
 	}
 	
 	// part of searchable plugin
