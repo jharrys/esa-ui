@@ -4,110 +4,104 @@
 <html>
 <head>
 <meta name="layout" content="bootstrap">
-<title>Catalog Items</title>
+<g:set var="entityName" value="${message(code: 'item.label', default: 'Item')}" />
+<title><g:message code="default.list.label" args="[entityName]" /></title>
 </head>
 <body>
-
 	<div class="row-fluid">
 
-		<aside id="application-status" class="span2">
-
-			<div class="well sidebar-nav">
-				<h3>Catalog Menu</h3>
-				<ul class="nav nav-pills nav-stacked">
-					<li class="active"><g:link action="list">List Items</g:link></li>
-					<li><g:link action="create">
-							Create New Items
+		<div class="span2">
+			<div class="well">
+				<ul class="nav nav-list">
+					<li class="nav-header">
+						${entityName}
+					</li>
+					<li class="active"><g:link action="list">
+							<i class="icon-list icon-white"></i>
+							<g:message code="default.list.label" args="[entityName]" />
 						</g:link></li>
-					<li>
-                        <g:form class="form-search" action="itemSearch" >
-                            <div class="input-append">
-                                <input type="text" class="span7 search-query" name="q" id="q">
-                                <button type="submit" value="Search" class="btn">Find</button>
-                            </div>
-                        </g:form>
-                    </li>
+					<li><g:link action="create">
+							<i class="icon-plus"></i>
+							<g:message code="default.create.label" args="[entityName]" />
+						</g:link></li>
 				</ul>
 			</div>
+		</div>
 
-		</aside>
+		<div class="span9">
 
-		<section id="main" class="span9">
+			<g:if test="${flash.message}">
+				<bootstrap:alert class="alert-info">
+					${flash.message}
+				</bootstrap:alert>
+			</g:if>
 
-			<div class="hero-unit">
-				<h2>Catalog Items</h2>
-				<g:if test="${flash.message}">
-					<div class="alert alert-block">
-						${flash.message}
-					</div>
-				</g:if>
+			<table class="table table-striped">
+				<thead>
+					<tr>
 
-				<table class="table table-striped table-bordered">
-					<thead>
-						<tr>
+						<g:sortableColumn property="name" title="${message(code: 'item.name.label', default: 'Name')}" />
 
-							<g:sortableColumn property="name" title="${message(code: 'item.name.label', default: 'Category / Name')}" />
+						<g:sortableColumn property="description" title="${message(code: 'item.description.label', default: 'Description')}" />
 
-							<g:sortableColumn property="description" title="${message(code: 'item.description.label', default: 'Description')}" />
+						<g:sortableColumn property="sourceSystem" title="${message(code: 'item.sourceSystem.label', default: 'Source System')}" />
 
-							<g:sortableColumn property="sourceSystem" title="${message(code: 'item.sourceSystem.label', default: 'Source System')}" />
+						<g:sortableColumn property="standard" title="${message(code: 'item.standard.label', default: 'Standard')}" />
 
-							<g:sortableColumn property="standard" title="${message(code: 'item.standard.label', default: 'IH Standard')}" />
+						<th class="header"><g:message code="item.document.label" default="Document" /></th>
 
-							<th><g:message code="item.document.label" default="Linked Document" /></th>
+						<g:sortableColumn property="intermountainItemNumber" title="${message(code: 'item.intermountainItemNumber.label', default: 'Intermountain Item Number')}" />
 
-							<g:sortableColumn property="intermountainItemNumber" title="${message(code: 'item.intermountainItemNumber.label', default: 'IH Item #')}" />
 
-							<th><g:message code="item.vendorParty.label" default="Vendor Party" /></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<g:each in="${itemInstanceList}" var="itemInstance">
+						<g:set var="isStandard" value="${itemInstance.standard == 'Y' ? true:false }"></g:set>
+						<tr class="${isStandard }">
 
+							<td>
+								${fieldValue(bean: itemInstance, field: "name")}
+							</td>
+
+							<td>
+								${fieldValue(bean: itemInstance, field: "description")}
+							</td>
+
+							<td>
+								${fieldValue(bean: itemInstance, field: "sourceSystem")}
+							</td>
+
+							<td>
+							
+							    <g:if test="${isStandard }">
+							     Yes
+							     </g:if> 
+							     <g:else>
+									<span class="label label-important">No</span>
+								</g:else>
+							
+							</td>
+
+							<td>
+								${itemInstance.document?.title}
+							</td>
+
+							<td>
+								${fieldValue(bean: itemInstance, field: "intermountainItemNumber")}
+							</td>
+
+
+							<td class="link"><g:link action="show" id="${itemInstance.id}" class="btn btn-small">Show &raquo;</g:link></td>
 						</tr>
-					</thead>
-					<tbody>
-						<g:each in="${itemInstanceList}" status="i" var="itemInstance">
-							<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-
-								<td>
-									${fieldValue(bean: itemInstance, field: "name")}
-								</td>
-
-								<td>
-									${fieldValue(bean: itemInstance, field: "description")}
-								</td>
-
-								<td>
-									${fieldValue(bean: itemInstance, field: "sourceSystem")}
-								</td>
-
-								<td>
-									${fieldValue(bean: itemInstance, field: "standard")}
-								</td>
-
-								<td>
-									${fieldValue(bean: itemInstance, field: "document")}
-								</td>
-
-								<td>
-									${fieldValue(bean: itemInstance, field: "intermountainItemNumber")}
-								</td>
-
-								<td>
-									${fieldValue(bean: itemInstance, field: "vendorParty.name")}
-								</td>
-
-
-
-							</tr>
-						</g:each>
-					</tbody>
-				</table>
-
-				<div class="pagination">
-					<g:paginate total="${itemInstanceTotal}" />
-				</div>
-
+					</g:each>
+				</tbody>
+			</table>
+			<div class="pagination">
+				<bootstrap:paginate total="${itemInstanceTotal}" />
 			</div>
-
-		</section>
+		</div>
 
 	</div>
 </body>

@@ -2,8 +2,6 @@ package org.ihc.esa
 
 
 
-import org.ihc.esa.ItemController;
-import org.ihc.esa.Item;
 import org.junit.*
 import grails.test.mixin.*
 
