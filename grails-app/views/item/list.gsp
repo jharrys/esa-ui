@@ -52,7 +52,6 @@
 
 						<g:sortableColumn property="intermountainItemNumber" title="${message(code: 'item.intermountainItemNumber.label', default: 'Intermountain Item Number')}" />
 
-
 						<th></th>
 					</tr>
 				</thead>

@@ -48,6 +48,8 @@
 
 							<g:sortableColumn property="sirpId" title="${message(code: 'document.sirpId.label', default: 'Security Incident Response Id')}" />
 
+                            <th></th>
+
 						</tr>
 					</thead>
 					<tbody>
@@ -67,8 +69,15 @@
 								</td>
 
 								<td>
-									${fieldValue(bean: documentInstance, field: "sirpId")}
+								    <g:if test="${(documentInstance.sirpId != null) && (!documentInstance.sirpId.empty) }">
+									   ${fieldValue(bean: documentInstance, field: "sirpId")}
+								    </g:if>
+								    <g:else>
+								        <span class="muted">SIRP will be provided by ISSA when their review is complete</span>
+									</g:else>
 								</td>
+								
+								<td class="link"><g:link action="show" id="${documentInstance.id}" class="btn btn-small">Show &raquo;</g:link></td>
 
 							</tr>
 						</g:each>

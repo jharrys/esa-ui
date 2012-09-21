@@ -2,13 +2,15 @@ package org.ihc.esa
 
 import grails.plugins.springsecurity.Secured
 
+import java.util.ArrayDeque
+
 import org.springframework.dao.DataIntegrityViolationException
 
 class ExceptionController
 {
 	private final static int EXCEPTION_FORM=1
 	
-	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+	static allowedMethods = [edit: ['GET', 'POST'], save: "POST", update: "POST", delete: "POST"]
 	
 	def springSecurityService
 	
@@ -69,6 +71,17 @@ class ExceptionController
 		}
 	}
 	
+	def show() {
+		def exceptionInstance = Document.get(params.id)
+		if (!exceptionInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'exception.label', default: 'Exception'), params.id])
+			redirect action: 'list'
+			return
+		}
+
+		[exceptionInstance: exceptionInstance]
+	}
+	
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def save_section() {
 		// TODO NPE check needed here
@@ -119,10 +132,10 @@ class ExceptionController
 		}
 		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
-		redirect(action: "show", id: documentInstance.id)
+		redirect(action: "show_old", id: documentInstance.id)
 	}
 	
-	def show() {
+	def show_old() {
 		def documentInstance = Document.get(params.id)
 		if (!documentInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
@@ -134,14 +147,37 @@ class ExceptionController
 	}
 	
 	def edit() {
-		def documentInstance = Document.get(params.id)
-		if (!documentInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
-			redirect(action: "list")
-			return
+		switch (request.method) {
+			case 'GET':
+				def exceptionInstance = Document.get(params.id)
+				if (!exceptionInstance) {
+					flash.message = message(code: 'default.not.found.message', args: [message(code: 'exception.label', default: 'Exception'), params.id])
+					redirect action: 'list'
+					return
+				}
+	
+				[exceptionInstance: exceptionInstance]
+				break
+				
+			case 'POST':
+				def exceptionInstance = Document.get(params.id)
+				if (!exceptionInstance) {
+					flash.message = message(code: 'default.not.found.message', args: [message(code: 'exception.label', default: 'Exception'), params.id])
+					redirect action: 'list'
+					return
+				}
+	
+				exceptionInstance.properties = params
+	
+				if (!exceptionInstance.save(flush: true)) {
+					render view: 'edit', model: [exceptionInstance: exceptionInstance]
+					return
+				}
+	
+				flash.message = message(code: 'default.updated.message', args: [message(code: 'exception.label', default: 'Exception'), exceptionInstance.id])
+				redirect action: 'show', id: exceptionInstance.id
+				break
 		}
-		
-		[documentInstance: documentInstance]
 	}
 	
 	def update() {
@@ -171,7 +207,7 @@ class ExceptionController
 		}
 		
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
-		redirect(action: "show", id: documentInstance.id)
+		redirect(action: "show_old", id: documentInstance.id)
 	}
 	
 	def delete() {
@@ -189,7 +225,7 @@ class ExceptionController
 		}
 		catch (DataIntegrityViolationException e) {
 			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'document.label', default: 'Document'), params.id])
-			redirect(action: "show", id: params.id)
+			redirect(action: "show_old", id: params.id)
 		}
 	}
 }
