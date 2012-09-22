@@ -1,17 +1,5 @@
-
-
-// locations to search for config files that get merged into the main config
-// config files can either be Java properties files or ConfigSlurper scripts
-
-// grails.config.locations = [ "classpath:${appName}-config.properties",
-//                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.grails/${appName}-config.properties",
-//                             "file:${userHome}/.grails/${appName}-config.groovy"]
-
-// if (System.properties["${appName}.config.location"]) {
-//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
-
+// See http://grails.org/doc/latest/guide/conf.html#configExternalized
+grails.config.locations = [ "classpath: john_log4j.groovy" ]
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
@@ -109,42 +97,6 @@ Environments {
     }
 }
 
-log4j = {
-    // Example of changing the log pattern for the default console
-    // appender:
-    //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
-	
-
-    error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
-           'org.codehaus.groovy.grails.web.pages', //  GSP
-           'org.codehaus.groovy.grails.web.sitemesh', //  layouts
-           'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
-           'org.codehaus.groovy.grails.web.mapping', // URL mapping
-           'org.codehaus.groovy.grails.commons', // core / classloading
-           'org.codehaus.groovy.grails.plugins', // plugins
-           'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
-           'org.springframework',
-           'org.hibernate',
-           'net.sf.ehcache.hibernate'
-		   
-   debug	'grails.app.controller',
-   			'grails.app.service',
-			'grails.app.domain',
-			'grails.app',
-			'org.hibernate.SQL',
-			'grails.plugins.twitterbootstrap'
-   
-   trace	'org.hibernate.type'
-
-   root {
-    	error 'stdout', 'errorlog'
-    	additivity = true
-    }
-}
-
 // Added by the Joda-Time plugin:
 grails.gorm.default.mapping = {
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentDateMidnight, class: org.joda.time.DateMidnight
@@ -175,3 +127,19 @@ grails.plugins.springsecurity.authority.className = 'org.ihc.esa.EsaRole'
 //grails.plugins.springsecurity.interceptUrlMap = [
 //	'/user/**':		['ROLE_ADMIN', 'IS_AUTHENTICATED_FULLY']	
 //]
+
+// Spring Security UI
+grails.plugins.springsecurity.ui.register.postRegisterUrl = '/welcome'	//TODO make this sensible
+grails.plugins.springsecurity.ui.register.emailBody = '...'				//TODO security registration
+grails.plugins.springsecurity.ui.register.emailFrom = '...'				//TODO security registration
+grails.plugins.springsecurity.ui.register.emailSubject = '...'			//TODO security registration
+grails.plugins.springsecurity.ui.register.defaultRoleNames = [] 		//TODO no roles
+//TODO spring security UI uses the mail plugin, so need to configure smtp
+//TODO grails s2ui-override register to copy the registration controller and GSPs into your application to be customized
+//TODO s2-create-persistent-token
+//TODO customizations: s2ui-override <type> <controller-package>
+//TODO The plugin defines its CSS styles in web-app/css/spring-security-ui.css and most of the jQuery plugins have corresponding CSS files. 
+//These can be overridden by overriding the springSecurityUI.gsp template and including your CSS file(s).
+
+
+

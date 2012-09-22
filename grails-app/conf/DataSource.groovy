@@ -43,20 +43,14 @@ environments
 	{
 		dataSource
 		{
-			dbCreate = "update"
-			url = "jdbc:h2:prodDb;MVCC=TRUE"
-			pooled = true
-			properties
-			{
-				maxActive = -1
-				minEvictableIdleTimeMillis=1800000
-				timeBetweenEvictionRunsMillis=1800000
-				numTestsPerEvictionRun=3
-				testOnBorrow=true
-				testWhileIdle=true
-				testOnReturn=true
-				validationQuery="SELECT 1"
-			}
+			// one of 'create', 'create-drop', 'update', 'validate', ''
+			dbCreate = "validate"
+			driverClassName = "oracle.jdbc.OracleDriver"
+			username = "esa"
+			password = "esa"
+			dialect = "org.hibernate.dialect.Oracle10gDialect"
+			url = "jdbc:oracle:thin:@192.168.56.101:1521:esa"
+			// logSql = true
 		}
 	}
 }
