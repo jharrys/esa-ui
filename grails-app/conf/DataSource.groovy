@@ -28,6 +28,12 @@ environments
 			url = "jdbc:oracle:thin:@192.168.56.101:1521:esa"
 			// logSql = true
 		}
+		
+		//		dataSource
+		//		{
+		//			dbCreate = "update"
+		//			url = "jdbc:h2:mem:testDb;MVCC=TRUE"
+		//		}
 	}
 	
 	test

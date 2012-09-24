@@ -2,8 +2,6 @@ package org.ihc.esa
 
 import grails.plugins.springsecurity.Secured
 
-import java.util.ArrayDeque
-
 import org.springframework.dao.DataIntegrityViolationException
 
 class ExceptionController
@@ -13,15 +11,20 @@ class ExceptionController
 	static allowedMethods = [edit: ['GET', 'POST'], save: "POST", update: "POST", delete: "POST"]
 	
 	def springSecurityService
-	
-	def index()
+
+		def index()
 	{
+		log.debug("redirection to list action of ExceptionController")
 		redirect(action: "list", params: params)
 	}
 	
 	def list()
 	{
+		log.debug("EXCEPTION_FORM set to: " + EXCEPTION_FORM)
 		def exceptionForm = Form.get(EXCEPTION_FORM)
+		
+		if (exceptionForm) log.debug("form of type exception<id:" + exceptionForm.id + "> acquired")
+		
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		[documentInstanceList: Document.findAllByForm(exceptionForm, [max: params.max, offset: params.offset, sort: "id"]), documentInstanceTotal: Document.count()]
 	}
@@ -29,6 +32,7 @@ class ExceptionController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def create()
 	{
+		log.debug("this is empty, do I need something here?")
 		// do something here if needed.
 	}
 	

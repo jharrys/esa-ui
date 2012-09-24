@@ -2,8 +2,6 @@ package org.ihc.esa
 
 
 
-import org.ihc.esa.LookupElementController;
-import org.ihc.esa.LookupElement;
 import org.junit.*
 import grails.test.mixin.*
 

@@ -2,8 +2,6 @@ package org.ihc.esa
 
 
 
-import org.ihc.esa.DocumentController;
-import org.ihc.esa.Document;
 import org.junit.*
 import grails.test.mixin.*
 

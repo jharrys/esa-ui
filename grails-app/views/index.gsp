@@ -14,15 +14,8 @@
 				<ul class="nav nav-pills nav-stacked">
 					<li><g:link controller="standards" action="index">Browse Standards</g:link></li>
 					<li><g:link controller="exception" action="list">Exception Requests</g:link></li>
-					<li><g:link controller="standards" action="definitions">Definitions</g:link></li>
-				</ul>
-				<h3>Administrative</h3>
-				<ul class="nav nav-pills nav-stacked">
-					<li><g:link controller="item" action="list">Manage Items</g:link></li>
-					<li><g:link controller="itemVersion" action="list">Manage Item Versions</g:link></li>
-					<li><g:link controller="lookupList" action="list">Manage Lookup Lists</g:link></li>
-					<li><g:link controller="document" action="list">Manage Documents</g:link></li>
-					<li><a href="<g:createLink controller='user' action='search'/>" target="_blank">Manage Users</a></li>
+					<li><g:link controller="earb" action="index">EARB Documents</g:link></li>
+					<li><g:link controller="admin" action="admin">Administration</g:link></li>
 				</ul>
 			</div>
 

@@ -13,7 +13,6 @@
 				<h3>EISA</h3>
 				<ul class="nav nav-pills nav-stacked">
 					<li><g:link controller="standards" action="search">Search Standards</g:link></li>
-					<li><g:link controller="exception" action="list">Apply for an Exception</g:link></li>
 					<li><g:link controller="earb" action="browse">Browse EARB Documents</g:link></li>
 					<li><g:link controller="earb" action="meetings">EARB Meetings and Agenda</g:link></li>
 					<li><g:link controller="idea" action="browse">IDEA</g:link></li>

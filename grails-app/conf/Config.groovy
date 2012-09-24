@@ -1,6 +1,3 @@
-// See http://grails.org/doc/latest/guide/conf.html#configExternalized
-grails.config.locations = [ "classpath: john_log4j.groovy" ]
-
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
@@ -28,17 +25,22 @@ grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
 grails.views.default.codec = "none" // none, html, base64
 grails.views.gsp.encoding = "UTF-8"
 grails.converters.encoding = "UTF-8"
+
 // enable Sitemesh preprocessing of GSP pages
 grails.views.gsp.sitemesh.preprocess = true
+
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
 
 // Set to false to use the new Grails 1.2 JSONBuilder in the render method
 grails.json.legacy.builder = false
+
 // enabled native2ascii conversion of i18n properties files
 grails.enable.native2ascii = true
+
 // packages to include in Spring bean scanning
 grails.spring.bean.packages = []
+
 // whether to disable processing of multi part requests
 grails.web.disable.multipart=false
 
@@ -48,9 +50,12 @@ grails.exceptionresolver.params.exclude = ['password']
 // enable query caching by default
 grails.hibernate.cache.queries = true
 
-Environments {
+environments {
     development {
         grails.logging.jul.usebridge = true
+		
+		// mask out secure fields - keep this off in development. TODO create tests for this
+		// grails.exceptionresolver.params.exclude = ['password', 'creditCard']
 		
 		// spring-security-mock plugin
 		// for user details service see conf/spring/resources.groovy
@@ -71,6 +76,9 @@ Environments {
 	test {
 		grails.logging.jul.usebridge = true
 		
+		// mask out secure fields
+		grails.exceptionresolver.params.exclude = ['password', 'creditCard']
+		
 		// spring-security-mock exposes a large security hole
 		grails.plugins.springsecurity.mock.active = false
 		
@@ -82,7 +90,10 @@ Environments {
 	}
 	
     production {
-        grails.logging.jul.usebridge = false
+        grails.logging.jul.usebridge = true
+		
+		// mask out secure fields
+		grails.exceptionresolver.params.exclude = ['password', 'creditCard']
 		
 		// spring-security-mock exposes a large security hole
 		grails.plugins.springsecurity.mock.active = false
@@ -93,9 +104,22 @@ Environments {
 		// the full DN will be equivalent to "cn=${username},${userDnBase}"
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = true
 		
-        // TODO: grails.serverURL = "http://www.changeme.com"
+        grails.serverURL = "http://192.168.56.101:8080"
     }
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+log4j =
+{
+	debug 	'grails.app.controllers'
+	/*
+	root {
+		error 'stdout'
+	}*/
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Added by the Joda-Time plugin:
 grails.gorm.default.mapping = {
@@ -141,5 +165,31 @@ grails.plugins.springsecurity.ui.register.defaultRoleNames = [] 		//TODO no role
 //TODO The plugin defines its CSS styles in web-app/css/spring-security-ui.css and most of the jQuery plugins have corresponding CSS files. 
 //These can be overridden by overriding the springSecurityUI.gsp template and including your CSS file(s).
 
+// See http://grails.org/doc/latest/guide/conf.html#configExternalized
+grails.config.locations = [ "classpath:log4j.properties" ]
 
+// Add the ability to have a configuration file external to the WAR defined by environment variable pointed to by ESA_EXTERNAL_CONFIG
+def ESA_EXTERNAL_CONFIG = "ESAUI_CONFIG_FILE"
+boolean locationSet = false
+if(!grails.config.locations || !(grails.config.locations instanceof List)) {
+	grails.config.locations = []
+} else {
+	locationSet = true
+}
+
+// Check environment and add external configuration file
+if(System.getenv(ESA_EXTERNAL_CONFIG)) {
+	grails.config.locations << "file:" + System.getenv(ESA_EXTERNAL_CONFIG)
+	locationSet = true
+} else if(System.getProperty(ESA_EXTERNAL_CONFIG)) {
+	grails.config.locations << "file:" + System.getProperty(ESA_EXTERNAL_CONFIG)
+	locationSet = true
+}
+
+// Print out whether location was set or not
+if (locationSet) {
+	println "grails.config.locations: " + grails.config.locations
+} else {
+	println "grails.config.locations: <not set>"
+}
 

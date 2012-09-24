@@ -5,8 +5,9 @@ import org.springframework.dao.DataIntegrityViolationException
 class ItemController {
 
     static allowedMethods = [create: ['GET', 'POST'], edit: ['GET', 'POST'], delete: 'POST']
-
+	
     def index() {
+		log.debug("redirecting to list action of ItemController")
         redirect action: 'list', params: params
     }
 
