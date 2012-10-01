@@ -11,8 +11,9 @@
 </head>
 <body>
 
-    <g:logMsg level="debug">Rendering inside save_section.gsp</g:logMsg>
-    <g:logMsg level="debug">Params are: ${params }</g:logMsg>
+	<g:logMsg level="debug">Rendering inside save_section.gsp</g:logMsg>
+	<g:logMsg level="debug">Params are: ${params }
+	</g:logMsg>
 
 	<div class="row-fluid">
 
@@ -37,7 +38,7 @@
 				<% if (max != null) { %>
 			<%= "of  ${max}" %>
 			<% } %>
-			(${sectionTitle })
+				(${sectionTitle })
 			</h3>
 
 			<g:if test="${flash.message}">
@@ -56,40 +57,23 @@
 				</bootstrap:alert>
 			</g:hasErrors>
 
-            <fieldset>
-			<g:form class="form-horizontal" action="save_section" params="${[sectionStack: sectionStack] }">
-                <g:hiddenField name="id" value="${documentInstance?.id}" />
-                <g:hiddenField name="formid" value="${formid}" />
+			<fieldset>
+				<g:form action="save_section" params="${[sectionStack: sectionStack] }">
+					<g:hiddenField name="id" value="${documentInstance?.id}" />
+					<g:hiddenField name="formid" value="${formid}" />
 
-				<table summary="Two column table with labels and inputs" border="0" cellspacing="0" cellpadding="0">
-					<thead>
-						<tr>
-							<th class="span4"></th>
-							<th class="span7 offset1"></th>
-						</tr>
-					</thead>
-					<tfoot>
-						<tr>
-							<td colspan="2">
-								<div class="form-actions">
-									<button type="submit" class="btn btn-primary">
-									   <i class="icon-ok icon-white"></i>
-									   Next Section
-									</button>
-									<button type="submit" class="btn btn-danger" name="_action_cancel">
-                                       <i class="icon-remove icon-white"></i>
-                                       Cancel
-                                    </button>
-								</div>
-							</td>
-						</tr>
-					</tfoot>
-					<tbody>
-						<g:render template="form" />
-					</tbody>
-				</table>
-				
-			</g:form>
+					<g:render template="form" />
+					
+					<div class="form-actions">
+						<button type="submit" class="btn btn-primary">
+							<i class="icon-ok icon-white"></i> Next Section
+						</button>
+						<button type="submit" class="btn btn-danger" name="_action_cancel">
+							<i class="icon-remove icon-white"></i> Cancel
+						</button>
+					</div>
+
+				</g:form>
 			</fieldset>
 
 		</div>
