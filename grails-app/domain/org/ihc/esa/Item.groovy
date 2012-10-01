@@ -11,6 +11,10 @@ class Item
 	String externalId
 	String sourceSystem
 	String standard
+	String exception
+	String deviation
+	String exceptionRequired
+	String exceptionCriteria
 	Document document
 	Party vendorParty
 	BigDecimal intermountainItemNumber
@@ -71,6 +75,10 @@ class Item
 		externalId column: 'EXTERNAL_ID'
 		sourceSystem column: 'SOURCE_SYSTEM'
 		standard column: 'STANDARD'
+		exception column: 'EXCEPTION'
+		deviation column: 'DEVIATION'
+		exceptionRequired column: 'EXCEPTION_REQUIRED'
+		exceptionCriteria column: 'EXCEPTION_CRITERIA'
 		document column: 'DOCUMENT_ID'
 		vendorParty column: 'VENDOR_PARTY_ID'
 		intermountainItemNumber column: 'INTERMOUNTAIN_ITEM_NUMBER'
@@ -101,7 +109,11 @@ class Item
 		
 		externalId nullable: true
 		sourceSystem nullable: true
-		standard (inList: ["Y", "N"], nullable: true)
+		standard inList: ["Y", "N"], nullable: true
+		exception inList: ["Y", "N"], nullable: true
+		deviation inList: ["Y", "N"], nullable: true
+		exceptionRequired inList: ["Y", "N"], nullable: true
+		exceptionCriteria nullable: true
 		document nullable: true
 		intermountainItemNumber nullable: true
 		name nullable: true

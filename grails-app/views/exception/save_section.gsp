@@ -10,10 +10,18 @@
 <title>New Exception</title>
 </head>
 <body>
+
+    <g:logMsg level="debug">Rendering inside save_section.gsp</g:logMsg>
+    <g:logMsg level="debug">Params are: ${params }</g:logMsg>
+
 	<div class="row-fluid">
-	
-		<div class="span-24">
-			<hr class="clear" />
+
+		<div class="span12">
+
+			<div class="page-header">
+				<h1>Application for Exception</h1>
+			</div>
+
 			<h3>
 				Section
 				${section }
@@ -29,44 +37,64 @@
 				<% if (max != null) { %>
 			<%= "of  ${max}" %>
 			<% } %>
+			(${sectionTitle })
 			</h3>
-			<g:if test="${flash.message}">
-				<div class="message" role="status">
-					${flash.message}
-				</div>
-			</g:if>
-		</div>
 
-		<div id="form" class="content scaffold-create span-24" role="main">
-			<%-- need to wrap g:form action in an if statement so that if sectionStack.empty() == true then change action to save() --%>
-			<g:form action="save_section" params="${[document: documentInstance, formid: formid, sectionStack: sectionStack] }">
+			<g:if test="${flash.message}">
+				<bootstrap:alert class="alert-info">
+					${flash.message}
+				</bootstrap:alert>
+			</g:if>
+
+			<g:hasErrors bean="${documentInstance}">
+				<bootstrap:alert class="alert-error">
+					<ul>
+						<g:eachError bean="${documentInstance}" var="error">
+							<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}" /></li>
+						</g:eachError>
+					</ul>
+				</bootstrap:alert>
+			</g:hasErrors>
+
+            <fieldset>
+			<g:form class="form-horizontal" action="save_section" params="${[sectionStack: sectionStack] }">
+                <g:hiddenField name="id" value="${documentInstance?.id}" />
+                <g:hiddenField name="formid" value="${formid}" />
+
 				<table summary="Two column table with labels and inputs" border="0" cellspacing="0" cellpadding="0">
 					<thead>
 						<tr>
-							<th class="span-10"></th>
-							<th class="span-14 last"></th>
+							<th class="span4"></th>
+							<th class="span7 offset1"></th>
 						</tr>
 					</thead>
 					<tfoot>
 						<tr>
 							<td colspan="2">
-								<!-- begin content.form.buttons -->
-								<fieldset class="buttons">
-									<%-- need to wrap g:submitButton action in an if statement so that if sectionStack.empty() == true then change action to save() --%>
-									<g:submitButton name="save" class="save" value="${message(code: 'default.button.next.label', default: 'Next')}" />
-								</fieldset> <!-- end content.form.buttons -->
+								<div class="form-actions">
+									<button type="submit" class="btn btn-primary">
+									   <i class="icon-ok icon-white"></i>
+									   Next Section
+									</button>
+									<button type="submit" class="btn btn-danger" name="_action_cancel">
+                                       <i class="icon-remove icon-white"></i>
+                                       Cancel
+                                    </button>
+								</div>
 							</td>
 						</tr>
 					</tfoot>
 					<tbody>
-						<!-- begin content.form.questions -->
-						<g:render template="/form/form" />
-						<!-- end content.form.questions -->
+						<g:render template="form" />
 					</tbody>
 				</table>
+				
 			</g:form>
+			</fieldset>
+
 		</div>
 
 	</div>
+
 </body>
 </html>

@@ -46,15 +46,9 @@
 						
 							<th class="header"><g:message code="document.form.label" default="Form" /></th>
 						
-							<g:sortableColumn property="sirpId" title="${message(code: 'document.sirpId.label', default: 'Sirp Id')}" />
+							<g:sortableColumn property="createdBy" title="${message(code: 'document.createdBy.label', default: 'Created By')}" />
 						
-							<g:sortableColumn property="requestor" title="${message(code: 'document.requestor.label', default: 'Requestor')}" />
-						
-							<g:sortableColumn property="requestorEmail" title="${message(code: 'document.requestorEmail.label', default: 'Requestor Email')}" />
-						
-							<g:sortableColumn property="owner" title="${message(code: 'document.owner.label', default: 'Owner')}" />
-						
-							<g:sortableColumn property="ownerEmail" title="${message(code: 'document.ownerEmail.label', default: 'Owner Email')}" />
+							<g:sortableColumn property="updatedBy" title="${message(code: 'document.updatedBy.label', default: 'Updated By')}" />
 						
 							<th></th>
 						</tr>
@@ -65,15 +59,9 @@
 						
 							<td>${fieldValue(bean: documentInstance, field: "form")}</td>
 						
-							<td>${fieldValue(bean: documentInstance, field: "sirpId")}</td>
+							<td>${fieldValue(bean: documentInstance, field: "createdBy")}</td>
 						
-							<td>${fieldValue(bean: documentInstance, field: "requestor")}</td>
-						
-							<td>${fieldValue(bean: documentInstance, field: "requestorEmail")}</td>
-						
-							<td>${fieldValue(bean: documentInstance, field: "owner")}</td>
-						
-							<td>${fieldValue(bean: documentInstance, field: "ownerEmail")}</td>
+							<td>${fieldValue(bean: documentInstance, field: "updatedBy")}</td>
 						
 							<td class="link">
 								<g:link action="show" id="${documentInstance.id}" class="btn btn-small">Show &raquo;</g:link>

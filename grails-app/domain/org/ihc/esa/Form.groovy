@@ -46,9 +46,4 @@ class Form
 		createdBy nullable: false
 		updatedBy nullable: false
 	}
-	
-	String toString()
-	{
-		name
-	}
 }

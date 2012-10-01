@@ -11,8 +11,8 @@ class ExceptionController
 	static allowedMethods = [edit: ['GET', 'POST'], save: "POST", update: "POST", delete: "POST"]
 	
 	def springSecurityService
-
-		def index()
+	
+	def index()
 	{
 		log.debug("redirection to list action of ExceptionController")
 		redirect(action: "list", params: params)
@@ -29,78 +29,23 @@ class ExceptionController
 		[documentInstanceList: Document.findAllByForm(exceptionForm, [max: params.max, offset: params.offset, sort: "id"]), documentInstanceTotal: Document.count()]
 	}
 	
-	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
-	def create()
+	def show()
 	{
-		log.debug("this is empty, do I need something here?")
-		// do something here if needed.
-	}
-	
-	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
-	def old_create()
-	{
-		// TODO fix hard coded form for exception
-		// TODO add error trapping for when form 1 is not found
-		def exceptionForm = Form.get(1)	// 1 is seeded in the FORM table as the exception form
-		// use a deque for thisFormSectionList so you can pop of each one as they come through. will need to order by desc because of LIFO
-		if (exceptionForm == null) {
-			//flash.message = "Failed to find Form 1, which is the Exception Form"
-			render(status: 503, text: 'Failed to find Form 1, designated as the Exception Form')
-		} else {
-		
-			// setup section numbers
-			def listOfSectionNumbers = 'select distinct ff.sectionNumber from FormField ff where ff.form=' + exceptionForm.id + ' order by ff.sectionNumber asc'
-			ArrayDeque sectionStack = FormField.executeQuery(listOfSectionNumbers)
-			def currentSection = sectionStack.pop()
-			
-			// setup new exception document
-			String requestorString = "-individual filling out this form-"					// Get from spring-security
-			String requestorEmailString = "-email of individual filling out this form-"		// Get from spring-security
-			String createdByString = requestorString										// Get from spring-security
-			String updatedByString = requestorString										// Get from spring-security
-			String ownerString = "-owner of the system-"									// Needs a preliminary screen
-			String ownerEmailString = "-email of owner of the system-"						// Needs a preliminary screen
-			String justificationString = "-this needs to be modified-"
-			
-			Party party = Party.get(1)
-			
-			Document doc = new Document(form:exceptionForm, requestor: requestorString, requestorEmail: requestorEmailString, owner: ownerString, 
-				ownerEmail: ownerEmailString, createdBy: createdByString, updatedBy: updatedByString, justification: justificationString, 
-				vendorRepresentativeParty: party)
-			doc.save()
-			
-			
-			[documentInstance: doc, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
-				formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"])]
-		}
-	}
-	
-	def show() {
 		def exceptionInstance = Document.get(params.id)
-		if (!exceptionInstance) {
+		if (!exceptionInstance)
+		{
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'exception.label', default: 'Exception'), params.id])
 			redirect action: 'list'
 			return
 		}
-
+		
 		[exceptionInstance: exceptionInstance]
 	}
 	
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
-	def save_section() {
-		// TODO NPE check needed here
-		def document = params.document
-		// TODO NPE check needed here
-		def form = Form.get(params.formid)
-		// TODO NPE check needed here
-		ArrayDeque sectionStack = new ArrayDeque(params.list("sectionStack"))
-		if (!sectionStack.isEmpty()) {
-			def currentSection = sectionStack.pop()
-			render(view: "create", model: [document: document, formid: form.id, section: currentSection, sectionStack: sectionStack,
-				formFields: FormField.findAllByFormAndSectionNumber(form, currentSection, [sort: "id"])])
-		} else {
-			render("Form Submitted!")
-		}
+	def create()
+	{
+		log.debug("this is empty, do I need something here?")
 	}
 	
 	/**
@@ -109,80 +54,132 @@ class ExceptionController
 	 */
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def save() {
-		def exceptionForm = Form.get(1) // TODO fix this
-		def party = Party.get(1) 		// TODO remove this requirement
-		Document doc = null
 		
+		// Setup Form type
+		def exceptionForm = Form.get(EXCEPTION_FORM)
 		if (exceptionForm == null) {
-			//flash.message = "Failed to find Form 1, which is the Exception Form"
-			render(status: 503, text: 'Failed to find Form 1, designated as the Exception Form')
+			flash.message = "Failed to find form type 'Exception'"
+							render(view: "/error")
+							return
+		}
+		
+		// Setup Document Instance
+		Document documentInstance = null
+		
+		def user = springSecurityService.currentUser
+		documentInstance = new Document(form: exceptionForm, createdBy: user.username, updatedBy: user.username)
+		
+		if(!documentInstance.save()) {
+			log.error("Could not save instance of document.")
+			flash.message = "Could not save instance of document. Please try again."
+			render(view: "create")
+			return
+		} else {
+			log.debug("doc: " + documentInstance + " saved.")
+		}
+
+		// Setup Title with QuestionResponse table		
+		def qr = new QuestionResponse(document: documentInstance, formField: documentInstance.titleFormField, createdBy: user.username, updatedBy: user.username, stringValue: params.title)
+		log.debug("trying to save new qr. doc:<" + documentInstance + ">, formfield:<" + documentInstance.titleFormField + ">")
+		
+		if(!qr.save()) {
+			log.error("Could not save Title <" + params.title + "> to QuestionResponse table.")
+			qr.errors.allErrors.each { log.error(it) }
+			flash.message = "Could not save Title <" + params.title + "> to QuestionResponse table."
+			render(view: "create")
 			return
 		}
 		
-		def user = springSecurityService.currentUser
-		doc = new Document(form: exceptionForm, requestor: params.requestor, requestorEmail: params.requestorEmail, owner: params.owner,
-			ownerEmail: params.ownerEmail, createdBy: user.username, updatedBy: user.username, justification: params.justification,
-			vendorRepresentativeParty: party)
-		doc.save()
-		render(text: "Succeeded!")
+		flash.message = "New exception titled \"" + params.title + "\" initialized."
+		
+		// Setup section numbers
+		def listOfSectionNumbers = 'select distinct ff.sectionNumber from FormField ff where ff.form=' + exceptionForm.id + ' order by ff.sectionNumber asc'
+		ArrayDeque sectionStack = FormField.executeQuery(listOfSectionNumbers)
+		def currentSection = sectionStack.pop()
+		
+		log.debug("documentInstance: " + documentInstance.id)
+		
+		def sectionTitle = FormField.findByFormAndSectionNumberAndDataType(exceptionForm, currentSection, "SectionHeader").question
+		log.debug("sectionTitle: \"" + sectionTitle + "\"")
+		
+		log.debug("Delegating rendering to save_section.gsp...")
+		render(view: "save_section", model: [documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
+			formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
 	}
 	
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
-	def old_save() {
-		def documentInstance = new Document(params)
-		if (!documentInstance.save(flush: true)) {
-			render(view: "create", model: [documentInstance: documentInstance])
-			return
-		}
+	def save_section() {
 		
-		flash.message = message(code: 'default.created.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
-		redirect(action: "show_old", id: documentInstance.id)
-	}
-	
-	def show_old() {
+		log.debug("save_section in exception controller called with: " + params)
+		
+		// TODO NPE check needed here
 		def documentInstance = Document.get(params.id)
-		if (!documentInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
-			redirect(action: "list")
-			return
-		}
 		
-		[documentInstance: documentInstance]
+		// TODO NPE check needed here
+		def exceptionForm = Form.get(params.formid)
+		
+		// TODO NPE check needed here
+		ArrayDeque sectionStack = new ArrayDeque(params.list("sectionStack"))
+		
+		if (!sectionStack.isEmpty()) {
+			def currentSection = sectionStack.pop()
+			
+			def sectionTitle = FormField.findByFormAndSectionNumberAndDataType(exceptionForm, currentSection, "SectionHeader").question
+			log.debug("sectionTitle: \"" + sectionTitle + "\"")
+			
+			render(view: "save_section", model: [documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
+				formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
+		} else {
+			log.debug("documentInstance id: " + documentInstance)
+			flash.message = "Exception successfully submitted."
+			redirect action: 'show', id: documentInstance.id
+		}
 	}
 	
 	def edit() {
 		switch (request.method) {
-			case 'GET':
-				def exceptionInstance = Document.get(params.id)
-				if (!exceptionInstance) {
-					flash.message = message(code: 'default.not.found.message', args: [message(code: 'exception.label', default: 'Exception'), params.id])
-					redirect action: 'list'
-					return
-				}
-	
-				[exceptionInstance: exceptionInstance]
-				break
-				
-			case 'POST':
-				def exceptionInstance = Document.get(params.id)
-				if (!exceptionInstance) {
-					flash.message = message(code: 'default.not.found.message', args: [message(code: 'exception.label', default: 'Exception'), params.id])
-					redirect action: 'list'
-					return
-				}
-	
-				exceptionInstance.properties = params
-	
-				if (!exceptionInstance.save(flush: true)) {
-					render view: 'edit', model: [exceptionInstance: exceptionInstance]
-					return
-				}
-	
-				flash.message = message(code: 'default.updated.message', args: [message(code: 'exception.label', default: 'Exception'), exceptionInstance.id])
-				redirect action: 'show', id: exceptionInstance.id
-				break
+		case 'GET':
+	        def documentInstance = Document.get(params.id)
+	        if (!documentInstance) {
+	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
+	            redirect action: 'list'
+	            return
+	        }
+
+	        [documentInstance: documentInstance, username: principal.username]
+			break
+		case 'POST':
+			log.debug("Updating document id: " + params.id)
+	        def documentInstance = Document.get(params.id)
+	        if (!documentInstance) {
+	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
+	            redirect action: 'list'
+	            return
+	        }
+
+			def title = params.title
+			log.debug("Web form title is set to: " + title)
+			if (!title.equals(documentInstance.title)) {
+				log.debug("Document <" + params.id + "> title is \"" + documentInstance.title + "\"; Updating to: \"" + title + "\"")
+				log.debug("FormField to find: " + documentInstance.titleFormField)
+				def qr = QuestionResponse.findByFormFieldAndDocument(documentInstance.titleFormField, documentInstance)
+				log.debug("QuestionResponse id to update is: " + qr.id)
+				qr.stringValue = title
+				qr.save()
+			}
+			
+	        documentInstance.properties = params
+
+	        if (!documentInstance.save(flush: true)) {
+	            render view: 'edit', model: [documentInstance: documentInstance]
+	            return
+	        }
+
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
+	        redirect action: 'show', id: documentInstance.id
+			break
 		}
-	}
+    }
 	
 	def update() {
 		def documentInstance = Document.get(params.id)
@@ -223,13 +220,27 @@ class ExceptionController
 		}
 		
 		try {
+			def title = documentInstance.title
 			documentInstance.delete(flush: true)
-			flash.message = message(code: 'default.deleted.message', args: [message(code: 'document.label', default: 'Document'), params.id])
+			flash.message = message(code: 'default.deleted.message', args: [message(code: 'document.label', default: 'Document'), title])
 			redirect(action: "list")
 		}
 		catch (DataIntegrityViolationException e) {
 			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'document.label', default: 'Document'), params.id])
-			redirect(action: "show_old", id: params.id)
+			redirect(action: "show", id: params.id)
 		}
+	}
+	
+	def error() {
+		//TODO enable this before sending to production
+//		sendMail {
+//			to "eisa-repository-notify@imail.org"
+//			subject "esa-ui error"
+//			body flash.message + "\n" + params.exception
+//		}
+		
+		flash.message = "ESA Team notified. We will try to respond within the next few hours. If it's urgent please contact (801) 442-5527 directly."
+		
+		render(view:"/confirmation")
 	}
 }

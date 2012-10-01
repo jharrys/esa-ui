@@ -12,6 +12,7 @@ class FormField
 	BigDecimal sectionNumber
 	BigDecimal orderNumber
 	String question
+	String searchListing
 	String dataType
 	String formInputType
 	String cssClass
@@ -38,6 +39,7 @@ class FormField
 		version false
 		
 		form column: 'FORM_ID'
+		searchListing column: 'SEARCH_LISTING'
 		pageNumber column: 'PAGE_NUMBER'
 		sectionNumber column: 'SECTION_NUMBER'
 		orderNumber column: 'ORDER_NUMBER'
@@ -57,6 +59,7 @@ class FormField
 	{
 		
 		form nullable: false
+		searchListing inList:["Y","N"], size: 1..1
 		pageNumber nullable: true
 		sectionNumber nullable: false
 		orderNumber nullable: true

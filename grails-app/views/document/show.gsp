@@ -49,55 +49,6 @@
 						
 					</g:if>
 				
-					<g:if test="${documentInstance?.sirpId}">
-						<dt><g:message code="document.sirpId.label" default="Sirp Id" /></dt>
-						
-							<dd><g:fieldValue bean="${documentInstance}" field="sirpId"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${documentInstance?.requestor}">
-						<dt><g:message code="document.requestor.label" default="Requestor" /></dt>
-						
-							<dd><g:fieldValue bean="${documentInstance}" field="requestor"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${documentInstance?.requestorEmail}">
-						<dt><g:message code="document.requestorEmail.label" default="Requestor Email" /></dt>
-						
-							<dd><g:fieldValue bean="${documentInstance}" field="requestorEmail"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${documentInstance?.owner}">
-						<dt><g:message code="document.owner.label" default="Owner" /></dt>
-						
-							<dd><g:fieldValue bean="${documentInstance}" field="owner"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${documentInstance?.ownerEmail}">
-						<dt><g:message code="document.ownerEmail.label" default="Owner Email" /></dt>
-						
-							<dd><g:fieldValue bean="${documentInstance}" field="ownerEmail"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${documentInstance?.justification}">
-						<dt><g:message code="document.justification.label" default="Justification" /></dt>
-						
-							<dd><g:fieldValue bean="${documentInstance}" field="justification"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${documentInstance?.vendorRepresentativeParty}">
-						<dt><g:message code="document.vendorRepresentativeParty.label" default="Vendor Representative Party" /></dt>
-						
-							<dd><g:link controller="party" action="show" id="${documentInstance?.vendorRepresentativeParty?.id}">${documentInstance?.vendorRepresentativeParty?.encodeAsHTML()}</g:link></dd>
-						
-					</g:if>
-				
 					<g:if test="${documentInstance?.createdBy}">
 						<dt><g:message code="document.createdBy.label" default="Created By" /></dt>
 						

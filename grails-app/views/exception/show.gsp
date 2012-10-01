@@ -6,7 +6,7 @@
 <meta name="layout" content="bootstrap">
 <g:set var="entityName" value="${message(code: 'exception.label', default: 'Exception')}" />
 <title>
-	${exceptionInstance.title }
+	${exceptionInstance.id }
 </title>
 </head>
 <body>
@@ -56,85 +56,17 @@
 					</dd>
 
 				</g:if>
-
-				<g:if test="${exceptionInstance?.sirpId}">
-					<dt>
-						<g:message code="exception.sirpId.label" default="SIRP ID" />
-					</dt>
-
-					<dd>
-						<g:fieldValue bean="${exceptionInstance}" field="sirpId" />
-					</dd>
-
-				</g:if>
-
-				<g:if test="${exceptionInstance?.requestor}">
-					<dt>
-						<g:message code="exception.requestor.label" default="Requester" />
-					</dt>
+				
+				<g:if test="${exceptionInstance?.form}">
+                    <dt>
+                        <g:message code="exception.title.label" default="Title" />
+                    </dt>
 
                     <dd>
-					    <g:fieldValue bean="${exceptionInstance}" field="requestor" />
-					</dd>
+                        <g:fieldValue bean="${exceptionInstance}" field="title" />
+                    </dd>
 
-				</g:if>
-
-				<g:if test="${exceptionInstance?.requestorEmail}">
-					<dt>
-						<g:message code="exception.requestorEmail.label" default="Requester Email" />
-					</dt>
-
-					<dd>
-						<g:fieldValue bean="${exceptionInstance}" field="requestorEmail" />
-					</dd>
-
-				</g:if>
-
-				<g:if test="${exceptionInstance?.owner}">
-					<dt>
-						<g:message code="exception.owner.label" default="Business Owner" />
-					</dt>
-
-					<dd>
-						<g:fieldValue bean="${exceptionInstance}" field="owner" />
-					</dd>
-
-				</g:if>
-
-				<g:if test="${exceptionInstance?.ownerEmail}">
-					<dt>
-						<g:message code="exception.ownerEmail.label" default="Business Owner Email" />
-					</dt>
-
-					<dd>
-						<g:fieldValue bean="${exceptionInstance}" field="ownerEmail" />
-					</dd>
-
-				</g:if>
-
-				<g:if test="${exceptionInstance?.justification}">
-					<dt>
-						<g:message code="exception.justification.label" default="Justification" />
-					</dt>
-
-					<dd>
-						<g:fieldValue bean="${exceptionInstance}" field="justification" />
-					</dd>
-
-				</g:if>
-
-				<g:if test="${exceptionInstance?.vendorRepresentativeParty}">
-					<dt>
-						<g:message code="exception.vendorRepresentativeParty.label" default="Vendor" />
-					</dt>
-
-					<dd>
-						<g:link controller="party" action="show" id="${exceptionInstance?.vendorRepresentativeParty?.id}">
-                            ${exceptionInstance?.vendorRepresentativeParty?.encodeAsHTML()}
-                        </g:link>
-					</dd>
-
-				</g:if>
+                </g:if>
 
 				<g:if test="${exceptionInstance?.createdBy}">
 					<dt>

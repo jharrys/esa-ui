@@ -13,23 +13,31 @@
 
 	<div class="row-fluid">
 
-		<div>
-			<g:form action="save">
-				<legend>Application for Exception</legend>
-				<label for="requestor">Requester:</label>
-				<input name="requestor" type="text" placeholder="The person entering this form...">
-				<label for="requestorEmail">Requester Email Address:</label>
-				<input name="requestorEmail" type="text" placeholder="Email">
-				<label for="owner">Business Owner:</label>
-				<input name="owner" type="text" placeholder="Business Owner">
-				<label for="ownerEmail">Business Owner Email Address:</label>
-				<input name="ownerEmail" type="text" placeholder="Business Owner Email">
-				<label for="justification">Justification:
-				<textarea name="justification" rows="3"></textarea>
-				</label>
-				<button type="submit" class="btn">Start Application Process...</button>
+		<g:if test="${flash.message}">
+			<bootstrap:alert class="alert-warning">
+				${flash.message}
+			</bootstrap:alert>
+		</g:if>
+
+		<fieldset>
+			<g:form class="form-horizontal" action="save">
+				<fieldset>
+					<legend>Application for Exception</legend>
+					<div class="control-group ${invalid ? 'error' : ''}">
+						<label class="control-label" for="title"> Requester: <span class="required-indicator">*</span>
+						</label>
+						<div class="controls">
+							<g:field id="title" name="title" type="text" placeholder="Title For Exception" required="true" />
+						</div>
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary">
+								<i class="icon-ok icon-white"></i> Start Application Process...
+							</button>
+						</div>
+					</div>
+				</fieldset>
 			</g:form>
-		</div>
+		</fieldset>
 
 	</div>
 </body>

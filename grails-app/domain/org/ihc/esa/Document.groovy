@@ -8,25 +8,38 @@ package org.ihc.esa
 class Document
 {
 	
-	String sirpId
-	String requestor
-	String requestorEmail
-	String owner
-	String ownerEmail
-	String justification
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
 	
+	String title = null
+	FormField titleFormField = null
+	
 	String getTitle() {
-		id + "-" + requestor
+		if (this.titleFormField == null) {
+			this.titleFormField = FormField.findByDataType("Title")
+		}
+		
+		if (this.title == null) {
+			this.title = QuestionResponse.findByDocumentAndFormField(this, this.titleFormField)?.stringValue
+		}
+		
+		return this.title
+	}
+	
+	FormField getTitleFormField() {
+		if (this.titleFormField == null) {
+			this.titleFormField = FormField.findByDataType("Title")
+		}
+		
+		return this.titleFormField
 	}
 	
 	// part of searchable plugin
 	static searchable = true
 	
-	static transients = ['title']
+	static transients = ['title', 'titleFormField']
 	
 	static hasMany = [
 		items: Item,
@@ -34,8 +47,7 @@ class Document
 	]
 	
 	static belongsTo = [
-		form: Form,
-		vendorRepresentativeParty: Party
+		form: Form
 	]
 	
 	static mapping =
@@ -46,13 +58,6 @@ class Document
 		version false
 		
 		form column: 'FORM_ID'
-		sirpId column: 'SIRP_ID'
-		requestor column: 'REQUESTOR'
-		requestorEmail column: 'REQUESTOR_EMAIL'
-		owner column: 'OWNER'
-		ownerEmail column: 'OWNER_EMAIL'
-		justification column: 'JUSTIFICATION'
-		vendorRepresentativeParty column: 'VENDOR_REPRESENTATIVE_PARTY_ID'
 		dateCreated column: 'DATE_CREATED'
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
@@ -63,14 +68,7 @@ class Document
 	{
 		
 		form nullable: false
-		sirpId nullable: true
-		requestor nullable: false
-		requestorEmail nullable: false
-		owner nullable: false
-		ownerEmail nullable: false
-		justification nullable: true
-		vendorRepresentativeParty nullable: true
-		createdBy nullable: true
-		updatedBy nullable: true
+		createdBy nullable: false
+		updatedBy nullable: false
 	}
 }

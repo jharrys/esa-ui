@@ -40,13 +40,13 @@
 					<thead>
 						<tr>
 
-							<g:sortableColumn property="form" title="Exception Name" />
+							<g:sortableColumn property="form" title="Exception Number" />
 
-							<g:sortableColumn property="owner" title="${message(code: 'document.owner.label', default: 'Owner')}" />
+							<g:sortableColumn property="title" title="${message(code: 'document.title.label', default: 'Title')}" />
+							
+							<g:sortableColumn property="createdBy" title="${message(code: 'document.createdBy.label', default: 'Created By')}" />
 
-							<g:sortableColumn property="requestor" title="${message(code: 'document.requestor.label', default: 'Requestor')}" />
-
-							<g:sortableColumn property="sirpId" title="${message(code: 'document.sirpId.label', default: 'Security Incident Response Id')}" />
+							<g:sortableColumn property="updatedBy" title="${message(code: 'document.updatedBy.label', default: 'Updated By')}" />
 
                             <th></th>
 
@@ -57,26 +57,22 @@
 							<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
 								<td><g:link action="show" id="${documentInstance.id}">
-										${fieldValue(bean: documentInstance, field: "title")}
-									</g:link></td>
-
-								<td>
-									${fieldValue(bean: documentInstance, field: "owner")}
-								</td>
-
-								<td>
-									${fieldValue(bean: documentInstance, field: "requestor")}
-								</td>
-
-								<td>
-								    <g:if test="${(documentInstance.sirpId != null) && (!documentInstance.sirpId.empty) }">
-									   ${fieldValue(bean: documentInstance, field: "sirpId")}
-								    </g:if>
-								    <g:else>
-								        <span class="muted">SIRP will be provided by ISSA when their review is complete</span>
-									</g:else>
+										${fieldValue(bean: documentInstance, field: "id")}
+									</g:link>
 								</td>
 								
+								<td>
+								    ${fieldValue(bean: documentInstance, field: "title") }
+								</td>
+
+								<td>
+									${fieldValue(bean: documentInstance, field: "createdBy")}
+								</td>
+
+								<td>
+									${fieldValue(bean: documentInstance, field: "updatedBy")}
+								</td>
+
 								<td class="link"><g:link action="show" id="${documentInstance.id}" class="btn btn-small">Show &raquo;</g:link></td>
 
 							</tr>

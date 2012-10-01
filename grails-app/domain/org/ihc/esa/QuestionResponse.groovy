@@ -16,6 +16,26 @@ class QuestionResponse
 	BigDecimal floatValue
 	Date dateValue
 	
+	def value = null
+	
+	def getValue() {
+		if (this.value == null) {
+			if (stringValue != null) {
+				this.value = stringValue
+			} else if (dateValue != null) {
+				this.value = dateValue
+			} else if (floatValue != null) {
+				this.value = floatValue
+			} else {
+				this.errors.reject("${id} does not have a value set")
+			}
+		}
+		
+		return this.value
+	}
+	
+	static transients = ['value']
+	
 	static belongsTo = [
 		document: Document,
 		formField: FormField
