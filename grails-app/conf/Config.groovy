@@ -131,6 +131,8 @@ log4j =
 			//'grails.app.domain',
 			//'grails.app'
 			
+	trace	'org.hibernate.type'							//with param values
+			
 	/*
 	root {
 		error 'stdout'

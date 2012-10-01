@@ -36,12 +36,13 @@
 		<g:logMsg level="debug">question_datatype_exists is true - creating a question row with question: "${question_id_value }"</g:logMsg>
 
 		<div class="control-group">
-			<label class="control-label" for="questionResponse.id.${question_id }"> ${question_id_value }</label>
+			<label class="control-label" for="qr${question_id }.value"> ${question_id_value }</label>
+			<g:hiddenField name="qr${question_id }-type" value="${question_datatype_value }"/>
 
             <div class="controls">
 			    <g:if test="${(question_can_select_multiple) && (question_lookuplist_exists) }">
 					<g:logMsg level="debug">question is multiple select and lookuplist does exist.</g:logMsg>
-					<g:select class="${question_cssclass_value }" id="questionResponse.id.${question_id }" name="questionResponse.id.${question_id }"
+					<g:select class="${question_cssclass_value }" id="qr${question_id }-value" name="qr${question_id }-value"
 						from="${question_lookuplist_elements }" multiple="multiple" optionKey="id" optionValue="display" noSelection="['':'-Select One-']"
 					/>
 				</g:if>
@@ -54,7 +55,7 @@
 					<g:if test="${question_lookuplist_value.name.equals('YesNo') }">
 						<% defaultKey=1; defaultValue="Yes" %>
 					</g:if>
-					<g:select class="${question_cssclass_value }" id="questionResponse.id.${question_id }" name="questionResponse.id.${question_id }"
+					<g:select class="${question_cssclass_value }" id="qr${question_id }-value" name="qr${question_id }-value"
 						from="${question_lookuplist_elements }" optionKey="id" optionValue="display" noSelection="["${defaultKey }":"${defaultValue }"]" />
 				</g:elseif> 
 				
@@ -63,38 +64,29 @@
 					<g:if test="${question_cssclass_value == 'textArea' }">
 						<g:logMsg level="debug">question is ${question_cssclass_value }
 						</g:logMsg>
-						<g:textArea name="${question_id_value }">type here</g:textArea>
+						<g:textArea id="qr${question_id }-value" name="qr${question_id }-value" rows="4">type here</g:textArea>
 					</g:if>
 				
-					<g:elseif test="${question_datatype_value == 'Date' }">
+					<g:elseif test="${question_datatype_value.equalsIgnoreCase('DATE_VALUE') }">
 						<g:logMsg level="debug">question is ${question_cssclass_value }
 						</g:logMsg>
-						<g:datePicker class="${question_cssclass_value }" id="questionResponse.id.${question_id }" name="questionResponse.id.${question_id }"
+						<g:datePicker class="${question_cssclass_value }" id="qr${question_id }-value" name="qr${question_id }-value"
 							value="${new Date()}" precision="day" noSelection="['':'-Choose-']"
 						/>
 					</g:elseif>
 				
-					<g:elseif test="${question_datatype_value == 'Number' }">
+					<g:elseif test="${question_datatype_value.equalsIgnoreCase('FLOAT_VALUE') }">
 						<g:logMsg level="debug">question is ${question_cssclass_value }
 						</g:logMsg>
 						<span class="add-on">$</span>
-						<input id="questionResponse.id.${question_id }" name="questionResponse.id.${question_id }" />
+						<input id="qr${question_id }-value" name="qr${question_id }-value" />
 						<span class="add-on">.00</span>
 					</g:elseif>
 				
-					<g:elseif test="${question_datatype_value == 'String' }">
+					<g:elseif test="${question_datatype_value.equalsIgnoreCase('STRING_VALUE') }">
 						<g:logMsg level="debug">question is ${question_cssclass_value }
 						</g:logMsg>
-				
-						<g:if test="${question_cssclass_value.equals("textArea") }">
-							<g:logMsg level="debug">cssclass value is "textArea"</g:logMsg>
-							<g:textArea id="questionResponse.id.${question_id }" name="questionResponse.id.${question_id }" rows="4"></g:textArea>
-						</g:if>
-				
-						<g:else>
-							<g:logMsg level="debug">creating simple field input type</g:logMsg>
-							<g:field class="${question_cssclass_value}" id="questionResponse.id.${question_id }" name="questionResponse.id.${question_id }" type="string" />
-						</g:else>
+						<g:field class="${question_cssclass_value}" id="qr${question_id }-value" name="qr${question_id }-value" type="string" />
 					</g:elseif>
 				
 					<g:else>

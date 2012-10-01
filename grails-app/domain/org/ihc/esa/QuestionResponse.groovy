@@ -61,7 +61,7 @@ class QuestionResponse
 	
 	static constraints =
 	{
-		
+		formField unique: 'document'	// formField + document combination should be unique
 		createdBy nullable: true
 		updatedBy nullable: true
 		stringValue nullable: true

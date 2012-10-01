@@ -53,14 +53,15 @@ class ExceptionController
 	 * and nothing else.
 	 */
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
-	def save() {
+	def save()
+	{
 		
 		// Setup Form type
 		def exceptionForm = Form.get(EXCEPTION_FORM)
 		if (exceptionForm == null) {
 			flash.message = "Failed to find form type 'Exception'"
-							render(view: "/error")
-							return
+			render(view: "/error")
+			return
 		}
 		
 		// Setup Document Instance
@@ -77,8 +78,8 @@ class ExceptionController
 		} else {
 			log.debug("doc: " + documentInstance + " saved.")
 		}
-
-		// Setup Title with QuestionResponse table		
+		
+		// Setup Title with QuestionResponse table
 		def qr = new QuestionResponse(document: documentInstance, formField: documentInstance.titleFormField, createdBy: user.username, updatedBy: user.username, stringValue: params.title)
 		log.debug("trying to save new qr. doc:<" + documentInstance + ">, formfield:<" + documentInstance.titleFormField + ">")
 		
@@ -121,6 +122,70 @@ class ExceptionController
 		// TODO NPE check needed here
 		ArrayDeque sectionStack = new ArrayDeque(params.list("sectionStack"))
 		
+		// user profile authenticated to this instance
+		def user = springSecurityService.currentUser
+		
+		/***********************************
+		 *  Perform save
+		 **********************************/
+		Map map = new HashMap()
+		params.entrySet().findAll {
+			//			it.key.startsWith("qr")
+			it.key ==~ /qr.*-value/
+		}.each {
+			def qr = it.key.split("-")[0]
+			def value = params[qr + "-value"] ?: "null"
+			def type = params[qr + "-type"]
+			def qrid = qr.split("qr")[1]
+			def m = [type: type, value: value]
+			map["$qrid"] = m
+			//log.debug("questionresponse: " + qrid + ", " + map["qrid"]?.value + ", " + map["qrid"]?.type)
+			log.debug("map: " + map)
+		}
+		
+		map.each { key, m ->
+			def formField = FormField.get(key)
+			def qr = null
+			
+			switch(m.type.toUpperCase()) {
+				case "DATE_VALUE":
+					log.debug("QR type is DATE_VALUE with value of: " + m.value)
+					qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username, 
+						dateValue: m.value)
+					break
+					
+				case "FLOAT_VALUE":
+					log.debug("QR type is FLOAT_VALUE with value of: " + m.value)
+					qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username,
+						floatValue: m.value)
+					break
+					
+				case "STRING_VALUE":
+					log.debug("QR type is STRING_VALUE with value of: " + m.value)
+				
+				default:
+					if ((!m.value) && (!m.value.equals("null") && (!m.value.equals("type here")))) {
+						qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username,
+							stringValue: m.value)
+					}
+			}
+			
+			if (qr != null) {
+				//TODO need to flag in database so that user can come back and correct later
+				if(!qr.save()) {
+					log.error("Error saving to QuestionResponse table for FormField " + key + " with value " + value)
+					qr.errors.allErrors.each { log.error(it) }
+					flash.message = flash.message + "<br>Error saving to QuestionResponse table for FormField " + key + " with value " + value
+				}
+			} else {
+				log.error("TODO: the object qr is null")
+			}
+		}
+		
+		/***********************************
+		 *  Prepare model for view
+		 **********************************/
+		
 		if (!sectionStack.isEmpty()) {
 			def currentSection = sectionStack.pop()
 			
@@ -131,32 +196,32 @@ class ExceptionController
 				formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
 		} else {
 			log.debug("documentInstance id: " + documentInstance)
-			flash.message = "Exception successfully submitted."
+			flash.message = flash.message + "<br>Exception successfully submitted."
 			redirect action: 'show', id: documentInstance.id
 		}
 	}
 	
 	def edit() {
 		switch (request.method) {
-		case 'GET':
-	        def documentInstance = Document.get(params.id)
-	        if (!documentInstance) {
-	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
-	            redirect action: 'list'
-	            return
-	        }
-
-	        [documentInstance: documentInstance, username: principal.username]
+			case 'GET':
+			def documentInstance = Document.get(params.id)
+			if (!documentInstance) {
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
+				redirect action: 'list'
+				return
+			}
+			
+			[documentInstance: documentInstance, username: principal.username]
 			break
-		case 'POST':
+			case 'POST':
 			log.debug("Updating document id: " + params.id)
-	        def documentInstance = Document.get(params.id)
-	        if (!documentInstance) {
-	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
-	            redirect action: 'list'
-	            return
-	        }
-
+			def documentInstance = Document.get(params.id)
+			if (!documentInstance) {
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
+				redirect action: 'list'
+				return
+			}
+			
 			def title = params.title
 			log.debug("Web form title is set to: " + title)
 			if (!title.equals(documentInstance.title)) {
@@ -168,18 +233,18 @@ class ExceptionController
 				qr.save()
 			}
 			
-	        documentInstance.properties = params
-
-	        if (!documentInstance.save(flush: true)) {
-	            render view: 'edit', model: [documentInstance: documentInstance]
-	            return
-	        }
-
+			documentInstance.properties = params
+			
+			if (!documentInstance.save(flush: true)) {
+				render view: 'edit', model: [documentInstance: documentInstance]
+				return
+			}
+			
 			flash.message = message(code: 'default.updated.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
-	        redirect action: 'show', id: documentInstance.id
+			redirect action: 'show', id: documentInstance.id
 			break
 		}
-    }
+	}
 	
 	def update() {
 		def documentInstance = Document.get(params.id)
@@ -233,11 +298,11 @@ class ExceptionController
 	
 	def error() {
 		//TODO enable this before sending to production
-//		sendMail {
-//			to "eisa-repository-notify@imail.org"
-//			subject "esa-ui error"
-//			body flash.message + "\n" + params.exception
-//		}
+		//		sendMail {
+		//			to "eisa-repository-notify@imail.org"
+		//			subject "esa-ui error"
+		//			body flash.message + "\n" + params.exception
+		//		}
 		
 		flash.message = "ESA Team notified. We will try to respond within the next few hours. If it's urgent please contact (801) 442-5527 directly."
 		
