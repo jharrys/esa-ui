@@ -43,9 +43,4 @@ class LookupElement
 		createdBy nullable: false
 		updatedBy nullable: false
 	}
-	
-	String toString()
-	{
-		display
-	}
 }

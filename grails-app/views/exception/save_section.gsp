@@ -11,7 +11,9 @@
 </head>
 <body>
 
+	<g:logMsg level="debug">===========================================================================</g:logMsg>
 	<g:logMsg level="debug">Rendering inside save_section.gsp</g:logMsg>
+	<g:logMsg level="debug">===========================================================================</g:logMsg>
 	<g:logMsg level="debug">Params are: ${params }
 	</g:logMsg>
 
@@ -66,7 +68,7 @@
 					
 					<div class="form-actions">
 						<button type="submit" class="btn btn-primary">
-							<i class="icon-ok icon-white"></i> Next Section
+							<i class="icon-ok icon-white"></i> ${max ? "Next Section" : "Complete Exception" }
 						</button>
 						<button type="submit" class="btn btn-danger" name="_action_cancel">
 							<i class="icon-remove icon-white"></i> Cancel

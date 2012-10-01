@@ -122,8 +122,8 @@ log4j =
 {
 	debug 	'grails.app.controllers.org.ihc.esa',			//My Controllers
 			'grails.app.domain.org.ihc.esa',				//My Domain
-			'org.hibernate.SQL',							//SQL
 			'grails.app.taglib.org.ihc.esa'					//My Tag library
+			//'org.hibernate.SQL'							//SQL
 			//'org.codehaus.groovy.grails.web.sitemesh',	//Layout
 			//'org.codehaus.groovy.grails.orm.hibernate',
 			//'net.sf.ehcache.hibernate',
@@ -131,7 +131,7 @@ log4j =
 			//'grails.app.domain',
 			//'grails.app'
 			
-	trace	'org.hibernate.type'							//with param values
+	//trace	'org.hibernate.type'							//with param values
 			
 	/*
 	root {

@@ -45,7 +45,7 @@ class ExceptionController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def create()
 	{
-		log.debug("this is empty, do I need something here?")
+		log.debug("not doing anything here")
 	}
 	
 	/**
@@ -111,7 +111,9 @@ class ExceptionController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def save_section() {
 		
+		log.debug("====================================================================================")
 		log.debug("save_section in exception controller called with: " + params)
+		log.debug("====================================================================================")
 		
 		// TODO NPE check needed here
 		def documentInstance = Document.get(params.id)
@@ -129,8 +131,8 @@ class ExceptionController
 		 *  Perform save
 		 **********************************/
 		Map map = new HashMap()
+		log.debug("[[ parsing params for qr*-value and qr*-type ]]")
 		params.entrySet().findAll {
-			//			it.key.startsWith("qr")
 			it.key ==~ /qr.*-value/
 		}.each {
 			def qr = it.key.split("-")[0]
@@ -139,46 +141,69 @@ class ExceptionController
 			def qrid = qr.split("qr")[1]
 			def m = [type: type, value: value]
 			map["$qrid"] = m
-			//log.debug("questionresponse: " + qrid + ", " + map["qrid"]?.value + ", " + map["qrid"]?.type)
 			log.debug("map: " + map)
 		}
-		
+
+		log.debug("[[ begin parsing for each formfield ]]")		
 		map.each { key, m ->
+			log.debug("=== formField: " + key + " ===")
+			log.debug("dataType == \"" + m.type + "\"")
+			log.debug("value == \"" + m.value + "\"")
 			def formField = FormField.get(key)
 			def qr = null
 			
-			switch(m.type.toUpperCase()) {
-				case "DATE_VALUE":
-					log.debug("QR type is DATE_VALUE with value of: " + m.value)
-					qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username, 
-						dateValue: m.value)
-					break
-					
-				case "FLOAT_VALUE":
-					log.debug("QR type is FLOAT_VALUE with value of: " + m.value)
-					qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username,
-						floatValue: m.value)
-					break
-					
-				case "STRING_VALUE":
-					log.debug("QR type is STRING_VALUE with value of: " + m.value)
-				
-				default:
-					if ((!m.value) && (!m.value.equals("null") && (!m.value.equals("type here")))) {
+			if ((m.value != null) && (!m.value.equals("null"))) {
+				log.debug("m.value is valid, switching on m.type")
+				switch(m.type.toUpperCase()) {
+					case "DATE_VALUE":
+						log.debug("case of " + m.type)
+						qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username, 
+							dateValue: m.value)
+						log.debug("QuestionResponse instance created for " + key)
+						break
+						
+					case "FLOAT_VALUE":
+						log.debug("case of " + m.type)
 						qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username,
-							stringValue: m.value)
+							floatValue: m.value)
+						log.debug("QuestionResponse instance created for " + key)
+						break
+						
+					case "STRING_VALUE":
+						log.debug("case of " + m.type)
+					
+					default:
+						log.debug("case of \"default\" switch")
+						if ((m.value) && (!m.value.equals("null")) && ((!m.value.equals("type here")))) {
+							log.debug("test for valid m.value passed")
+							qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username,
+								stringValue: m.value)
+							log.debug("QuestionResponse instance created for " + key)
+						} else {
+							log.debug("test for valid m.value did **not** pass")
+							log.debug("QuestionResponse instance was **not** created for " + key)
+						}
+				}
+				
+				if (qr != null) {
+					log.debug("assertion that qr is not null passed -> attempting to save qr instance now...")
+					
+					//TODO need to flag in database so that user can come back and correct later
+					if(!qr.save()) {
+						log.debug("qr instance for formField " + key + " was **not** saved due to an error condition")
+						log.debug("answer value (m.value) == \"" + m.value + "\"")
+						log.error("error saving to QuestionResponse table for FormField " + key + " with value \"" + m.value + "\"")
+						qr.errors.allErrors.each { log.error(it) }
+						flash.message = "Error saving to QuestionResponse table for FormField " + key + " with value \"" + m.value + "\""
+					} else {
+						log.debug("QuestionResponse instance with id " + qr.id + " has been saved for Document " + qr.document.id + 
+							" with FormField of " + qr.formField.id + " and value of \"" + qr.value + "\"")
 					}
-			}
-			
-			if (qr != null) {
-				//TODO need to flag in database so that user can come back and correct later
-				if(!qr.save()) {
-					log.error("Error saving to QuestionResponse table for FormField " + key + " with value " + value)
-					qr.errors.allErrors.each { log.error(it) }
-					flash.message = flash.message + "<br>Error saving to QuestionResponse table for FormField " + key + " with value " + value
+				} else {
+					log.debug("assertion that qr is not null failed! -> this may be legitimate, user may not have filled in a non-required field.")
 				}
 			} else {
-				log.error("TODO: the object qr is null")
+				log.debug("QuestionResponse **not** saved! formField " + key + " did not have an answer, answer was null or answer was default text:\"" + m.value + "\"")
 			}
 		}
 		
@@ -186,21 +211,29 @@ class ExceptionController
 		 *  Prepare model for view
 		 **********************************/
 		
+		log.debug("====================================================================================")
+		log.debug("Preparing model for view")
+		log.debug("====================================================================================")
+		
 		if (!sectionStack.isEmpty()) {
 			def currentSection = sectionStack.pop()
 			
 			def sectionTitle = FormField.findByFormAndSectionNumberAndDataType(exceptionForm, currentSection, "SectionHeader").question
-			log.debug("sectionTitle: \"" + sectionTitle + "\"")
+			log.debug("found sectionTitle: \"" + sectionTitle + "\"")
 			
+			log.debug("submitting to save_section view for rendering.")
 			render(view: "save_section", model: [documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
 				formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
 		} else {
-			log.debug("documentInstance id: " + documentInstance)
-			flash.message = flash.message + "<br>Exception successfully submitted."
+			log.debug("no more sections to present for form id " + formid + " and document id: " + documentInstance.id)
+			flash.message = "Exception ID " + documentInstance.id + " \"" + documentInstance.title + "\" successfully completed.<br>Please note ID for future reference."
+			
+			log.debug("redirecting to show view for document " + documentInstance.id)
 			redirect action: 'show', id: documentInstance.id
 		}
 	}
 	
+	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def edit() {
 		switch (request.method) {
 			case 'GET':
@@ -246,6 +279,7 @@ class ExceptionController
 		}
 	}
 	
+	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def update() {
 		def documentInstance = Document.get(params.id)
 		if (!documentInstance) {
@@ -276,6 +310,7 @@ class ExceptionController
 		redirect(action: "show_old", id: documentInstance.id)
 	}
 	
+	@Secured(['ROLE_ESA_ADMIN', 'IS_AUTHENTICATED_FULLY'])
 	def delete() {
 		def documentInstance = Document.get(params.id)
 		if (!documentInstance) {

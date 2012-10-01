@@ -11,8 +11,10 @@ class Item
 	String externalId
 	String sourceSystem
 	String standard
+	String standardType
 	String exception
 	String deviation
+	String inService
 	String exceptionRequired
 	String exceptionCriteria
 	Document document
@@ -75,8 +77,10 @@ class Item
 		externalId column: 'EXTERNAL_ID'
 		sourceSystem column: 'SOURCE_SYSTEM'
 		standard column: 'STANDARD'
+		standardType column: 'STANDARD_TYPE'
 		exception column: 'EXCEPTION'
 		deviation column: 'DEVIATION'
+		inService column: 'IN_SERVICE'
 		exceptionRequired column: 'EXCEPTION_REQUIRED'
 		exceptionCriteria column: 'EXCEPTION_CRITERIA'
 		document column: 'DOCUMENT_ID'
@@ -109,9 +113,11 @@ class Item
 		
 		externalId nullable: true
 		sourceSystem nullable: true
-		standard inList: ["Y", "N"], nullable: true
-		exception inList: ["Y", "N"], nullable: true
-		deviation inList: ["Y", "N"], nullable: true
+		standard inList: ["Y", "N"], nullable: false
+		standardType nullable: true
+		exception inList: ["Y", "N"], nullable: false
+		deviation inList: ["Y", "N"], nullable: false
+		inService inList: ["Y", "N"], nullable: false
 		exceptionRequired inList: ["Y", "N"], nullable: true
 		exceptionCriteria nullable: true
 		document nullable: true
