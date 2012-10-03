@@ -1,3 +1,4 @@
+<%@page import="org.codehaus.groovy.grails.commons.ApplicationHolder"%>
 <%@ page import="org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes"%>
 <!doctype html>
 <html lang="en">
@@ -40,9 +41,10 @@
 					<ul class="nav">
 						<li <%= request.forwardURI == "${createLink(uri: '/')}" ? ' class="active"' : '' %>><a href="${createLink(uri: '/')}">Home</a></li>
 						<li <%= request.forwardURI == "${createLink(uri: '/standards/index')}" ? ' class="active"' : '' %>><g:link controller="standards">Standards</g:link></li>
-						<li <%= request.forwardURI == "${createLink(uri: '/earb')}" ? ' class="active"' : '' %>><g:link controller="earb">EARB</g:link></li>
+						<li <%= request.forwardURI == "${createLink(uri: '/exception/index')}" ? ' class="active"' : '' %>><g:link controller="exception">Exceptions</g:link></li>
+						<li <%= request.forwardURI == "${createLink(uri: '/earb')}" ? ' class="disabled"' : 'class="disabled"' %>><g:link controller="earb">EARB</g:link></li>
 						<li <%= request.forwardURI == "${createLink(uri: '/admin/admin')}" ? ' class="active"' : '' %>><g:link controller="admin">Administration</g:link></li>
-						<li><a href="#" rel="tooltip" data-placement="bottom" title="About Me!!">About</a></li>
+						<li><a href="#" rel="tooltip" data-placement="bottom" title="Version ${ApplicationHolder.application.metadata['app.version'] }">About</a></li>
 					</ul>
 				</div>
 			</div>
