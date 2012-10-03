@@ -6,24 +6,36 @@ import org.springframework.dao.DataIntegrityViolationException
 
 class ExceptionController
 {
-	private final static int EXCEPTION_FORM=1
+	private final Form EXCEPTION_FORM
 	
 	static allowedMethods = [edit: ['GET', 'POST'], save: "POST", update: "POST", delete: "POST"]
 	
 	def springSecurityService
 	
+	ExceptionController() {
+		EXCEPTION_FORM = Form.findByNameIlike("exception")
+	}
+	
 	def index()
 	{
+		log.debug("====================================================================================")
+		log.debug("index() action in exception controller called with: " + params)
+		log.debug("====================================================================================")
+		
 		log.debug("redirection to list action of ExceptionController")
 		redirect(action: "list", params: params)
 	}
 	
 	def list()
 	{
-		log.debug("EXCEPTION_FORM set to: " + EXCEPTION_FORM)
-		def exceptionForm = Form.get(EXCEPTION_FORM)
+		log.debug("====================================================================================")
+		log.debug("list() action in exception controller called with: " + params)
+		log.debug("====================================================================================")
 		
-		if (exceptionForm) log.debug("form of type exception<id:" + exceptionForm.id + "> acquired")
+		log.debug("EXCEPTION_FORM set to: " + EXCEPTION_FORM)
+		def exceptionForm = EXCEPTION_FORM
+		
+		if (exceptionForm) log.debug("form " + exceptionForm.id + " found, called \"" + exceptionForm.name + "\"")
 		
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		[documentInstanceList: Document.findAllByForm(exceptionForm, [max: params.max, offset: params.offset, sort: "id"]), documentInstanceTotal: Document.count()]
@@ -45,7 +57,19 @@ class ExceptionController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def create()
 	{
-		log.debug("not doing anything here")
+		def user = null
+		if (log.debugEnabled) {
+			user = springSecurityService.currentUser
+		}
+
+		log.debug("====================================================================================")
+		log.debug("create() action in exception controller called with: " + params)
+		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
+		log.debug("pass rendering to create.gsp")
 	}
 	
 	/**
@@ -55,10 +79,22 @@ class ExceptionController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def save()
 	{
+		def user = null
+		if (log.debugEnabled) {
+			user = springSecurityService.currentUser
+		}
+		
+		log.debug("====================================================================================")
+		log.debug("save() action in exception controller called with: " + params)
+		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
 		
 		// Setup Form type
-		def exceptionForm = Form.get(EXCEPTION_FORM)
+		def exceptionForm = EXCEPTION_FORM
 		if (exceptionForm == null) {
+			log.error("EXCEPTION_FORM does not exist. Check that the FORM table contains a FORM with the NAME value of \"EXCEPTION\"")
 			flash.message = "Failed to find form type 'Exception'"
 			render(view: "/error")
 			return
@@ -67,7 +103,6 @@ class ExceptionController
 		// Setup Document Instance
 		Document documentInstance = null
 		
-		def user = springSecurityService.currentUser
 		documentInstance = new Document(form: exceptionForm, createdBy: user.username, updatedBy: user.username)
 		
 		if(!documentInstance.save()) {
@@ -111,21 +146,28 @@ class ExceptionController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def save_section() {
 		
+		// user profile authenticated to this instance
+		def user = null
+		if (log.debugEnabled) {
+			user = springSecurityService.currentUser
+		}
+
 		log.debug("====================================================================================")
-		log.debug("save_section in exception controller called with: " + params)
+		log.debug("save_section() action in exception controller called with: " + params)
+		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
 		log.debug("====================================================================================")
 		
 		// TODO NPE check needed here
 		def documentInstance = Document.get(params.id)
 		
 		// TODO NPE check needed here
-		def exceptionForm = Form.get(params.formid)
+		def exceptionForm = EXCEPTION_FORM
 		
 		// TODO NPE check needed here
 		ArrayDeque sectionStack = new ArrayDeque(params.list("sectionStack"))
 		
-		// user profile authenticated to this instance
-		def user = springSecurityService.currentUser
 		
 		/***********************************
 		 *  Perform save
@@ -225,7 +267,7 @@ class ExceptionController
 			render(view: "save_section", model: [documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
 				formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
 		} else {
-			log.debug("no more sections to present for form id " + formid + " and document id: " + documentInstance.id)
+			log.debug("no more sections to present for form id " + exceptionForm.id + " and document id: " + documentInstance.id)
 			flash.message = "Exception ID " + documentInstance.id + " \"" + documentInstance.title + "\" successfully completed.<br>Please note ID for future reference."
 			
 			log.debug("redirecting to show view for document " + documentInstance.id)
@@ -235,6 +277,20 @@ class ExceptionController
 	
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def edit() {
+		
+		// user profile authenticated to this instance
+		def user = null
+		if (log.debugEnabled) {
+			user = springSecurityService.currentUser
+		}
+
+		log.debug("====================================================================================")
+		log.debug("edit() action in exception controller called with: " + params)
+		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
 		switch (request.method) {
 			case 'GET':
 			def documentInstance = Document.get(params.id)
@@ -281,6 +337,20 @@ class ExceptionController
 	
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def update() {
+		
+		// user profile authenticated to this instance
+		def user = null
+		if (log.debugEnabled) {
+			user = springSecurityService.currentUser
+		}
+
+		log.debug("====================================================================================")
+		log.debug("update() action in exception controller called with: " + params)
+		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
 		def documentInstance = Document.get(params.id)
 		if (!documentInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
@@ -312,6 +382,20 @@ class ExceptionController
 	
 	@Secured(['ROLE_ESA_ADMIN', 'IS_AUTHENTICATED_FULLY'])
 	def delete() {
+		
+		// user profile authenticated to this instance
+		def user = null
+		if (log.debugEnabled) {
+			user = springSecurityService.currentUser
+		}
+
+		log.debug("====================================================================================")
+		log.debug("save_section() action in exception controller called with: " + params)
+		log.debug("requires ROLE_ESA_ADMIN and user must be FULLY_AUTHENTICATED")
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
 		def documentInstance = Document.get(params.id)
 		if (!documentInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
