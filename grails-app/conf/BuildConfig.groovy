@@ -46,6 +46,8 @@ grails.project.dependency.resolution =
 		compile ":spring-security-mock:1.0.1"
 		compile ":spring-security-ui:0.2"
 		compile ":searchable:0.6.3"
+		compile ":external-config-reload:1.2.1"
+		compile ":jasper:1.5.2"
 		
 		runtime ":twitter-bootstrap:2.1.0.1"
 		runtime ":fields:1.3"
