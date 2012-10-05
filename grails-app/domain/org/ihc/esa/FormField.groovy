@@ -62,13 +62,13 @@ class FormField
 		version false
 		
 		form column: 'FORM_ID'
-		searchListing column: 'SEARCH_LISTING'
 		pageNumber column: 'PAGE_NUMBER'
 		sectionNumber column: 'SECTION_NUMBER'
 		orderNumber column: 'ORDER_NUMBER'
 		required column: 'REQUIRED'
 		internalOnly column: 'INTERNAL_ONLY'
 		question column: 'QUESTION'
+		searchListing column: 'SEARCH_LISTING'
 		dataType column: 'DATA_TYPE'
 		formInputType column: 'FORM_INPUT_TYPE'
 		cssClass column: 'CSS_CLASS'
@@ -87,13 +87,13 @@ class FormField
 	{
 		
 		form nullable: false
-		searchListing inList:["Y","N"], size: 1..1
 		pageNumber nullable: true
 		sectionNumber nullable: false
 		orderNumber nullable: true
 		required nullable: false
 		internalOnly nullable: false
 		question nullable: false
+		searchListing inList:["Y","N"], size: 1..1
 		dataType nullable: false
 		formInputType nullable: true
 		cssClass nullable: true
@@ -101,6 +101,7 @@ class FormField
 		defaultValueString nullable: true
 		defaultValueFloat nullable: true
 		defaultValueDate nullable: true
+		lookupList nullable: true
 		createdBy nullable: false
 		updatedBy nullable: false
 	}
