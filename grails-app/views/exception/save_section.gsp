@@ -27,7 +27,7 @@
 
 			<h3>
 				Section
-				${section }
+				${section.intValue() }
 				<%
 				    max = sectionStack.max{a,b->
 						if (!(a instanceof BigDecimal)) { 
