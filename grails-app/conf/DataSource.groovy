@@ -20,6 +20,17 @@ environments
 		dataSource
 		{
 			// one of 'create', 'create-drop', 'update', 'validate', ''
+			dbCreate = "create"
+			url = "jdbc:h2:mem:testDb;MVCC=TRUE"	//use this URL to connect through http://server/grailsapp/dbconsole
+			//logSql = true
+		}
+	}
+	
+	test
+	{
+		dataSource
+		{
+			// one of 'create', 'create-drop', 'update', 'validate', ''
 			dbCreate = "validate"
 			driverClassName = "oracle.jdbc.OracleDriver"
 			username = "esa"
@@ -27,21 +38,6 @@ environments
 			dialect = "org.hibernate.dialect.Oracle10gDialect"
 			url = "jdbc:oracle:thin:@192.168.56.101:1521:esa"
 			//logSql = true
-		}
-		
-		//		dataSource
-		//		{
-		//			dbCreate = "update"
-		//			url = "jdbc:h2:mem:testDb;MVCC=TRUE"
-		//		}
-	}
-	
-	test
-	{
-		dataSource
-		{
-			dbCreate = "update"
-			url = "jdbc:h2:mem:testDb;MVCC=TRUE"
 		}
 	}
 	

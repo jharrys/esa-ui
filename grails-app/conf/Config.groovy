@@ -68,11 +68,11 @@ environments {
 		// spring-security-mock plugin
 		// for user details service see conf/spring/resources.groovy
 		grails.plugins.springsecurity.mock.active = false
-//		grails.plugins.springsecurity.mock.fullName = "Mock Mockster"
-//		grails.plugins.springsecurity.mock.email = "harris.johnny@gmail.com"
-//		grails.plugins.springsecurity.mock.username =  "mmockster"
-//		grails.plugins.springsecurity.mock.roles = [ 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_EXCEPTION' ]
-//		grails.plugins.springsecurity.ipRestrictions = [ '/**': ['127.0.0.0/8', '::1/128'] ]
+		//	grails.plugins.springsecurity.mock.fullName = "Mock Mockster"
+		//	grails.plugins.springsecurity.mock.email = "harris.johnny@gmail.com"
+		//	grails.plugins.springsecurity.mock.username =  "mmockster"
+		//	grails.plugins.springsecurity.mock.roles = [ 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_EXCEPTION' ]
+		//	grails.plugins.springsecurity.ipRestrictions = [ '/**': ['127.0.0.0/8', '::1/128'] ]
 		
 		// All 3 of these must be set to true if you want spring-security-mock to load roles from ldap rather than mock.roles setting
 		grails.plugins.springsecurity.ldap.active = false
@@ -120,19 +120,50 @@ environments {
 
 log4j =
 {
-	debug 	'grails.app.controllers.org.ihc.esa',			//My Controllers
-			'grails.app.domain.org.ihc.esa',				//My Domain
-			'grails.app.taglib.org.ihc.esa'					//My Tag library
-			//'org.hibernate.SQL'							//SQL
-			//'org.codehaus.groovy.grails.web.sitemesh',	//Layout
-			//'org.codehaus.groovy.grails.orm.hibernate',
-			//'net.sf.ehcache.hibernate',
-			//'org.springframework',
-			//'grails.app.domain',
-			//'grails.app'
+	// sensible defaults under Tomcat 6.x and Tomcat 7.x
+	def catalinaBase = System.properties.getProperty('catalina.base')
+	if (!catalinaBase) catalinaBase = '.'
+	//	def logDirectory = "${catalinaBase}/logs"
+	def logf = "c:/tmp/esaui.log"
+	
+	//println "logDirectory: " + logDirectory
+	
+	appenders {
+		console		name: 'stdout'
+		file		name: 'file', file: logf, append: true
+	}
+	
+	environments {
+		
+		development {
+			debug 	'grails.app.controllers.org.ihc.esa',					//My Controllers
+					'grails.app.domain.org.ihc.esa',						//My Domain
+					'grails.app.taglib.org.ihc.esa'							//My Tag library
+					//'org.hibernate.SQL'									//SQL
+					//'org.codehaus.groovy.grails.web.sitemesh',			//Layout
+					//'org.codehaus.groovy.grails.orm.hibernate',
+					//'net.sf.ehcache.hibernate',
+					//'org.springframework',
+					//'grails.app.domain',
+					//'grails.app'
+					//'grails.plugins.twitterbootstrap'						//css twitter bootstrap plugin
 			
-	//trace	'org.hibernate.type'							//with param values
+			trace	'org.hibernate.SQL',									//with param values
+					'org.hibernate.type'
 			
+			//warn 	'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
+		}
+		
+		test {
+			// set appropriate defaults for test
+		}
+		
+		production {
+			// set appropriate defaults for production
+		}
+		
+	}
+	
 	/*
 	root {
 		error 'stdout'
