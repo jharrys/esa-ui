@@ -7,21 +7,7 @@
 <body>
 	<div class="row-fluid">
 
-		<aside id="application-status" class="span3">
-
-			<div class="well sidebar-nav">
-				<h3>EISA</h3>
-				<ul class="nav nav-pills nav-stacked">
-					<li><g:link controller="standards" action="index">Browse Standards</g:link></li>
-					<li><g:link controller="exception" action="list">Exception Requests</g:link></li>
-					<li><g:link controller="earb" action="index">EARB Documents</g:link></li>
-					<li><g:link controller="admin" action="admin">Administration</g:link></li>
-				</ul>
-			</div>
-
-		</aside>
-
-		<section id="main" class="span9">
+		<section id="main" class="span12">
 
 			<div class="hero-unit">
 				<h2>Enterprise Information Systems Architecture</h2>
@@ -33,7 +19,7 @@
 
 			<div class="row-fluid">
 
-				<div class="span4">
+				<div class="span6">
 					<h4>Features available today:</h4>
 					<ul id="nav nav-list">
 						<li>Query for existing software standards</li>
@@ -43,7 +29,7 @@
 					</ul>
 				</div>
 
-				<div class="span4">
+				<div class="span6">
 					<h4>Features we want to release soon:</h4>
 					<ul>
 						<li>Automate Exception work flow process</li>
