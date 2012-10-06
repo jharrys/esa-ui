@@ -1,32 +1,34 @@
 package org.ihc.esa
 
 /*--------------------------------------------------------------------------
- Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
+ Created manually by JH [05-Oct-2012 13:00:00 -0600]
  Copyright 2012 by Intermountain Healthcare
  --------------------------------------------------------------------------*/
 
 /**
  * <p>
- * Contract represents the contract we have with the vendor for a specific
- * {@link Item}.
+ * Category represents a hierarchy of nodes much like a file systems
+ * folder/sub-folder structure. Each node may contain other nodes or leaf nodes.
+ * The Category container is used to hold object of type {@link Item}. 
  * </p>
  * <p>
- * A contract can have many of type {@link Item}.
+ * The relationship between Category and Item is straightforward. The join table
+ * does not need to be defined as it has with the {@link Catalog} relationship.
  * </p>
  * <p>
- * {@link #contractNumber} is required and represents the identifier for the
- * contract on file.
+ * {@link #taxonomy} is the only required field.
  * </p>
  * @author lpjharri
- *
+ * @see Item
  */
-class Contract
+
+class Category
 {
 	/**
-	 * String to identify contract.
+	 * Name for this node or container.
 	 * Required.
 	 */
-	String contractNumber
+	String taxonomy
 	
 	Date dateCreated
 	String createdBy
@@ -38,24 +40,28 @@ class Contract
 	]
 	
 	/**
-	 * Contract maps to table CONTRACT
+	 * Category maps to table CATEGORY
 	 */
 	static mapping =
 	{
-		id generator:'sequence', params:[sequence:'CONTRACT_SEQ']
-		table 'CONTRACT'
+		id generator:'sequence', params:[sequence:'CATEGORY_SEQ']
+		table 'CATEGORY'
 		version false
 		
-		contractNumber column: 'CONTRACT_NUMBER'
+		taxonomy column: 'TAXONOMY'
 		dateCreated column: 'DATE_CREATED'
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
+		
+		items joinTable: [name: 'ITEM_CATEGORY',
+							key: 'CATEGORY_ID',
+							column: 'ITEM_ID']
 	}
 	
 	static constraints =
 	{
-		contractNumber nullable: false, blank: false, size: 1..256
+		taxonomy nullable: false, blank: false, size: 1..4000
 		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'

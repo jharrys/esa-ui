@@ -7,7 +7,7 @@ package org.ihc.esa
 
 class LookupElement
 {
-	
+	LookupList lookupList
 	String value
 	String display
 	Date dateCreated
@@ -15,13 +15,10 @@ class LookupElement
 	Date lastUpdated
 	String updatedBy
 	
-	static belongsTo = [
-		lookupList: LookupList
-	]
+	static belongsTo = LookupList
 	
 	static mapping =
 	{
-		
 		id generator:'sequence', params:[sequence:'LOOKUP_ELEMENT_SEQ']
 		table 'LOOKUP_ELEMENT'
 		version false
@@ -37,10 +34,12 @@ class LookupElement
 	
 	static constraints =
 	{
-		
-		value nullable: false
-		display nullable: false
-		createdBy nullable: false
-		updatedBy nullable: false
+		lookupList nullable: true
+		value nullable: false, blank: false, size: 1..40
+		display nullable: false, blank: false, size: 1..256
+		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
+		createdBy nullable: false, size: 1..40
+		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
+		updatedBy nullable: false, size: 1..40
 	}
 }

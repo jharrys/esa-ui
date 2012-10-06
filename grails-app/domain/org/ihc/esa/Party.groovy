@@ -1,29 +1,71 @@
 package org.ihc.esa
 
-/***************************************************************************
+/*--------------------------------------------------------------------------
  Generated code by GenGroovyObjects [20-Aug-2012 15:47:33 -0600]
  Copyright 2012 by Intermountain Healthcare
- ***************************************************************************/
+ ---------------------------------------------------------------------------*/
 
+/**
+ * <p>
+ * Party represents a vendor or partner with which we do business.
+ * </p>
+ * <p>
+ * {@link #type} is the only required field, all others are nullable.
+ * </p>
+ * @author lpjharri
+ * @since 1.0
+ * @see Address
+ * @see PartyRelationship
+ */
 class Party
 {
-	
+	/**
+	 * Identifier from the external source from which this address was acquired.
+	 * Can be nullable.
+	 */
 	String externalId
+	
+	/**
+	 * Describes the type of relationship we have with the vendor.
+	 * Required field.
+	 */
 	String type
+	
+	/**
+	 * Vendor name.
+	 * Can be nullable.
+	 */
 	String name
+	
+	/**
+	 * Valid email address.
+	 * Can be nullable.
+	 */
 	String emailAddress
+	
 	String mobilePhoneNumber
 	String workPhoneNumber
 	String homePhoneNumber
+	
+	/**
+	 * Valid URL for vendor's website.
+	 * Can be nullable.
+	 */
 	String webSiteUrl
+	
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
 	
+	/**
+	 * Party can have many of type {@link Item}
+	 * Party can have many of type {@link Address}; join table is PARTY_ADDRESS
+	 * Party can also have relationships with multiple other parties.
+	 */
 	static hasMany = [
-		vendorItem: Item,
-		partyAddressParty: PartyAddress,
+		addresses: Address,							//validated
+		items: Item,								//validated
 		partyRelationshipParty: PartyRelationship,
 		partyRelationshipParty1: PartyRelationship
 	]
@@ -33,17 +75,14 @@ class Party
 		partyRelationshipParty1:"childParty"
 	]
 	
+	/**
+	 * Party maps to table PARTY
+	 */
 	static mapping =
 	{
-		
 		id generator:'sequence', params:[sequence:'PARTY_SEQ']
 		table 'PARTY'
 		version false
-		
-		vendorItem joinTable: [ name: 'ITEM', key: 'VENDOR_PARTY_ID']
-		partyAddressParty joinTable: [ name: 'PARTY_ADDRESS', key: 'PARTY_ID']
-		partyRelationshipParty joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'PARENT_PARTY_ID']
-		partyRelationshipParty1 joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'CHILD_PARTY_ID']
 		
 		externalId column: 'EXTERNAL_ID'
 		type column: 'TYPE'
@@ -57,20 +96,28 @@ class Party
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
+		
+		//validated: addresses, items
+		addresses joinTable: [ name: 'PARTY_ADDRESS', key: 'PARTY_ID', column: 'ADDRESS_ID']
+		items joinTable: [ name: 'ITEM', key: 'VENDOR_PARTY_ID' ]
+		
+		partyRelationshipParty joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'PARENT_PARTY_ID']
+		partyRelationshipParty1 joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'CHILD_PARTY_ID']
 	}
 	
 	static constraints =
 	{
-		
-		externalId nullable: true
-		type nullable: false
-		name nullable: true
-		emailAddress nullable: true
-		mobilePhoneNumber nullable: true
-		workPhoneNumber nullable: true
-		homePhoneNumber nullable: true
-		webSiteUrl nullable: true
-		createdBy nullable: false
-		updatedBy nullable: false
+		externalId nullable: true, blank: false, size: 1..128
+		type nullable: false, blank: false, size: 1..40
+		name nullable: true, blank: false, size: 1..128
+		emailAddress nullable: true, email: true
+		mobilePhoneNumber nullable: true, size: 0..15
+		workPhoneNumber nullable: true, size: 0..15
+		homePhoneNumber nullable: true, size: 0..15
+		webSiteUrl nullable: true, url: true, size: 0..4000
+		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
+		createdBy nullable: false, size: 1..40
+		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
+		updatedBy nullable: false, size: 1..40
 	}
 }

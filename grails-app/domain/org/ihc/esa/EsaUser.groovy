@@ -7,21 +7,39 @@ class EsaUser
 	
 	String username
 	String password
-	String email_address
-	boolean enabled
-	boolean accountExpired
-	boolean accountLocked
-	boolean passwordExpired
+	String emailAddress
+	boolean enabled = false
+	boolean accountExpired = false
+	boolean accountLocked = false
+	boolean passwordExpired = false
+	BigDecimal version
+	
+	static mapping =
+	{
+		id generator:'sequence', params:[sequence:'ESA_USER_SEQ']
+		table 'ESA_USER'
+		
+		username column: 'USERNAME'
+		password column: 'PASSWORD'
+		emailAddress column: 'EMAIL_ADDRESS'
+		enabled column: 'ENABLED'
+		accountExpired column: 'ACCOUNT_EXPIRED'
+		accountLocked column: 'ACCOUNT_LOCKED'
+		passwordExpired column: 'PASSWORD_EXPIRED'
+		version column: 'VERSION'
+	}
 	
 	static constraints =
 	{
-		username blank: false, unique: true
-		password blank: false
-		email_address blank: false, email: true
+		username nullable: false, blank: false, unique: true
+		password nullable: false, blank: false, password: true
+		emailAddress nullable: true, blank: false, email: true
+		enabled nullable: true
+		accountExpired nullable: true
+		accountLocked nullable: true
+		passwordExpired nullable: true
+		version nullable: true
 	}
-	
-	static mapping =
-	{ password column: 'password' }
 	
 	Set<EsaRole> getAuthorities()
 	{

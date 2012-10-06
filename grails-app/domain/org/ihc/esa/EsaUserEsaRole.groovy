@@ -6,6 +6,23 @@ class EsaUserEsaRole implements Serializable {
 
 	EsaUser esaUser
 	EsaRole esaRole
+	
+	static mapping = {
+		id generator:'sequence', params:[sequence:'ESA_USER_ESA_ROLE_SEQ']
+		table 'ESA_USER_ESA_ROLE'
+		
+		id composite: ['esaRole', 'esaUser']
+		version false
+		
+		esaUser column: 'ESA_USER_ID'
+		esaRole column: 'ESA_ROLE_ID'
+	}
+	
+	static constraints =
+	{
+		esaUser nullable: false
+		esaRole nullable: false
+	}
 
 	boolean equals(other) {
 		if (!(other instanceof EsaUserEsaRole)) {
@@ -48,10 +65,5 @@ class EsaUserEsaRole implements Serializable {
 
 	static void removeAll(EsaRole esaRole) {
 		executeUpdate 'DELETE FROM EsaUserEsaRole WHERE esaRole=:esaRole', [esaRole: esaRole]
-	}
-
-	static mapping = {
-		id composite: ['esaRole', 'esaUser']
-		version false
 	}
 }

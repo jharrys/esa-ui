@@ -7,14 +7,15 @@ package org.ihc.esa
 
 class QuestionResponse
 {
-	
+	FormField formField
+	Document document
+	String stringValue
+	BigDecimal floatValue
+	Date dateValue
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
-	String stringValue
-	BigDecimal floatValue
-	Date dateValue
 	
 	def value = null
 	
@@ -36,36 +37,35 @@ class QuestionResponse
 	
 	static transients = ['value']
 	
-	static belongsTo = [
-		document: Document,
-		formField: FormField
-	]
+	static belongsTo = [ Document, FormField ]
 	
 	static mapping =
 	{
-		
 		id generator:'sequence', params:[sequence:'QUESTION_RESPONSE_SEQ']
 		table 'QUESTION_RESPONSE'
 		version false
 		
-		dateCreated column: 'DATE_CREATED'
-		createdBy column: 'CREATED_BY'
-		lastUpdated column: 'LAST_UPDATED'
-		updatedBy column: 'UPDATED_BY'
 		formField column: 'FORM_FIELD_ID'
 		document column: 'DOCUMENT_ID'
 		stringValue column: 'STRING_VALUE'
 		floatValue column: 'FLOAT_VALUE'
 		dateValue column: 'DATE_VALUE'
+		dateCreated column: 'DATE_CREATED'
+		createdBy column: 'CREATED_BY'
+		lastUpdated column: 'LAST_UPDATED'
+		updatedBy column: 'UPDATED_BY'
 	}
 	
 	static constraints =
 	{
-		formField unique: 'document'	// formField + document combination should be unique
-		createdBy nullable: true
-		updatedBy nullable: true
-		stringValue nullable: true
+		formField nullable: true, unique: 'document'
+		document nullable: true
+		stringValue nullable: true, blank: false, size: 1..4000
 		floatValue nullable: true
-		dateValue nullable: true
+		dateValue nullable: true, display: true, format: 'yyyy-MM-dd'
+		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
+		createdBy nullable: false, size: 1..40
+		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
+		updatedBy nullable: false, size: 1..40
 	}
 }

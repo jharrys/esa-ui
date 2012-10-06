@@ -1,52 +1,53 @@
 package org.ihc.esa
 
 /*--------------------------------------------------------------------------
- Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
+ Created manually by JH [05-Oct-2012 13:00:00 -0600]
  Copyright 2012 by Intermountain Healthcare
  --------------------------------------------------------------------------*/
 
 /**
  * <p>
- * Contract represents the contract we have with the vendor for a specific
- * {@link Item}.
+ * ConfigurationParameter stores meta-data about the database version for this
+ * application, as well as other parameters that may be needed in the future.
  * </p>
  * <p>
- * A contract can have many of type {@link Item}.
- * </p>
- * <p>
- * {@link #contractNumber} is required and represents the identifier for the
- * contract on file.
+ * {@link #name} is required.
+ * {@link #value} is required.
  * </p>
  * @author lpjharri
- *
+ * @since 1.0
  */
-class Contract
+
+class ConfigurationParameter
 {
 	/**
-	 * String to identify contract.
+	 * Name of parameter. See {@link #value}.
 	 * Required.
 	 */
-	String contractNumber
+	String name
+	
+	/**
+	 * value of {@link #name}.
+	 * Required.
+	 */
+	String value
 	
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
 	
-	static hasMany = [
-		items: Item
-	]
-	
 	/**
-	 * Contract maps to table CONTRACT
+	 * ConfigurationParameter maps to table CONFIGURATION_PARAMETER
 	 */
 	static mapping =
 	{
-		id generator:'sequence', params:[sequence:'CONTRACT_SEQ']
-		table 'CONTRACT'
+		id generator:'sequence', params:[sequence:'CONFIGURATION_PARAMETER_SEQ']
+		table 'CONFIGURATION_PARAMETER'
 		version false
 		
-		contractNumber column: 'CONTRACT_NUMBER'
+		name column: 'NAME'
+		value column: 'VALUE'
 		dateCreated column: 'DATE_CREATED'
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
@@ -55,7 +56,8 @@ class Contract
 	
 	static constraints =
 	{
-		contractNumber nullable: false, blank: false, size: 1..256
+		name nullable: false, blank: false, size: 1..1024
+		value nullable: false, blank: false, size: 1..4000
 		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'

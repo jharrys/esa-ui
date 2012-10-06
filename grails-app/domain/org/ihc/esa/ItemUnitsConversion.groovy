@@ -7,7 +7,7 @@ package org.ihc.esa
 
 class ItemUnitsConversion
 {
-	
+	Item item
 	BigDecimal value
 	String units
 	String perUnits
@@ -16,13 +16,10 @@ class ItemUnitsConversion
 	Date lastUpdated
 	String updatedBy
 	
-	static belongsTo = [
-		item: Item
-	]
+	static belongsTo = Item
 	
 	static mapping =
 	{
-		
 		id generator:'sequence', params:[sequence:'ITEM_UNITS_CONVERSION_SEQ']
 		table 'ITEM_UNITS_CONVERSION'
 		version false
@@ -39,12 +36,13 @@ class ItemUnitsConversion
 	
 	static constraints =
 	{
-		
 		item nullable: true
 		value nullable: true
-		units nullable: true
-		perUnits nullable: true
-		createdBy nullable: false
-		updatedBy nullable: false
+		units nullable: true, blank: false, size: 1..64
+		perUnits nullable: true, blank: false, size: 1..64
+		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
+		createdBy nullable: false, size: 1..40
+		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
+		updatedBy nullable: false, size: 1..40
 	}
 }

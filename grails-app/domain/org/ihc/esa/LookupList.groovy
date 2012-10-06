@@ -7,7 +7,6 @@ package org.ihc.esa
 
 class LookupList
 {
-	
 	String name
 	String prompt
 	String description
@@ -25,7 +24,6 @@ class LookupList
 	
 	static mapping =
 	{
-		
 		id generator:'sequence', params:[sequence:'LOOKUP_LIST_SEQ']
 		table 'LOOKUP_LIST'
 		version false
@@ -43,18 +41,14 @@ class LookupList
 	
 	static constraints =
 	{
-		
-		name nullable: false
-		prompt nullable: false
-		description nullable: true
-		listType nullable: false
-		sqlStatement nullable: true
-		createdBy nullable: false
-		updatedBy nullable: false
-	}
-	
-	String toString()
-	{
-		name + " of type " + listType
+		name nullable: false, blank: false, size: 1..40
+		prompt nullable: false, blank: false, size: 1..256
+		description nullable: true, size: 0..1024
+		listType nullable: false, blank: false, size: 1..40
+		sqlStatement nullable: true, blank: false, size: 1..4000
+		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
+		createdBy nullable: false, size: 1..40
+		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
+		updatedBy nullable: false, size: 1..40
 	}
 }

@@ -7,20 +7,17 @@ package org.ihc.esa
 
 class ReplacementItem
 {
-	
+	Item item
+	Item replacementItem
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
 	
-	static belongsTo = [
-		replacementItem: Item,
-		item: Item
-	]
+	static belongsTo = [ Item ]
 	
 	static mapping =
 	{
-		
 		id generator:'sequence', params:[sequence:'REPLACEMENT_ITEM_SEQ']
 		table 'REPLACEMENT_ITEM'
 		version false
@@ -35,10 +32,11 @@ class ReplacementItem
 	
 	static constraints =
 	{
-		
 		item nullable: false
 		replacementItem nullable: false
-		createdBy nullable: false
-		updatedBy nullable: false
+		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
+		createdBy nullable: false, size: 1..40
+		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
+		updatedBy nullable: false, size: 1..40
 	}
 }
