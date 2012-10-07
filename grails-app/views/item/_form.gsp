@@ -7,7 +7,7 @@
 		<g:message code="item.externalId.label" default="External Id" />
 		
 	</label>
-	<g:textField name="externalId" value="${itemInstance?.externalId}"/>
+	<g:textArea name="externalId" cols="40" rows="5" maxlength="256" value="${itemInstance?.externalId}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'sourceSystem', 'error')} ">
@@ -15,7 +15,7 @@
 		<g:message code="item.sourceSystem.label" default="Source System" />
 		
 	</label>
-	<g:textField name="sourceSystem" value="${itemInstance?.sourceSystem}"/>
+	<g:textArea name="sourceSystem" cols="40" rows="5" maxlength="256" value="${itemInstance?.sourceSystem}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'standard', 'error')} ">
@@ -24,6 +24,54 @@
 		
 	</label>
 	<g:select name="standard" from="${itemInstance.constraints.standard.inList}" value="${itemInstance?.standard}" valueMessagePrefix="item.standard" noSelection="['': '']"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'standardType', 'error')} ">
+	<label for="standardType">
+		<g:message code="item.standardType.label" default="Standard Type" />
+		
+	</label>
+	<g:textField name="standardType" maxlength="40" value="${itemInstance?.standardType}"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'exception', 'error')} ">
+	<label for="exception">
+		<g:message code="item.exception.label" default="Exception" />
+		
+	</label>
+	<g:select name="exception" from="${itemInstance.constraints.exception.inList}" value="${itemInstance?.exception}" valueMessagePrefix="item.exception" noSelection="['': '']"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'deviation', 'error')} ">
+	<label for="deviation">
+		<g:message code="item.deviation.label" default="Deviation" />
+		
+	</label>
+	<g:select name="deviation" from="${itemInstance.constraints.deviation.inList}" value="${itemInstance?.deviation}" valueMessagePrefix="item.deviation" noSelection="['': '']"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'inService', 'error')} ">
+	<label for="inService">
+		<g:message code="item.inService.label" default="In Service" />
+		
+	</label>
+	<g:select name="inService" from="${itemInstance.constraints.inService.inList}" value="${itemInstance?.inService}" valueMessagePrefix="item.inService" noSelection="['': '']"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'exceptionRequired', 'error')} ">
+	<label for="exceptionRequired">
+		<g:message code="item.exceptionRequired.label" default="Exception Required" />
+		
+	</label>
+	<g:select name="exceptionRequired" from="${itemInstance.constraints.exceptionRequired.inList}" value="${itemInstance?.exceptionRequired}" valueMessagePrefix="item.exceptionRequired" noSelection="['': '']"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'exceptionCriteria', 'error')} ">
+	<label for="exceptionCriteria">
+		<g:message code="item.exceptionCriteria.label" default="Exception Criteria" />
+		
+	</label>
+	<g:textArea name="exceptionCriteria" cols="40" rows="5" maxlength="2048" value="${itemInstance?.exceptionCriteria}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'document', 'error')} ">
@@ -47,7 +95,7 @@
 		<g:message code="item.name.label" default="Name" />
 		
 	</label>
-	<g:textField name="name" value="${itemInstance?.name}"/>
+	<g:textField name="name" maxlength="128" value="${itemInstance?.name}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'description', 'error')} ">
@@ -55,7 +103,7 @@
 		<g:message code="item.description.label" default="Description" />
 		
 	</label>
-	<g:textField name="description" value="${itemInstance?.description}"/>
+	<g:textArea name="description" cols="40" rows="5" maxlength="512" value="${itemInstance?.description}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'generalLedgerCode', 'error')} ">
@@ -63,7 +111,7 @@
 		<g:message code="item.generalLedgerCode.label" default="General Ledger Code" />
 		
 	</label>
-	<g:textField name="generalLedgerCode" value="${itemInstance?.generalLedgerCode}"/>
+	<g:textArea name="generalLedgerCode" cols="40" rows="5" maxlength="256" value="${itemInstance?.generalLedgerCode}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'productGroup', 'error')} ">
@@ -71,7 +119,7 @@
 		<g:message code="item.productGroup.label" default="Product Group" />
 		
 	</label>
-	<g:textField name="productGroup" value="${itemInstance?.productGroup}"/>
+	<g:textField name="productGroup" maxlength="64" value="${itemInstance?.productGroup}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'technologyGroup', 'error')} ">
@@ -79,7 +127,7 @@
 		<g:message code="item.technologyGroup.label" default="Technology Group" />
 		
 	</label>
-	<g:textField name="technologyGroup" value="${itemInstance?.technologyGroup}"/>
+	<g:textField name="technologyGroup" maxlength="64" value="${itemInstance?.technologyGroup}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'contract', 'error')} ">
@@ -95,7 +143,7 @@
 		<g:message code="item.availableDate.label" default="Available Date" />
 		
 	</label>
-	<g:datePicker name="availableDate" precision="day"  value="${itemInstance?.availableDate}" default="none" noSelection="['': '']" />
+	<g:datePicker name="availableDate" format="yyyy-MM-dd" precision="day"  value="${itemInstance?.availableDate}" default="none" noSelection="['': '']" />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'ihcActualDecomissioned', 'error')} ">
@@ -103,7 +151,7 @@
 		<g:message code="item.ihcActualDecomissioned.label" default="Ihc Actual Decomissioned" />
 		
 	</label>
-	<g:datePicker name="ihcActualDecomissioned" precision="day"  value="${itemInstance?.ihcActualDecomissioned}" default="none" noSelection="['': '']" />
+	<g:datePicker name="ihcActualDecomissioned" format="yyyy-MM-dd" precision="day"  value="${itemInstance?.ihcActualDecomissioned}" default="none" noSelection="['': '']" />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'ihcProposedDecomissioned', 'error')} ">
@@ -111,7 +159,7 @@
 		<g:message code="item.ihcProposedDecomissioned.label" default="Ihc Proposed Decomissioned" />
 		
 	</label>
-	<g:datePicker name="ihcProposedDecomissioned" precision="day"  value="${itemInstance?.ihcProposedDecomissioned}" default="none" noSelection="['': '']" />
+	<g:datePicker name="ihcProposedDecomissioned" format="yyyy-MM-dd" precision="day"  value="${itemInstance?.ihcProposedDecomissioned}" default="none" noSelection="['': '']" />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'vendorDecomissioned', 'error')} ">
@@ -119,7 +167,7 @@
 		<g:message code="item.vendorDecomissioned.label" default="Vendor Decomissioned" />
 		
 	</label>
-	<g:datePicker name="vendorDecomissioned" precision="day"  value="${itemInstance?.vendorDecomissioned}" default="none" noSelection="['': '']" />
+	<g:datePicker name="vendorDecomissioned" format="yyyy-MM-dd" precision="day"  value="${itemInstance?.vendorDecomissioned}" default="none" noSelection="['': '']" />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'vendorCatalogNumber', 'error')} ">
@@ -127,7 +175,7 @@
 		<g:message code="item.vendorCatalogNumber.label" default="Vendor Catalog Number" />
 		
 	</label>
-	<g:textField name="vendorCatalogNumber" value="${itemInstance?.vendorCatalogNumber}"/>
+	<g:textField name="vendorCatalogNumber" maxlength="20" value="${itemInstance?.vendorCatalogNumber}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'manufacturerPartId', 'error')} ">
@@ -143,7 +191,7 @@
 		<g:message code="item.manufacturerCatalogNumber.label" default="Manufacturer Catalog Number" />
 		
 	</label>
-	<g:textField name="manufacturerCatalogNumber" value="${itemInstance?.manufacturerCatalogNumber}"/>
+	<g:textArea name="manufacturerCatalogNumber" cols="40" rows="5" maxlength="256" value="${itemInstance?.manufacturerCatalogNumber}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'purchasingUnitOfMeasure', 'error')} ">
@@ -151,7 +199,7 @@
 		<g:message code="item.purchasingUnitOfMeasure.label" default="Purchasing Unit Of Measure" />
 		
 	</label>
-	<g:textField name="purchasingUnitOfMeasure" value="${itemInstance?.purchasingUnitOfMeasure}"/>
+	<g:textField name="purchasingUnitOfMeasure" maxlength="64" value="${itemInstance?.purchasingUnitOfMeasure}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'purchasingUnitPrice', 'error')} ">
@@ -167,7 +215,31 @@
 		<g:message code="item.unspscNumber.label" default="Unspsc Number" />
 		
 	</label>
-	<g:textField name="unspscNumber" value="${itemInstance?.unspscNumber}"/>
+	<g:textField name="unspscNumber" maxlength="20" value="${itemInstance?.unspscNumber}"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'usefulLife', 'error')} ">
+	<label for="usefulLife">
+		<g:message code="item.usefulLife.label" default="Useful Life" />
+		
+	</label>
+	<g:textField name="usefulLife" maxlength="128" value="${itemInstance?.usefulLife}"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'comments', 'error')} ">
+	<label for="comments">
+		<g:message code="item.comments.label" default="Comments" />
+		
+	</label>
+	<g:textArea name="comments" cols="40" rows="5" maxlength="4000" value="${itemInstance?.comments}"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'party', 'error')} ">
+	<label for="party">
+		<g:message code="item.party.label" default="Party" />
+		
+	</label>
+	<g:select id="party" name="party.id" from="${org.ihc.esa.Party.list()}" optionKey="id" value="${itemInstance?.party?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'createdBy', 'error')} ">
@@ -175,7 +247,7 @@
 		<g:message code="item.createdBy.label" default="Created By" />
 		
 	</label>
-	<g:textField name="createdBy" value="${itemInstance?.createdBy}"/>
+	<g:textField name="createdBy" maxlength="40" value="${itemInstance?.createdBy}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'updatedBy', 'error')} ">
@@ -183,32 +255,23 @@
 		<g:message code="item.updatedBy.label" default="Updated By" />
 		
 	</label>
-	<g:textField name="updatedBy" value="${itemInstance?.updatedBy}"/>
+	<g:textField name="updatedBy" maxlength="40" value="${itemInstance?.updatedBy}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'vendorParty', 'error')} ">
-	<label for="vendorParty">
-		<g:message code="item.vendorParty.label" default="Vendor Party" />
-		
-	</label>
-	<g:select id="vendorParty" name="vendorParty.id" from="${org.ihc.esa.Party.list()}" optionKey="id" value="${itemInstance?.vendorParty?.id}" class="many-to-one" noSelection="['null': '']"/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'belongsToCatalogs', 'error')} ">
-	<label for="belongsToCatalogs">
-		<g:message code="item.belongsToCatalogs.label" default="Belongs To Catalogs" />
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'catalogs', 'error')} ">
+	<label for="catalogs">
+		<g:message code="item.catalogs.label" default="Catalogs" />
 		
 	</label>
 	
-<ul class="one-to-many">
-<g:each in="${itemInstance?.belongsToCatalogs?}" var="b">
-    <li><g:link controller="catalogItem" action="show" id="${b.id}">${b?.encodeAsHTML()}</g:link></li>
-</g:each>
-<li class="add">
-<g:link controller="catalogItem" action="create" params="['item.id': itemInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'catalogItem.label', default: 'CatalogItem')])}</g:link>
-</li>
-</ul>
+</div>
 
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'categories', 'error')} ">
+	<label for="categories">
+		<g:message code="item.categories.label" default="Categories" />
+		
+	</label>
+	
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'configurationElements', 'error')} ">
@@ -257,6 +320,23 @@
 </g:each>
 <li class="add">
 <g:link controller="itemVersion" action="create" params="['item.id': itemInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'itemVersion.label', default: 'ItemVersion')])}</g:link>
+</li>
+</ul>
+
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: itemInstance, field: 'notes', 'error')} ">
+	<label for="notes">
+		<g:message code="item.notes.label" default="Notes" />
+		
+	</label>
+	
+<ul class="one-to-many">
+<g:each in="${itemInstance?.notes?}" var="n">
+    <li><g:link controller="note" action="show" id="${n.id}">${n?.encodeAsHTML()}</g:link></li>
+</g:each>
+<li class="add">
+<g:link controller="note" action="create" params="['item.id': itemInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'note.label', default: 'Note')])}</g:link>
 </li>
 </ul>
 
