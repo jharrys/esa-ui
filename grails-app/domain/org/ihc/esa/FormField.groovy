@@ -16,7 +16,6 @@ package org.ihc.esa
  * {@link #form} is required to link back to it's type.
  * {@link #sectionNumber} is required, probably doesn't need to be.
  * {@link #question} is required as it is the rendered representation of this FormField.
- * {@link #dataType} is required and represents the type of data to be entered.
  * </p>
  * <p>
  * The rest of the properties are nullable.
@@ -73,7 +72,7 @@ class FormField
 	String searchListing
 	
 	/**
-	 * Required. Expresses the type of data for response.
+	 * Optional. Expresses the type of data for response.
 	 */
 	String dataType
 	
@@ -190,7 +189,7 @@ class FormField
 		internalOnly nullable: true, inList: ["Y","N"], blank: false, size: 1..1
 		question nullable: false, blank: false, size: 1..4000
 		searchListing nullable: true, inList:["Y","N"], blank: false, size: 1..1 
-		dataType nullable: false, blank: false, size: 1..20
+		dataType nullable: true, blank: false, size: 1..20
 		multiSelect nullable: true, inList: ["Y","N"], blank: false, size: 1..1
 		defaultValueString nullable: true, blank: false, size: 1..4000
 		defaultValueFloat nullable: true
