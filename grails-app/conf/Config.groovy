@@ -91,10 +91,10 @@ environments {
 		grails.plugins.springsecurity.mock.active = false
 		
 		// All 3 of these must be set to true if you want spring-security-mock to load roles from ldap rather than mock.roles setting
-		grails.plugins.springsecurity.ldap.active = true
-		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = true
+		grails.plugins.springsecurity.ldap.active = false
+		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = false
 		// the full DN will be equivalent to "cn=${username},${userDnBase}"
-		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = true
+		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
 	}
 	
     production {
@@ -112,7 +112,7 @@ environments {
 		// the full DN will be equivalent to "cn=${username},${userDnBase}"
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = true
 		
-        grails.serverURL = "http://192.168.56.101:8080"
+        //grails.serverURL = ""
     }
 }
 
@@ -136,6 +136,12 @@ log4j =
 	environments {
 		
 		development {
+			/*
+			 * 'org.hibernate.SQL'  // sql output
+			 * 'org.hibernate.type' // binding variables for sql output
+			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
+			 */
+			
 			debug 	'grails.app.controllers.org.ihc.esa',					//My Controllers
 					'grails.app.domain.org.ihc.esa',						//My Domain
 					'grails.app.taglib.org.ihc.esa'							//My Tag library
@@ -155,10 +161,34 @@ log4j =
 		}
 		
 		test {
-			// set appropriate defaults for test
+			/*
+			 * 'org.hibernate.SQL'  // sql output
+			 * 'org.hibernate.type' // binding variables for sql output
+			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
+			 */
+			
+			debug 	'grails.app.controllers.org.ihc.esa',					//My Controllers
+					'grails.app.domain.org.ihc.esa',						//My Domain
+					'grails.app.taglib.org.ihc.esa'							//My Tag library
+					//'org.hibernate.SQL'									//SQL
+					//'org.codehaus.groovy.grails.web.sitemesh',			//Layout
+					//'org.codehaus.groovy.grails.orm.hibernate',
+					//'net.sf.ehcache.hibernate',
+					//'org.springframework',
+					//'grails.app.domain',
+					//'grails.app'
+					//'grails.plugins.twitterbootstrap'						//css twitter bootstrap plugin
+			
+			trace	'grails.app.services.grails.plugins.springsecurity'
 		}
 		
 		production {
+			/*
+			 * 'org.hibernate.SQL'  // sql output
+			 * 'org.hibernate.type' // binding variables for sql output
+			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
+			 */
+			
 			// set appropriate defaults for production
 		}
 		
