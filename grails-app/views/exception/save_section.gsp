@@ -70,7 +70,10 @@
 						<button type="submit" class="btn btn-primary">
 							<i class="icon-ok icon-white"></i> ${max ? "Next Section" : "Complete Exception" }
 						</button>
-						<button type="submit" class="btn btn-danger" name="_action_cancel">
+						<button type="submit" class="btn btn-warning" name="finishLater" value="true">
+							<i class="icon-ok icon-white"></i> ${max ? "Save (Finish Later)" : "Hide this button" }
+						</button>
+						<button type="submit" class="btn btn-danger" name="cancel" value="true">
 							<i class="icon-remove icon-white"></i> Cancel
 						</button>
 					</div>
