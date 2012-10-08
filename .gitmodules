@@ -1,0 +1,3 @@
+[submodule "esa-content"]
+	path = esa-content
+	url = git@github.com:jharrys/esa-content.git
