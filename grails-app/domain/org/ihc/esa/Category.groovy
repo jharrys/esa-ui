@@ -16,28 +16,43 @@ package org.ihc.esa
  * does not need to be defined as it has with the {@link Catalog} relationship.
  * </p>
  * <p>
- * {@link #taxonomy} is the only required field.
+ * {@link #name} is required.
+ * {@link #parentCategory} is required. For root nodes parentCategory == this.
+ * {@link #parentCategoryPath} is required and is the string representation of the full hierarchy, to prevent recursive queries.
  * </p>
  * @author lpjharri
+ * @since 1.0
  * @see Item
  */
 
 class Category
 {
 	/**
+	 * Required. The owning node of this node.
+	 * Note parentCategory == this for root nodes.
+	 */
+	Category parentCategory
+	
+	/**
+	 * Required. The full string path including the root node and delimiter '/'.
+	 * This is done to avoid a recursive query.
+	 */
+	String parentCategoryPath
+	
+	/**
 	 * Name for this node or container.
 	 * Required.
 	 */
-	String taxonomy
+	String name
 	
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
 	
-	static hasMany = [
-		items: Item
-	]
+	static hasMany = [ Category, Item ]
+	
+	static belongsTo = Category
 	
 	/**
 	 * Category maps to table CATEGORY
@@ -48,7 +63,9 @@ class Category
 		table 'CATEGORY'
 		version false
 		
-		taxonomy column: 'TAXONOMY'
+		parentCategory column: 'PARENT_CATEGORY_ID'
+		parentCategoryPath column: 'PARENT_CATEGORY_PATH'
+		name column: 'NAME'
 		dateCreated column: 'DATE_CREATED'
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
@@ -61,7 +78,9 @@ class Category
 	
 	static constraints =
 	{
-		taxonomy nullable: false, blank: false, size: 1..4000
+		parentCategory nullable: false
+		parentCategoryPath nullable: false, blank: false, size: 1..4000
+		name nullable: false, blank: false, size: 1..128
 		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
