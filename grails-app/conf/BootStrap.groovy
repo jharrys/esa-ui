@@ -67,37 +67,37 @@ class BootStrap
 					
 					Reader reader = null
 					
-					reader = new BufferedReader(new FileReader("../../form_seed_data.sql"))
+					reader = new BufferedReader(new FileReader("esa-content/form_seed_data.sql"))
 					RunScript.execute(connection, reader)
 					reader.close()
 					assert Form.count() == 4
 					
-					reader = new BufferedReader(new FileReader("../../party_seed_data.sql"))
+					reader = new BufferedReader(new FileReader("esa-content/party_seed_data.sql"))
 					RunScript.execute(connection, reader)
 					reader.close()
 					assert Party.count() == 42
 					
-					reader = new BufferedReader(new FileReader("../../configuration_parameter_seed_data.sql"))
+					reader = new BufferedReader(new FileReader("esa-content/configuration_parameter_seed_data.sql"))
 					RunScript.execute(connection, reader)
 					reader.close()
 					assert ConfigurationParameter.count() == 1
 					
-					reader = new BufferedReader(new FileReader("../../lookup_list_seed_data.sql"))
+					reader = new BufferedReader(new FileReader("esa-content/lookup_list_seed_data.sql"))
 					RunScript.execute(connection, reader)
 					reader.close()
 					assert LookupList.count() == 14
 					
-					reader = new BufferedReader(new FileReader("../../lookup_element_seed_data.sql"))
+					reader = new BufferedReader(new FileReader("esa-content/lookup_element_seed_data.sql"))
 					RunScript.execute(connection, reader)
 					reader.close()
 					assert LookupElement.count() == 29
 					
-					reader = new BufferedReader(new FileReader("../../form_field_seed_data.sql"))
+					reader = new BufferedReader(new FileReader("esa-content/form_field_seed_data.sql"))
 					RunScript.execute(connection, reader)
 					reader.close()
 					assert FormField.count() == 44
 					
-					reader = new BufferedReader(new FileReader("../../item_seed_data_from_eisa_excel.sql"))
+					reader = new BufferedReader(new FileReader("esa-content/item_seed_data_from_eisa_excel.sql"))
 					RunScript.execute(connection, reader)
 					reader.close()
 					assert Item.count() == 341
