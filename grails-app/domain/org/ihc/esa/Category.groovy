@@ -52,8 +52,6 @@ class Category
 	
 	static hasMany = [ Category, Item ]
 	
-	static belongsTo = Category
-	
 	/**
 	 * Category maps to table CATEGORY
 	 */
