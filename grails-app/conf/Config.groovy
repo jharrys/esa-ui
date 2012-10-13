@@ -51,10 +51,23 @@ grails.exceptionresolver.params.exclude = ['password']
 grails.hibernate.cache.queries = true
 
 // configure mail plugin
+//grails {
+//	mail {
+//		host = "smtp.co.ihc.com"
+//		port = 25
+//	}
+//}
+
 grails {
 	mail {
-		host = "smtp.co.ihc.com"
-		port = 25
+		host = "smtp.gmail.com"
+		port = 465
+		username = "harris.johnny@gmail.com"
+		password = "eyrodujhipahspco"
+		props = ["mail.smtp.auth":"true",
+				"mail.smtp.socketFactory.port":"465",
+				"mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+				"mail.smtp.socketFactory.fallback":"false"]
 	}
 }
 

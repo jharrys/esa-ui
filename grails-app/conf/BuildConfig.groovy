@@ -6,11 +6,11 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 grails.project.war.file = "esa-ui.war"
-grails.war.resources =
-{ stagingDir, args ->
-	copy(file: "grails-app/conf/log4j.groovy",
-					tofile: "${stagingDir}/WEB-INF/classes/log4j.groovy")
-}
+//grails.war.resources =
+//{ stagingDir, args ->
+//	copy(file: "grails-app/conf/log4j.groovy",
+//					tofile: "${stagingDir}/WEB-INF/classes/log4j.groovy")
+//}
 
 grails.project.dependency.resolution =
 {

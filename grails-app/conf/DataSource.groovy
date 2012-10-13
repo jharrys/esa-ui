@@ -51,7 +51,7 @@ environments
 			username = "esa"
 			password = "esa"
 			dialect = "org.hibernate.dialect.Oracle10gDialect"
-			url = "jdbc:oracle:thin:@192.168.56.101:1521:esa"
+			url = "jdbc:oracle:thin:@159.212.164.180:1521:esa"
 			// logSql = true
 		}
 	}
