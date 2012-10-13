@@ -57,11 +57,8 @@ class ExceptionController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def create()
 	{
-		def user = null
-		if (log.debugEnabled) {
-			user = springSecurityService.currentUser
-		}
-
+		def user = springSecurityService.currentUser
+		
 		log.debug("====================================================================================")
 		log.debug("create() action in exception controller called with: " + params)
 		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
@@ -79,10 +76,10 @@ class ExceptionController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def save()
 	{
-		def user = null
-		if (log.debugEnabled) {
-			user = springSecurityService.currentUser
-		}
+		def user = springSecurityService.currentUser
+		
+		def xisnottrue = false
+		assert xisnottrue
 		
 		log.debug("====================================================================================")
 		log.debug("save() action in exception controller called with: " + params)
@@ -141,18 +138,15 @@ class ExceptionController
 		
 		log.debug("Delegating rendering to save_section.gsp...")
 		render(view: "save_section", model: [documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
-			formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
+							formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
 	}
 	
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def save_section() {
 		
 		// user profile authenticated to this instance
-		def user = null
-		if (log.debugEnabled) {
-			user = springSecurityService.currentUser
-		}
-
+		def user = springSecurityService.currentUser
+		
 		log.debug("====================================================================================")
 		log.debug("save_section() action in exception controller called with: " + params)
 		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
@@ -188,8 +182,8 @@ class ExceptionController
 				map["$qrid"] = m
 				log.debug("map: " + map)
 			}
-	
-			log.debug("[[ begin parsing for each formfield ]]")		
+			
+			log.debug("[[ begin parsing for each formfield ]]")
 			map.each { key, m ->
 				log.debug("=== formField: " + key + " ===")
 				log.debug("dataType == \"" + m.type + "\"")
@@ -202,18 +196,18 @@ class ExceptionController
 					switch(m.type.toUpperCase()) {
 						case "DATE_VALUE":
 							log.debug("case of " + m.type)
-							qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username, 
-								dateValue: m.value)
+							qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username,
+											dateValue: m.value)
 							log.debug("QuestionResponse instance created for " + key)
 							break
-							
+						
 						case "FLOAT_VALUE":
 							log.debug("case of " + m.type)
 							qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username,
-								floatValue: m.value)
+											floatValue: m.value)
 							log.debug("QuestionResponse instance created for " + key)
 							break
-							
+						
 						case "STRING_VALUE":
 							log.debug("case of " + m.type)
 						
@@ -222,7 +216,7 @@ class ExceptionController
 							if ((m.value) && (!m.value.equals("null")) && ((!m.value.equals("type here")))) {
 								log.debug("test for valid m.value passed")
 								qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username,
-									stringValue: m.value)
+												stringValue: m.value)
 								log.debug("QuestionResponse instance created for " + key)
 							} else {
 								log.debug("test for valid m.value did **not** pass")
@@ -241,8 +235,8 @@ class ExceptionController
 							qr.errors.allErrors.each { log.error(it) }
 							flash.message = "Error saving to QuestionResponse table for FormField " + key + " with value \"" + m.value + "\""
 						} else {
-							log.debug("QuestionResponse instance with id " + qr.id + " has been saved for Document " + qr.document.id + 
-								" with FormField of " + qr.formField.id + " and value of \"" + qr.value + "\"")
+							log.debug("QuestionResponse instance with id " + qr.id + " has been saved for Document " + qr.document.id +
+											" with FormField of " + qr.formField.id + " and value of \"" + qr.value + "\"")
 						}
 					} else {
 						log.debug("assertion that qr is not null failed! -> this may be legitimate, user may not have filled in a non-required field.")
@@ -273,7 +267,7 @@ class ExceptionController
 					
 					log.debug("submitting to save_section view for rendering.")
 					render(view: "save_section", model: [documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
-						formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
+										formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
 				} else {
 					log.debug("no more sections to present for form id " + exceptionForm.id + " and document id: " + documentInstance.id)
 					flash.message = "Exception ID " + documentInstance.id + " \"" + documentInstance.title + "\" successfully completed.<br>Please note ID for future reference."
@@ -302,7 +296,7 @@ class ExceptionController
 			section -= 1
 			
 			flash.message = "Saving of section " + section + " has been canceled.<br />" +
-				"Document number " + documentInstance.id + " titled \"" + documentInstance.title + "\" will remain in the database at its last saved point."
+							"Document number " + documentInstance.id + " titled \"" + documentInstance.title + "\" will remain in the database at its last saved point."
 			redirect action: 'list'
 		} // end-cancel
 	}
@@ -311,11 +305,8 @@ class ExceptionController
 	def edit() {
 		
 		// user profile authenticated to this instance
-		def user = null
-		if (log.debugEnabled) {
-			user = springSecurityService.currentUser
-		}
-
+		def user = springSecurityService.currentUser
+		
 		log.debug("====================================================================================")
 		log.debug("edit() action in exception controller called with: " + params)
 		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
@@ -325,45 +316,45 @@ class ExceptionController
 		
 		switch (request.method) {
 			case 'GET':
-			def documentInstance = Document.get(params.id)
-			if (!documentInstance) {
-				flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
-				redirect action: 'list'
-				return
-			}
+				def documentInstance = Document.get(params.id)
+				if (!documentInstance) {
+					flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
+					redirect action: 'list'
+					return
+				}
 			
-			[documentInstance: documentInstance, username: principal.username]
-			break
+				[documentInstance: documentInstance, username: principal.username]
+				break
 			case 'POST':
-			log.debug("Updating document id: " + params.id)
-			def documentInstance = Document.get(params.id)
-			if (!documentInstance) {
-				flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
-				redirect action: 'list'
-				return
-			}
+				log.debug("Updating document id: " + params.id)
+				def documentInstance = Document.get(params.id)
+				if (!documentInstance) {
+					flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), params.id])
+					redirect action: 'list'
+					return
+				}
 			
-			def title = params.title
-			log.debug("Web form title is set to: " + title)
-			if (!title.equals(documentInstance.title)) {
-				log.debug("Document <" + params.id + "> title is \"" + documentInstance.title + "\"; Updating to: \"" + title + "\"")
-				log.debug("FormField to find: " + documentInstance.titleFormField)
-				def qr = QuestionResponse.findByFormFieldAndDocument(documentInstance.titleFormField, documentInstance)
-				log.debug("QuestionResponse id to update is: " + qr.id)
-				qr.stringValue = title
-				qr.save()
-			}
+				def title = params.title
+				log.debug("Web form title is set to: " + title)
+				if (!title.equals(documentInstance.title)) {
+					log.debug("Document <" + params.id + "> title is \"" + documentInstance.title + "\"; Updating to: \"" + title + "\"")
+					log.debug("FormField to find: " + documentInstance.titleFormField)
+					def qr = QuestionResponse.findByFormFieldAndDocument(documentInstance.titleFormField, documentInstance)
+					log.debug("QuestionResponse id to update is: " + qr.id)
+					qr.stringValue = title
+					qr.save()
+				}
 			
-			documentInstance.properties = params
+				documentInstance.properties = params
 			
-			if (!documentInstance.save(flush: true)) {
-				render view: 'edit', model: [documentInstance: documentInstance]
-				return
-			}
+				if (!documentInstance.save(flush: true)) {
+					render view: 'edit', model: [documentInstance: documentInstance]
+					return
+				}
 			
-			flash.message = message(code: 'default.updated.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
-			redirect action: 'show', id: documentInstance.id
-			break
+				flash.message = message(code: 'default.updated.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
+				redirect action: 'show', id: documentInstance.id
+				break
 		}
 	}
 	
@@ -371,11 +362,8 @@ class ExceptionController
 	def update() {
 		
 		// user profile authenticated to this instance
-		def user = null
-		if (log.debugEnabled) {
-			user = springSecurityService.currentUser
-		}
-
+		def user = springSecurityService.currentUser
+		
 		log.debug("====================================================================================")
 		log.debug("update() action in exception controller called with: " + params)
 		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
@@ -394,8 +382,8 @@ class ExceptionController
 			def version = params.version.toLong()
 			if (documentInstance.version > version) {
 				documentInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-				[message(code: 'document.label', default: 'Document')] as Object[],
-				"Another user has updated this Document while you were editing")
+								[message(code: 'document.label', default: 'Document')] as Object[],
+								"Another user has updated this Document while you were editing")
 				render(view: "edit", model: [documentInstance: documentInstance])
 				return
 			}
@@ -416,11 +404,8 @@ class ExceptionController
 	def delete() {
 		
 		// user profile authenticated to this instance
-		def user = null
-		if (log.debugEnabled) {
-			user = springSecurityService.currentUser
-		}
-
+		def user = springSecurityService.currentUser
+		
 		log.debug("====================================================================================")
 		log.debug("save_section() action in exception controller called with: " + params)
 		log.debug("requires ROLE_ESA_ADMIN and user must be FULLY_AUTHENTICATED")
@@ -449,11 +434,11 @@ class ExceptionController
 	
 	def error() {
 		//TODO enable this before sending to production
-		//		sendMail {
-		//			to "eisa-repository-notify@imail.org"
-		//			subject "esa-ui error"
-		//			body flash.message + "\n" + params.exception
-		//		}
+		sendMail {
+			to "harris.johnny@gmail.com"
+			subject "esa-ui error"
+			body flash.message + "\n" + params.exception
+		}
 		
 		flash.message = "ESA Team notified. We will try to respond within the next few hours. If it's urgent please contact (801) 442-5527 directly."
 		
