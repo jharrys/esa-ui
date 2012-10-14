@@ -50,7 +50,10 @@ class Category
 	Date lastUpdated
 	String updatedBy
 	
-	static hasMany = [ Category, Item ]
+	static hasMany = [
+		categories: Category,
+		items: Item
+	]
 	
 	/**
 	 * Category maps to table CATEGORY

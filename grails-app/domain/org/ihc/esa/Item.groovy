@@ -40,7 +40,7 @@ class Item
 	String sourceSystem
 	
 	/**
-	 * 'Y' or 'N' whether this Item is part of Intermountain standards. Defaults to 'N'.
+	 * 'Y' or 'N' or 'A' whether this Item is part of Intermountain standards ('Y'), an alternate standard ('A') or not a standard ('N'). Defaults to 'N'.
 	 */
 	String standard = "N"
 	
@@ -285,7 +285,7 @@ class Item
 	{
 		externalId nullable: true, blank: false, size: 1..256
 		sourceSystem nullable: true, blank: false, size: 1..256
-		standard nullable: true, inList: ["Y", "N"], size: 1..1
+		standard nullable: true, inList: ["Y", "N", "A"], size: 1..1
 		standardType nullable: true, blank: false, size: 1..40
 		exception nullable: true, blank: false, inList: ["Y", "N"], size: 1..1
 		deviation nullable: true, blank: false, inList: ["Y", "N"], size: 1..1
