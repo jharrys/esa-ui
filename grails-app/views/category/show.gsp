@@ -33,7 +33,7 @@
 			<div class="span9">
 
 				<div class="page-header">
-					<h1><g:message code="default.show.label" args="[entityName]" /></h1>
+					<h1>${categoryInstance?.name }</h1>
 				</div>
 
 				<g:if test="${flash.message}">
@@ -42,52 +42,38 @@
 
 				<dl>
 				
-					<g:if test="${categoryInstance?.parentCategory}">
-						<dt><g:message code="category.parentCategory.label" default="Parent Category" /></dt>
-						
-							<dd><g:link controller="category" action="show" id="${categoryInstance?.parentCategory?.id}">${categoryInstance?.parentCategory?.encodeAsHTML()}</g:link></dd>
-						
-					</g:if>
-				
 					<g:if test="${categoryInstance?.parentCategoryPath}">
-						<dt><g:message code="category.parentCategoryPath.label" default="Parent Category Path" /></dt>
+						<dt><g:message code="category.parentCategoryPath.label" default="Full Path" /></dt>
 						
-							<dd><g:fieldValue bean="${categoryInstance}" field="parentCategoryPath"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${categoryInstance?.name}">
-						<dt><g:message code="category.name.label" default="Name" /></dt>
-						
-							<dd><g:fieldValue bean="${categoryInstance}" field="name"/></dd>
+							<dd>${(categoryInstance?.parentCategoryPath.equals('/')) ? ("/" + categoryInstance?.name?.encodeAsHTML()) : (categoryInstance?.parentCategoryPath?.encodeAsHTML() + '/' + categoryInstance?.name?.encodeAsHTML()) }</dd>
 						
 					</g:if>
-				
-					<g:if test="${categoryInstance?.dateCreated}">
-						<dt><g:message code="category.dateCreated.label" default="Date Created" /></dt>
+					
+					<g:if test="${categoryInstance?.parentCategory}">
+						<dt><g:message code="category.parentCategory.label" default="Child of" /></dt>
+						    
+						    <g:if test="${categoryInstance?.parentCategoryPath?.equals('/') }">
+						      <dd>${categoryInstance?.parentCategoryPath?.encodeAsHTML()}</dd>
+						    </g:if>
+						    
+						    <g:else>
+							  <dd><g:link controller="category" action="show" id="${categoryInstance?.parentCategory?.id}">${categoryInstance?.parentCategoryPath?.encodeAsHTML()}</g:link></dd>
+						    </g:else>
+						    
+					</g:if>
+					
+					<g:if test="${categoryInstance?.categories}">
+						<dt><g:message code="category.categories.label" default="Contains" /></dt>
 						
-							<dd><g:formatDate date="${categoryInstance?.dateCreated}" /></dd>
-						
+						    <g:each in="${categoryInstance?.categories }" var="child">
+							     <dd><g:link controller="category" action="show" id="${child?.id}">${child?.name?.encodeAsHTML()}</g:link></dd>
+						    </g:each>
 					</g:if>
 				
 					<g:if test="${categoryInstance?.createdBy}">
 						<dt><g:message code="category.createdBy.label" default="Created By" /></dt>
 						
 							<dd><g:fieldValue bean="${categoryInstance}" field="createdBy"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${categoryInstance?.lastUpdated}">
-						<dt><g:message code="category.lastUpdated.label" default="Last Updated" /></dt>
-						
-							<dd><g:formatDate date="${categoryInstance?.lastUpdated}" /></dd>
-						
-					</g:if>
-				
-					<g:if test="${categoryInstance?.updatedBy}">
-						<dt><g:message code="category.updatedBy.label" default="Updated By" /></dt>
-						
-							<dd><g:fieldValue bean="${categoryInstance}" field="updatedBy"/></dd>
 						
 					</g:if>
 				
