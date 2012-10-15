@@ -16,6 +16,9 @@ package org.ihc.esa
  * does not need to be defined as it has with the {@link Catalog} relationship.
  * </p>
  * <p>
+ * Implements Comparable
+ * </p>
+ * <p>
  * {@link #name} is required.
  * {@link #parentCategory} is required. For root nodes parentCategory == this.
  * {@link #parentCategoryPath} is required and is the string representation of the full hierarchy, to prevent recursive queries.
@@ -23,9 +26,10 @@ package org.ihc.esa
  * @author lpjharri
  * @since 1.0
  * @see Item
+ * @see java.lang.Comparable
  */
 
-class Category
+class Category implements Comparable<Category>
 {
 	/**
 	 * Required. The owning node of this node.
@@ -86,5 +90,64 @@ class Category
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
+	}
+	
+	/**
+	 * Natural order based strictly off of name
+	 */
+	public int compareTo(Category c)
+	{
+		int EQUAL = 0
+		
+		if (this.is(c)) return EQUAL
+		
+		if (this.equals(c)) return EQUAL
+		
+		int r1 = this.parentCategoryPath.compareToIgnoreCase(c.parentCategoryPath)
+		
+		if (r1 == 0)
+		{
+			return this.name.compareToIgnoreCase(c.name)
+		}
+		
+		return r1
+	}
+	
+	/**
+	 * Should only have one Category with String Abc==aBC
+	 * 
+	 * @param c
+	 * @return
+	 */
+	@Override public boolean equals(Category c)
+	{
+		
+		if (c == null) return false
+		
+		if (this.is(c)) return true
+		
+		if (c.getClass() != getClass()) return false
+		
+		if (c.id.equals(this.id)) return true
+		
+		if (this.name.equalsIgnoreCase(c.name))
+		{
+			if (this.parentCategory.id.equals(c.parentCategory.id))
+			{
+				return true
+			}
+		}
+		
+		return false
+	}
+	
+	@Override public int hashCode()
+	{
+		int result = 17
+		
+		result = (37*result) + this.id.hashCode()
+		result = (37*result) + this.name.toLowerCase().hashCode()
+		
+		return result
 	}
 }

@@ -1,10 +1,14 @@
 package org.ihc.esa
 
+import grails.plugins.springsecurity.Secured
+
 import org.springframework.dao.DataIntegrityViolationException
 
 class CategoryController {
 	
 	static allowedMethods = [create: ['GET', 'POST'], edit: ['GET', 'POST'], delete: 'POST']
+	
+	def springSecurityService
 	
 	def index() {
 		redirect action: 'list', params: params
@@ -17,6 +21,7 @@ class CategoryController {
 		[categoryInstanceList: Category.list(params), categoryInstanceTotal: Category.count()]
 	}
 	
+	@Secured(['ROLE_ESA_ADMIN'])
 	def create() {
 		switch (request.method) {
 			case 'GET':
@@ -46,7 +51,18 @@ class CategoryController {
 		[categoryInstance: categoryInstance]
 	}
 	
+	@Secured(['ROLE_ESA_ADMIN'])
 	def edit() {
+		
+		def user = springSecurityService.currentUser
+		
+		log.debug("====================================================================================")
+		log.debug("edit() action in exception controller called with: " + params)
+		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
 		switch (request.method) {
 			case 'GET':
 				def categoryInstance = Category.get(params.id)
@@ -66,17 +82,6 @@ class CategoryController {
 					return
 				}
 			
-				if (params.version) {
-					def version = params.version.toLong()
-					if (categoryInstance.version > version) {
-						categoryInstance.errors.rejectValue('version', 'default.optimistic.locking.failure',
-										[message(code: 'category.label', default: 'Category')] as Object[],
-										"Another user has updated this Category while you were editing")
-						render view: 'edit', model: [categoryInstance: categoryInstance]
-						return
-					}
-				}
-			
 				categoryInstance.properties = params
 			
 				if (!categoryInstance.save(flush: true)) {
@@ -90,7 +95,18 @@ class CategoryController {
 		}
 	}
 	
+	@Secured(['ROLE_ESA_ADMIN'])
 	def delete() {
+		
+		def user = springSecurityService.currentUser
+		
+		log.debug("====================================================================================")
+		log.debug("delete() action in exception controller called with: " + params)
+		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
 		def categoryInstance = Category.get(params.id)
 		if (!categoryInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'category.label', default: 'Category'), params.id])
@@ -107,5 +123,15 @@ class CategoryController {
 			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'category.label', default: 'Category'), params.id])
 			redirect action: 'show', id: params.id
 		}
+	}
+	
+	def cancel() {
+		log.debug("====================================================================================")
+		log.debug("cancel() action in exception controller called with: " + params)
+		log.debug("====================================================================================")
+		
+		flash.message = "Edit canceled by user"
+		
+		redirect action: 'list'
 	}
 }

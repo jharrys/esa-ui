@@ -32,7 +32,7 @@
 			<div class="span9">
 
 				<div class="page-header">
-					<h1>${categoryInstance?.name }</h1>
+					<h1>id: ${categoryInstance?.id} - ${categoryInstance?.name }</h1>
 				</div>
 
 				<g:if test="${flash.message}">
@@ -53,7 +53,7 @@
 					<g:form class="form-horizontal" action="edit" id="${categoryInstance?.id}" >
 						<g:hiddenField name="version" value="${categoryInstance?.version}" />
 						<fieldset>
-							<f:all bean="categoryInstance"/>
+							<f:all bean="categoryInstance" except="parentCategoryPath"/>
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary">
 									<i class="icon-ok icon-white"></i>
@@ -62,6 +62,10 @@
 								<button type="submit" class="btn btn-danger" name="_action_delete" formnovalidate>
 									<i class="icon-trash icon-white"></i>
 									<g:message code="default.button.delete.label" default="Delete" />
+								</button>
+								<button type="submit" class="btn" name="_action_cancel" formnovalidate>
+									<i class="icon-remove icon-black"></i>
+									<g:message code="default.button.cancel.label" default="Cancel" />
 								</button>
 							</div>
 						</fieldset>
