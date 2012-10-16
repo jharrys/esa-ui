@@ -35,7 +35,7 @@ class StandardsController
 		htmlBodyString += "<br> roles are: " + user?.authorities + "</p>"
 		htmlBodyString += "<p> exception: " + params.exception + "</p>"
 		
-		//TODO enable this before sending to production
+		//DEPLOY: enable this before sending to production
 		log.debug("sending email")
 		sendMail {
 			from "john.harris@imail.org"

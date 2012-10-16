@@ -1,17 +1,53 @@
 package org.ihc.esa
 
-/***************************************************************************
+/*--------------------------------------------------------------------------
  Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
  Copyright 2012 by Intermountain Healthcare
- ***************************************************************************/
+ --------------------------------------------------------------------------*/
 
+/**
+ * <p>
+ * Version history for {@link Item}
+ * </p>
+ * <p>
+ * {@link #item} is required and represents owning Item.<br />
+ * {@link #versionNumber} is required and represents owning item version number.<br />
+ * {@link #ihcActualDecomission} is required and represents Intermountain's actual decommission date for this version of said Item.<br />
+ * {@link #ihcProposedDecomissioned} is required and represents Intermountain's proposed decommission date for this version of said Item.<br />
+ * {@link #vendorDecomission} is required and represents vendor's decommission date for this version of said Item.<br />
+ * </p>
+ * 
+ * @author lpjharri
+ * @since 1.0
+ * @see Item
+ */
 class ItemVersion
 {
+	/**
+	 * Required. The parent item.
+	 */
 	Item item
+	
+	/**
+	 * Required. The version number for the owning parent.
+	 */
 	String versionNumber
+	
+	/**
+	 * Optional. Intermountain's actual decommission date.
+	 */
 	Date ihcActualDecomission
+	
+	/**
+	 * Optional. Intermountain's proposed decommision date.
+	 */
 	Date ihcProposedDecomissioned
+	
+	/**
+	 * Optional. Vendor's decommission date.
+	 */
 	Date vendorDecomission
+	
 	Date dateCreated
 	String createdBy
 	Date lastUpdated

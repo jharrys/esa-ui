@@ -75,7 +75,7 @@ environments {
     development {
         grails.logging.jul.usebridge = true
 		
-		// mask out secure fields - keep this off in development. TODO create tests for this
+		// mask out secure fields - keep this off in development. FIXME: create tests for this
 		// grails.exceptionresolver.params.exclude = ['password', 'creditCard']
 		
 		// spring-security-mock plugin
@@ -247,16 +247,16 @@ grails.plugins.springsecurity.authority.className = 'org.ihc.esa.EsaRole'
 //]
 
 // Spring Security UI
-grails.plugins.springsecurity.ui.register.postRegisterUrl = '/welcome'	//TODO make this sensible
-grails.plugins.springsecurity.ui.register.emailBody = '...'				//TODO security registration
-grails.plugins.springsecurity.ui.register.emailFrom = '...'				//TODO security registration
-grails.plugins.springsecurity.ui.register.emailSubject = '...'			//TODO security registration
-grails.plugins.springsecurity.ui.register.defaultRoleNames = [] 		//TODO no roles
-//TODO spring security UI uses the mail plugin, so need to configure smtp
-//TODO grails s2ui-override register to copy the registration controller and GSPs into your application to be customized
-//TODO s2-create-persistent-token
-//TODO customizations: s2ui-override <type> <controller-package>
-//TODO The plugin defines its CSS styles in web-app/css/spring-security-ui.css and most of the jQuery plugins have corresponding CSS files. 
+grails.plugins.springsecurity.ui.register.postRegisterUrl = '/welcome'	//DEPLOY: make this sensible
+grails.plugins.springsecurity.ui.register.emailBody = '...'				//DEPLOY: security registration
+grails.plugins.springsecurity.ui.register.emailFrom = '...'				//DEPLOY: security registration
+grails.plugins.springsecurity.ui.register.emailSubject = '...'			//DEPLOY: security registration
+grails.plugins.springsecurity.ui.register.defaultRoleNames = [] 		//DEPLOY: no roles
+//FIXME: spring security UI uses the mail plugin, so need to configure smtp
+//FIXME: grails s2ui-override register to copy the registration controller and GSPs into your application to be customized
+//FIXME: s2-create-persistent-token
+//FIXME: customizations: s2ui-override <type> <controller-package>
+//FIXME: The plugin defines its CSS styles in web-app/css/spring-security-ui.css and most of the jQuery plugins have corresponding CSS files. 
 //These can be overridden by overriding the springSecurityUI.gsp template and including your CSS file(s).
 
 // See http://grails.org/doc/latest/guide/conf.html#configExternalized

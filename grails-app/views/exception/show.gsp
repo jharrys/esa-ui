@@ -6,7 +6,7 @@
 <meta name="layout" content="bootstrap">
 <g:set var="entityName" value="${message(code: 'exception.label', default: 'Exception')}" />
 <title>
-	${exceptionInstance.id }
+	Exception #${exceptionInstance.id }
 </title>
 </head>
 <body>
@@ -34,7 +34,7 @@
 
 			<div class="page-header">
 				<h1>
-					${exceptionInstance.title }
+					Exception #${exceptionInstance.id } - ${exceptionInstance.title }
 				</h1>
 			</div>
 
@@ -46,71 +46,7 @@
 
 			<dl>
 
-				<g:if test="${exceptionInstance?.form}">
-					<dt>
-						<g:message code="exception.form.label" default="Form Type" />
-					</dt>
-
-					<dd>
-						<g:fieldValue bean="${exceptionInstance}" field="form" />
-					</dd>
-
-				</g:if>
-				
-				<g:if test="${exceptionInstance?.form}">
-                    <dt>
-                        <g:message code="exception.title.label" default="Title" />
-                    </dt>
-
-                    <dd>
-                        <g:fieldValue bean="${exceptionInstance}" field="title" />
-                    </dd>
-
-                </g:if>
-
-				<g:if test="${exceptionInstance?.createdBy}">
-					<dt>
-						<g:message code="exception.createdBy.label" default="Created By" />
-					</dt>
-
-					<dd>
-						<g:fieldValue bean="${exceptionInstance}" field="createdBy" />
-					</dd>
-
-				</g:if>
-
-				<g:if test="${exceptionInstance?.updatedBy}">
-					<dt>
-						<g:message code="exception.updatedBy.label" default="Updated By" />
-					</dt>
-
-					<dd>
-						<g:fieldValue bean="${exceptionInstance}" field="updatedBy" />
-					</dd>
-
-				</g:if>
-
-				<g:if test="${exceptionInstance?.dateCreated}">
-					<dt>
-						<g:message code="exception.dateCreated.label" default="Date Created" />
-					</dt>
-
-					<dd>
-						<g:formatDate date="${exceptionInstance?.dateCreated}" />
-					</dd>
-
-				</g:if>
-
-				<g:if test="${exceptionInstance?.lastUpdated}">
-					<dt>
-						<g:message code="exception.lastUpdated.label" default="Last Updated" />
-					</dt>
-
-					<dd>
-						<g:formatDate date="${exceptionInstance?.lastUpdated}" />
-					</dd>
-
-				</g:if>
+				<f:all bean="exceptionInstance" except="createdBy,updatedBy,items" />
 
 			</dl>
 

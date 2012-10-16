@@ -11,7 +11,7 @@ class ConfigurationCatalogControllerTests {
 
     def populateValidParams(params) {
         assert params != null
-        // TODO: Populate valid properties like...
+        // TESTME: Populate valid properties like...
         //params["name"] = 'someValidName'
     }
 
@@ -101,7 +101,7 @@ class ConfigurationCatalogControllerTests {
 
         // test invalid parameters in update
         params.id = configurationCatalog.id
-        //TODO: add invalid values to params object
+        //TESTME: add invalid values to params object
 
         controller.update()
 

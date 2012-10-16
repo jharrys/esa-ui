@@ -90,7 +90,7 @@ class BootStrap
 					reader = new BufferedReader(new FileReader("esa-content/lookup_element_seed_data.sql"))
 					RunScript.execute(connection, reader)
 					reader.close()
-					assert LookupElement.count() == 29
+					assert LookupElement.count() == 69
 					
 					reader = new BufferedReader(new FileReader("esa-content/form_field_seed_data.sql"))
 					RunScript.execute(connection, reader)
@@ -106,6 +106,16 @@ class BootStrap
 					RunScript.execute(connection, reader)
 					reader.close()
 					assert Item.count() == 63
+					
+					reader = new BufferedReader(new FileReader("esa-content/document_seed_data.sql"))
+					RunScript.execute(connection, reader)
+					reader.close()
+					assert Document.count() == 3
+					
+					reader = new BufferedReader(new FileReader("esa-content/question_response_seed_data.sql"))
+					RunScript.execute(connection, reader)
+					reader.close()
+					assert QuestionResponse.count() == 85
 				}
 			}	// end-development
 			test {

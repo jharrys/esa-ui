@@ -78,9 +78,6 @@ class ExceptionController
 	{
 		def user = springSecurityService.currentUser
 		
-		def xisnottrue = false
-		assert xisnottrue
-		
 		log.debug("====================================================================================")
 		log.debug("save() action in exception controller called with: " + params)
 		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
@@ -123,7 +120,7 @@ class ExceptionController
 			return
 		}
 		
-		flash.message = "New exception titled \"" + params.title + "\" initialized."
+		flash.message = "New exception saved. Note identifier \"" + exceptionForm.id + "\" and title \"" + params.title + "\""
 		
 		// Setup section numbers
 		def listOfSectionNumbers = 'select distinct ff.sectionNumber from FormField ff where ff.form=' + exceptionForm.id + ' order by ff.sectionNumber asc'
@@ -144,6 +141,9 @@ class ExceptionController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def save_section() {
 		
+		//FIXME: Hookup Standards items as lookup field for formField.id==22
+		//FIXME: Implement LookupLists of type 'sql'
+		
 		// user profile authenticated to this instance
 		def user = springSecurityService.currentUser
 		
@@ -154,15 +154,15 @@ class ExceptionController
 		log.debug("roles == " + user?.authorities)
 		log.debug("====================================================================================")
 		
-		// TODO NPE check needed here
+		//FIXME: NPE check needed here
 		def documentInstance = Document.get(params.id)
 		
 		if (!params.cancel) {
 			
-			// TODO NPE check needed here
+			// FIXME: NPE check needed here
 			def exceptionForm = EXCEPTION_FORM
 			
-			// TODO NPE check needed here
+			// FIXME: NPE check needed here
 			ArrayDeque sectionStack = new ArrayDeque(params.list("sectionStack"))
 			
 			
@@ -227,7 +227,7 @@ class ExceptionController
 					if (qr != null) {
 						log.debug("assertion that qr is not null passed -> attempting to save qr instance now...")
 						
-						//TODO need to flag in database so that user can come back and correct later
+						//FIXME: need to flag in database so that user can come back and correct later
 						if(!qr.save()) {
 							log.debug("qr instance for formField " + key + " was **not** saved due to an error condition")
 							log.debug("answer value (m.value) == \"" + m.value + "\"")
@@ -280,7 +280,7 @@ class ExceptionController
 				redirect action: 'list'
 			} // end-finishLater
 		} else {
-			//TODO add better cancel handling (should have a confirmation box and other logic)
+			//FIXME: add better cancel handling (should have a confirmation box and other logic)
 			log.debug("cancel is set")
 			
 			int section = 0
@@ -433,7 +433,7 @@ class ExceptionController
 	}
 	
 	def error() {
-		//TODO enable this before sending to production
+		//DEPLOY: enable this before sending to production
 		sendMail {
 			to "harris.johnny@gmail.com"
 			subject "esa-ui error"

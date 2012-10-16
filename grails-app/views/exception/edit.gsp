@@ -55,7 +55,7 @@
 						<fieldset>
 						    <f:field bean="documentInstance" property="form" />
 						    <f:field bean="documentInstance" property="title" />
-<%--							<f:all bean="documentInstance"/>--%>
+							<f:all bean="documentInstance"/>
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary">
 									<i class="icon-ok icon-white"></i>

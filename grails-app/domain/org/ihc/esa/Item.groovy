@@ -92,6 +92,7 @@ class Item
 	/**
 	 * Intermountain specific identifier.
 	 * Can be nullable.
+	 * FIXME: Correct number type
 	 */
 	BigDecimal intermountainItemNumber
 	
@@ -163,6 +164,7 @@ class Item
 	/**
 	 * Manufacturer's part number.
 	 * Can be nullable.
+	 * FIXME: Correct number type
 	 */
 	BigDecimal manufacturerPartId
 	
@@ -181,6 +183,7 @@ class Item
 	/**
 	 * Price per unit.
 	 * Can be nullable.
+	 * FIXME: Correct number type
 	 */
 	BigDecimal purchasingUnitPrice
 	

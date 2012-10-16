@@ -13,9 +13,9 @@ package org.ihc.esa
  * {@link Document} instance as well as this FormField.
  * </p>
  * <p>
- * {@link #form} is required to link back to it's type.
- * {@link #sectionNumber} is required, probably doesn't need to be.
- * {@link #question} is required as it is the rendered representation of this FormField.
+ * {@link #form} is required to link back to it's type.<br />
+ * {@link #sectionNumber} is required, probably doesn't need to be.<br />
+ * {@link #question} is required as it is the rendered representation of this FormField.<br />
  * </p>
  * <p>
  * The rest of the properties are nullable.
@@ -36,16 +36,19 @@ class FormField
 	
 	/**
 	 * Optional field for rendering presentation.
+	 * FIXME: Correct number type
 	 */
 	BigDecimal pageNumber
 	
 	/**
 	 * A required field for rendering presentation.
+	 * FIXME: Correct number type
 	 */
 	BigDecimal sectionNumber
 	
 	/**
 	 * An optional field for rendering presentation.
+	 * FIXME: Correct number type
 	 */
 	BigDecimal orderNumber
 	
@@ -91,6 +94,7 @@ class FormField
 	/**
 	 * The default value for a Float type.
 	 * Optional.
+	 * FIXME: Correct number type
 	 */
 	BigDecimal defaultValueFloat
 	

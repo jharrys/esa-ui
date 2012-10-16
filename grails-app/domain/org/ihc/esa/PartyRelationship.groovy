@@ -1,17 +1,43 @@
 package org.ihc.esa
 
-/***************************************************************************
+/*--------------------------------------------------------------------------
  Generated code by GenGroovyObjects [09-Aug-2012 20:45:44 -0600]
  Copyright 2012 by Intermountain Healthcare
- ***************************************************************************/
+ --------------------------------------------------------------------------*/
 
 import java.util.Date
+
+/**
+ * <p>
+ * Represents relationships between different vendors.
+ * </p>
+ * <p>
+ * {@link #parentParty} is required.<br />
+ * {@link #childParty} is required.<br />
+ * {@link #relationship} is required.<br />
+ * </p>
+ * 
+ * @author lpjharri
+ * @since 1.0
+ * @see Party
+ */
 class PartyRelationship
 {
-	
+	/**
+	 * Required. The owning party.
+	 */
 	Party parentParty
+	
+	/**
+	 * Required. The owned party.
+	 */
 	Party childParty
+	
+	/**
+	 * Required. The type of relationship.
+	 */
 	String relationshipType
+	
 	Date dateCreated
 	String createdBy
 	Date lastUpdated

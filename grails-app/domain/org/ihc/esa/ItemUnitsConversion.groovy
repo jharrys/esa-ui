@@ -1,16 +1,40 @@
 package org.ihc.esa
 
-/***************************************************************************
+/*--------------------------------------------------------------------------
  Generated code by GenGroovyObjects [20-Aug-2012 15:47:33 -0600]
  Copyright 2012 by Intermountain Healthcare
- ***************************************************************************/
+ --------------------------------------------------------------------------*/
 
+/**
+ * Units conversion for parent {@link Item}
+ * 
+ * @author lpjharri
+ * @since 1.0
+ * @see Item
+ */
 class ItemUnitsConversion
 {
+	/**
+	 * Back reference to owning {@link Item}
+	 */
 	Item item
+	
+	/**
+	 * Optional. Price per unit.
+	 * FIXME: Correct number type
+	 */
 	BigDecimal value
+	
+	/**
+	 * Optional.
+	 */
 	String units
+	
+	/**
+	 * Optional.
+	 */
 	String perUnits
+	
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
@@ -36,7 +60,7 @@ class ItemUnitsConversion
 	
 	static constraints =
 	{
-		item nullable: true
+		item nullable: false
 		value nullable: true
 		units nullable: true, blank: false, size: 1..64
 		perUnits nullable: true, blank: false, size: 1..64
