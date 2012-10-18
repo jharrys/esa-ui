@@ -15,6 +15,8 @@
 			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 
+<link rel="stylesheet" href="${resource(dir: 'css', file: 'datepicker.css')}" type="text/css">
+
 <r:require modules="scaffolding" />
 
 <!-- Le fav and touch icons -->
@@ -25,6 +27,11 @@
 </head>
 
 <body>
+    <!--
+        bootstrap twitter doesn't include one, so I'm using this one http://www.eyecon.ro/bootstrap-datepicker/ 
+        FIXME: place this resource in the appropriate configuration files 
+    -->
+	<g:javascript src='bootstrap-datepicker.js' />
 
 	<nav class="navbar navbar-fixed-top navbar-inverse">
 		<div class="navbar-inner">
