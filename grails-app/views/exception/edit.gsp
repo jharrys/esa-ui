@@ -4,7 +4,7 @@
 	<head>
 		<meta name="layout" content="bootstrap">
 		<g:set var="entityName" value="${message(code: 'exception.label', default: 'Exception')}" />
-		<title><g:message code="default.edit.label" args="[entityName]" /></title>
+		<title>Edit ${documentInstance.id }</title>
 	</head>
 	<body>
 		<div class="row-fluid">
@@ -32,7 +32,7 @@
 			<div class="span9">
 
 				<div class="page-header">
-					<h1><g:message code="default.edit.label" args="[entityName]" /></h1>
+					<h1>Edit #${documentInstance.id } - ${documentInstance.title }</h1>
 				</div>
 
 				<g:if test="${flash.message}">
@@ -53,9 +53,7 @@
 					<g:form class="form-horizontal" action="edit" id="${documentInstance?.id}" >
 					<g:hiddenField name="updatedBy" value="${username}" />
 						<fieldset>
-						    <f:field bean="documentInstance" property="form" />
-						    <f:field bean="documentInstance" property="title" />
-							<f:all bean="documentInstance"/>
+							<f:all bean="documentInstance" except="form,createdBy,updatedBy"/>
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary">
 									<i class="icon-ok icon-white"></i>
@@ -65,6 +63,10 @@
 									<i class="icon-trash icon-white"></i>
 									<g:message code="default.button.delete.label" default="Delete" />
 								</button>
+								<button type="submit" class="btn" name="_action_cancel" formnovalidate>
+                                    <i class="icon-remove icon-black"></i>
+                                    <g:message code="default.button.cancel.label" default="Cancel" />
+                                </button>
 							</div>
 						</fieldset>
 					</g:form>

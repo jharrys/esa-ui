@@ -3,6 +3,7 @@
 <%@ page import="org.ihc.esa.FormField"%>
 <%@ page import="org.ihc.esa.LookupList"%>
 <%@ page import="org.ihc.esa.LookupElement"%>
+<%@ page import="org.ihc.esa.QuestionResponse"%>
 
 <g:logMsg level="debug">===========================================================================</g:logMsg>
 <g:logMsg level="debug">Still rendering ... but from template _form for exception saveSection.gsp</g:logMsg>
@@ -14,6 +15,9 @@
 	<g:set var="internal_use_only" value="${field.internalOnly == 'Y' ? true:false }" />
 	<g:logMsg level="debug">Field: ${field }
 	</g:logMsg>
+	
+	<% QuestionResponse qr = QuestionResponse.findByFormFieldAndDocument(field, documentInstance) %>
+	<g:logMsg level="debug">Pull in the QuestionResponse data for this field: "${QuestionResponse.findByFormFieldAndDocument(field, documentInstance) }"</g:logMsg>
     
     <!-- skip if this question is to be answered only by EISA -->
     <g:if test="${!internal_use_only }">
@@ -32,16 +36,16 @@
 		<g:set var="question_lookuplist_value" value="${field.lookupList ?: 'Pick List Not Setup' }" />
 		<g:set var="question_lookuplist_elements" value="${field.lookupList?.elements }" />
 		<g:set var="answer_required" value="${field.required == 'Y' ? true:false }" />
-		<g:set var="answer_default" value="${field.defaultValue }" />
+		<g:set var="answer_default" value="${qr?.value ?: field.defaultValue }" />
 		<%
-		  answer_default_index = null
-		  if(field.lookupList != null) {
-			  field.lookupList.elements.find {
-				  it.value ==~ /$answer_default/
-			  }.each {
-			     answer_default_index = it.id 
-			  }
-		  }
+		  answer_default_index = answer_default
+		  //if(field.lookupList != null) {
+			//  field.lookupList.elements.find {
+			//	  it.value ==~ /$answer_default/
+			//  }.each {
+			//     answer_default_index = it.id 
+			//  }
+		  //}
 		 %>
 
         <g:logMsg level="debug">answer_default: ==${answer_default }==</g:logMsg>
@@ -68,7 +72,7 @@
 				    <g:if test="${(question_can_select_multiple) && (question_lookuplist_exists) }">
 						<g:logMsg level="debug">question is multiple select and lookuplist does exist.</g:logMsg>
 						<g:select class="${question_cssclass_value }" id="qr${question_id }-value" name="qr${question_id }-value"
-							from="${question_lookuplist_elements }" value="${answer_default_index }" multiple="multiple" optionKey="id" optionValue="display" noSelection="['':'-Select One-']"
+							from="${question_lookuplist_elements }" value="${answer_default_index }" multiple="multiple" optionKey="id" optionValue="display" noSelection="['':'-Select One-']" 
 						/>
 					</g:if>
 					 
@@ -84,15 +88,29 @@
 						<g:if test="${question_cssclass_value == 'textArea' }">
 							<g:logMsg level="debug">question is ${question_cssclass_value }
 							</g:logMsg>
-							<g:textArea class="span9" id="qr${question_id }-value" name="qr${question_id }-value" rows="5" placeholder="${answer_default ?: 'type here' }" />
+							
+							<g:if test="${answer_default }">
+							     <g:textArea class="span9" id="qr${question_id }-value" name="qr${question_id }-value" rows="5" value="${answer_default }" />
+							</g:if>
+							
+							<g:else>
+							     <g:textArea class="span9" id="qr${question_id }-value" name="qr${question_id }-value" rows="5" placeholder="type here" />
+							</g:else>
+							
 						</g:if>
 					
 						<g:elseif test="${question_datatype_value.equalsIgnoreCase('DATE_VALUE') }">
 							<g:logMsg level="debug">question is ${question_cssclass_value }
 							</g:logMsg>
-							<g:datePicker class="${question_cssclass_value }" id="qr${question_id }-value" name="qr${question_id }-value"
-								value="${new Date()}" precision="day" noSelection="['':'-Choose-']"
-							/>
+							 <g:logMsg level="debug">date answer is ${answer_default }</g:logMsg>
+							 <% answer_default = dateFormatter.format(answer_default) %>
+							 <g:logMsg level="debug">date converted to ${answer_default }</g:logMsg>
+							 <input id="qr${question_id }-value" name="qr${question_id }-value" size="16" type="text" value="${answer_default }">
+							 <script>
+							    $(function() {
+								    $('#qr${question_id }-value').datepicker({format: 'mm/dd/yyyy'});
+								    });
+							 </script>
 						</g:elseif>
 					
 						<g:elseif test="${question_datatype_value.equalsIgnoreCase('FLOAT_VALUE') }">
@@ -106,7 +124,16 @@
 						<g:elseif test="${question_datatype_value.equalsIgnoreCase('STRING_VALUE') }">
 							<g:logMsg level="debug">question is ${question_cssclass_value }
 							</g:logMsg>
-							<g:field class="${question_cssclass_value}" id="qr${question_id }-value" name="qr${question_id }-value" type="string" placeholder="${answer_default ?: 'type here' }" />
+							<g:if test="${answer_default }">
+								<g:field class="${question_cssclass_value}" id="qr${question_id }-value" name="qr${question_id }-value" type="string" 
+								     value="${answer_default}" />
+							</g:if>
+							
+							<g:else>
+								<g:field class="${question_cssclass_value}" id="qr${question_id }-value" name="qr${question_id }-value" type="string" 
+								     placeholder="type here" />
+							</g:else>
+							
 						</g:elseif>
 					
 						<g:else>

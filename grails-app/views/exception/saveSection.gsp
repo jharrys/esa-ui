@@ -12,7 +12,7 @@
 <body>
 
 	<g:logMsg level="debug">===========================================================================</g:logMsg>
-	<g:logMsg level="debug">Rendering inside save_section.gsp</g:logMsg>
+	<g:logMsg level="debug">Rendering inside saveSection.gsp</g:logMsg>
 	<g:logMsg level="debug">===========================================================================</g:logMsg>
 	<g:logMsg level="debug">Params are: ${params }
 	</g:logMsg>
@@ -60,7 +60,7 @@
 			</g:hasErrors>
 
 			<fieldset>
-				<g:form action="save_section" params="${[sectionStack: sectionStack] }">
+				<g:form action="saveSection" params="${[sectionStack: sectionStack] }">
 					<g:hiddenField name="id" value="${documentInstance?.id}" />
 					<g:hiddenField name="formid" value="${formid}" />
 
