@@ -54,6 +54,8 @@ class QuestionResponse
 	Date lastUpdated
 	String updatedBy
 	
+	int hashCode = 0
+	
 	/**
 	 * This value is derived from the getter {@link #getValue()}
 	 */
@@ -116,7 +118,7 @@ class QuestionResponse
 		return list
 	}
 	
-	static transients = ['value', 'form']
+	static transients = ['value', 'form', 'hashCode', 'formFieldCacheMap']
 	
 	static belongsTo = [ Document, FormField ]
 	
@@ -151,5 +153,45 @@ class QuestionResponse
 		updatedBy nullable: false, size: 1..40
 	}
 	
+	/**
+	 * equality tests
+	 *
+	 * @param c
+	 * @return
+	 */
+	@Override public boolean equals(QuestionResponse o)
+	{
+		
+		if (this.is(o)) return true
+
+		if (o == null) return false
+		
+		if (o.getClass() != getClass()) return false
+		
+		if (!o.formField.equals(this.formField)) return false
+
+		if (!o.document.equals(this.document)) return false
+		
+		if (o.getValue().equals(this.getValue())) return true
+		
+		return false
+	}
 	
+	@Override public int hashCode()
+	{
+		if (this.hashCode==0) {
+			log.debug("attempting to calculate hashCode...")
+			int result = 17
+			log.debug("hashing formField")
+			result = (37*result) + this.formField.hashCode()
+			log.debug("hashing document")
+			result = (37*result) + this.document.hashCode()
+			log.debug("hashing getValue()")
+			result = (37*result) + this.getValue().hashCode()
+			this.hashCode = result
+			log.debug("calculated " + result)
+		}
+		
+		return this.hashCode
+	}
 }

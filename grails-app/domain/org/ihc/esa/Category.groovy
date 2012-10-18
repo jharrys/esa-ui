@@ -49,6 +49,10 @@ class Category implements Comparable<Category>
 	Date lastUpdated
 	String updatedBy
 	
+	int hashCode = 0
+	
+	static transients = ['hashCode']
+	
 	static hasMany = [
 		categories: Category,
 		items: Item
@@ -114,20 +118,18 @@ class Category implements Comparable<Category>
 	 * @param c
 	 * @return
 	 */
-	@Override public boolean equals(Category c)
+	@Override public boolean equals(Category o)
 	{
 		
-		if (c == null) return false
+		if (o == null) return false
 		
-		if (this.is(c)) return true
+		if (this.is(o)) return true
 		
-		if (c.getClass() != getClass()) return false
+		if (o.getClass() != getClass()) return false
 		
-		if (c.id.equals(this.id)) return true
-		
-		if (this.name.equalsIgnoreCase(c.name))
+		if (this.name.equalsIgnoreCase(o.name))
 		{
-			if (this.parentCategory.id.equals(c.parentCategory.id))
+			if (this.parentCategory.id.equals(o.parentCategory.id))
 			{
 				return true
 			}
@@ -138,11 +140,14 @@ class Category implements Comparable<Category>
 	
 	@Override public int hashCode()
 	{
-		int result = 17
+
+		if (this.hashCode==0) {
+			int result = 17
+			result = (37*result) + this.name.toLowerCase().hashCode()
+			result = (37*result) + this.parentCategory.id.hashCode()
+			this.hashCode = result
+		}
 		
-		result = (37*result) + this.id.hashCode()
-		result = (37*result) + this.name.toLowerCase().hashCode()
-		
-		return result
+		return this.hashCode
 	}
 }

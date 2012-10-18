@@ -55,6 +55,8 @@ class Document
 	Date lastUpdated
 	String updatedBy
 	
+	int hashCode = 0
+	
 	/**
 	 * title is derived from hydrated object.
 	 */
@@ -90,7 +92,7 @@ class Document
 	// part of searchable plugin
 	static searchable = true
 	
-	static transients = ['title', 'titleFormField']
+	static transients = ['title', 'titleFormField', 'hashCode']
 	
 	static hasMany = [
 		items: Item,
@@ -122,5 +124,39 @@ class Document
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
+	}
+	
+	/**
+	 * equality based on id and form
+	 *
+	 * @param c
+	 * @return
+	 */
+	@Override public boolean equals(Document o)
+	{
+		
+		if (this.is(o)) return true
+		
+		if (o == null) return false
+						
+		if (o.getClass() != getClass()) return false
+		
+		if (o.form.equals(this.form) && o.dateCreated.equals(this.dateCreated) && o.createdBy.equals(this.createdBy)) return true
+		
+		return false
+	}
+	
+	@Override public int hashCode()
+	{
+
+		if (this.hashCode==0) {
+			int result = 17
+			result = (37*result) + this.form.hashCode()
+			result = (37*result) + this.dateCreated.hashCode()
+			result = (37*result) + this.createdBy.hashCode()
+			this.hashCode = result
+		}
+		
+		return this.hashCode
 	}
 }

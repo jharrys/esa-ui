@@ -124,6 +124,8 @@ class FormField
 	Date lastUpdated
 	String updatedBy
 	
+	int hashCode = 0
+	
 	/**
 	 * A derived field to ease computation of value, since value
 	 * can be of three different types.
@@ -144,7 +146,7 @@ class FormField
 		return this.defaultValue
 	}
 	
-	static transients = ['defaultValue']
+	static transients = ['defaultValue', 'hashCode']
 	
 	static hasMany = [
 		responseToQuestion: QuestionResponse
@@ -205,5 +207,41 @@ class FormField
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
+	}
+	
+	/**
+	 * equality tests
+	 *
+	 * @param c
+	 * @return
+	 */
+	@Override public boolean equals(FormField o)
+	{
+		
+		if (this.is(o)) return true
+
+		if (o == null) return false
+		
+		if (o.getClass() != getClass()) return false
+		
+		if (o.form.equals(this.form) && o.question.equalsIgnoreCase(this.question) && o.dataType?.equalsIgnoreCase(this.dataType) 
+			&& o.dateCreated.equals(this.dateCreated)) return true
+		
+		return false
+	}
+	
+	@Override public int hashCode()
+	{
+
+		if (this.hashCode==0) {
+			int result = 17
+			result = (37*result) + this.form.hashCode()
+			result = (37*result) + this.question.hashCode()
+			result = (37*result) + this.dataType?.hashCode()
+			result = (37*result) + this.dateCreated.hashCode()
+			this.hashCode = result
+		}
+		
+		return this.hashCode
 	}
 }

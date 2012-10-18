@@ -210,8 +210,12 @@ class Item
 	Date lastUpdated
 	String updatedBy
 	
+	int hashCode = 0
+	
 	// part of searchable plugin
 	static searchable = true
+	
+	static transients = ['hashCode']
 	
 	static hasMany = [
 		catalogs: Catalog,							//validated
@@ -320,5 +324,39 @@ class Item
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
+	}
+	
+	/**
+	 * equality tests
+	 *
+	 * @param c
+	 * @return
+	 */
+	@Override public boolean equals(Item o)
+	{
+		
+		if (this.is(o)) return true
+
+		if (o == null) return false
+		
+		if (o.getClass() != getClass()) return false
+		
+		if (o.document.equals(this.document) && o.name?.equalsIgnoreCase(this.name) && o.dateCreated.equals(this.dateCreated)) return true
+		
+		return false
+	}
+	
+	@Override public int hashCode()
+	{
+
+		if (this.hashCode==0) {
+			int result = 17
+			result = (37*result) + this.document.hashCode()
+			result = (37*result) + this.name?.hashCode()
+			result = (37*result) + this.dateCreated.hashCode()
+			this.hashCode = result
+		}
+		
+		return this.hashCode
 	}
 }

@@ -32,6 +32,10 @@ class ItemCategory
 	Date lastUpdated
 	String updatedBy
 	
+	int hashCode = 0
+	
+	static transients = ['hashCode']
+	
 	/**
 	 * Category maps to table ITEM_CATEGORY
 	 */
@@ -59,5 +63,40 @@ class ItemCategory
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
+	}
+	
+	/**
+	 * equality tests
+	 *
+	 * @param c
+	 * @return
+	 */
+	@Override public boolean equals(ItemCategory o)
+	{
+		
+		if (this.is(o)) return true
+
+		if (o == null) return false
+		
+		if (o.getClass() != getClass()) return false
+		
+		if (!o.item.equals(this.item)) return false
+
+		if (!o.category.equals(this.category)) return false
+		
+		return false
+	}
+	
+	@Override public int hashCode()
+	{
+
+		if (this.hashCode==0) {
+			int result = 17
+			result = (37*result) + this.item.hashCode()
+			result = (37*result) + this.category.hashCode()
+			this.hashCode = result
+		}
+		
+		return this.hashCode
 	}
 }

@@ -47,6 +47,10 @@ class Form
 	Date lastUpdated
 	String updatedBy
 	
+	int hashCode = 0
+	
+	static transients = ['hashCode']
+	
 	static hasMany = [
 		anInstanceOfForm: Document,
 		formFields: FormField
@@ -78,5 +82,38 @@ class Form
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true
 		updatedBy nullable: false, size: 1..40
+	}
+	
+	/**
+	 * equality based on id and name (case ignored)
+	 *
+	 * @param c
+	 * @return
+	 */
+	@Override public boolean equals(Form o)
+	{
+		
+		if (this.is(o)) return true
+
+		if (o == null) return false
+		
+		if (o.getClass() != getClass()) return false
+		
+		if (o.dateCreated.equals(this.dateCreated) && o.name.equalsIgnoreCase(this.name)) return true
+		
+		return false
+	}
+	
+	@Override public int hashCode()
+	{
+
+		if (this.hashCode==0) {
+			int result = 17
+			result = (37*result) + this.name.toLowerCase().hashCode()
+			result = (37*result) + this.dateCreated.hashCode()
+			this.hashCode = result
+		}
+		
+		return this.hashCode
 	}
 }
