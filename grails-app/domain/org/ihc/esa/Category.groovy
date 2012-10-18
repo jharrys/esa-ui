@@ -11,11 +11,6 @@ package org.ihc.esa
  * folder/sub-folder structure. Each node may contain other nodes or leaf nodes.
  * The Category container is used to hold object of type {@link Item}. 
  * </p>
- * <p>
- * The relationship between Category and Item is straightforward. The join table
- * does not need to be defined as it has with the {@link Catalog} relationship.
- * </p>
- * <p>
  * Implements Comparable
  * </p>
  * <p>

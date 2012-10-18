@@ -214,10 +214,10 @@ class Item
 	static searchable = true
 	
 	static hasMany = [
-		categories: Category,						//validated
 		catalogs: Catalog,							//validated
 		itemVersions: ItemVersion,					//validated
 		notes: Note,								//validated
+		itemCategories: ItemCategory,
 		itemConversions: ItemUnitsConversion,
 		replacementForItems: ReplacementItem,
 		replacementItems: ReplacementItem,
@@ -275,7 +275,7 @@ class Item
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
 		
-		categories joinTable: [name: 'ITEM_CATEGORY',
+		itemCategories joinTable: [name: 'ITEM_CATEGORY',
 			key: 'ITEM_ID',
 			column: 'CATEGORY_ID']
 		
