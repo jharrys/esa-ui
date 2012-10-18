@@ -3,6 +3,7 @@
 <%@ page import="org.ihc.esa.FormField"%>
 <%@ page import="org.ihc.esa.LookupList"%>
 <%@ page import="org.ihc.esa.LookupElement"%>
+<%@ page import="java.text.SimpleDateFormat"%>
 <!doctype html>
 <html>
 <head>
@@ -16,6 +17,8 @@
 	<g:logMsg level="debug">===========================================================================</g:logMsg>
 	<g:logMsg level="debug">Params are: ${params }
 	</g:logMsg>
+	
+	<% SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat) %>
 
 	<div class="row-fluid">
 

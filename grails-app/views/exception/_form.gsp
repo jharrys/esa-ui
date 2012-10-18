@@ -90,9 +90,12 @@
 						<g:elseif test="${question_datatype_value.equalsIgnoreCase('DATE_VALUE') }">
 							<g:logMsg level="debug">question is ${question_cssclass_value }
 							</g:logMsg>
-							<g:datePicker class="${question_cssclass_value }" id="qr${question_id }-value" name="qr${question_id }-value"
-								value="${new Date()}" precision="day" noSelection="['':'-Choose-']"
-							/>
+							<input id="qr${question_id }-value" name="qr${question_id }-value" size="16" type="text" value="${dateFormatter.format(new Date()) }">
+							<script>
+                                $(function() {
+                                    $('#qr${question_id }-value').datepicker({format: 'mm/dd/yyyy'});
+                                    });
+                             </script>
 						</g:elseif>
 					
 						<g:elseif test="${question_datatype_value.equalsIgnoreCase('FLOAT_VALUE') }">

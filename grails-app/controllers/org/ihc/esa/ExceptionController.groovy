@@ -82,6 +82,9 @@ class ExceptionController
 	{
 		def user = springSecurityService.currentUser
 		
+		// the date format we'll use
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(this.dateFormat)
+		
 		log.debug("====================================================================================")
 		log.debug("save() action in exception controller called with: " + params)
 		log.debug("requires ROLE_ESA_USER or ROLE_ESA_ADMIN")
@@ -138,7 +141,7 @@ class ExceptionController
 			log.debug("sectionTitle: \"" + sectionTitle + "\"")
 			
 			log.debug("Delegating rendering to saveSection.gsp...")
-			render(view: "saveSection", model: [documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
+			render(view: "saveSection", model: [dateFormat: dateFormat, documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
 								formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
 		
 		}
@@ -152,6 +155,9 @@ class ExceptionController
 		
 		// user profile authenticated to this instance
 		def user = springSecurityService.currentUser
+		
+		// the date format we'll use
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(this.dateFormat)
 		
 		log.debug("====================================================================================")
 		log.debug("saveSection() action in exception controller called with: " + params)
@@ -202,6 +208,7 @@ class ExceptionController
 					switch(m.type.toUpperCase()) {
 						case "DATE_VALUE":
 							log.debug("case of " + m.type)
+							m.value = dateFormatter.parse(m.value)
 							qr = new QuestionResponse(document: documentInstance, formField: formField, createdBy: user.username, updatedBy: user.username,
 											dateValue: m.value)
 							log.debug("QuestionResponse instance created for " + key)
@@ -272,7 +279,7 @@ class ExceptionController
 					log.debug("found sectionTitle: \"" + sectionTitle + "\"")
 					
 					log.debug("submitting to saveSection view for rendering.")
-					render(view: "saveSection", model: [documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
+					render(view: "saveSection", model: [dateFormat: dateFormat, documentInstance: documentInstance, formid: exceptionForm.id, section: currentSection, sectionStack: sectionStack,
 										formFields: FormField.findAllByFormAndSectionNumber(exceptionForm, currentSection, [sort: "id"]), sectionTitle: sectionTitle])
 				} else {
 					log.debug("no more sections to present for form id " + exceptionForm.id + " and document id: " + documentInstance.id)
