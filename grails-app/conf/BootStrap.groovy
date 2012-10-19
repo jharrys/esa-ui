@@ -67,55 +67,29 @@ class BootStrap
 					
 					Reader reader = null
 					
-					reader = new BufferedReader(new FileReader("esa-content/form_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert Form.count() == 4
+					def map = [:]
 					
-					reader = new BufferedReader(new FileReader("esa-content/party_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert Party.count() == 42
+					map['form'] = 4
+					map['party'] = 42
+					map['configuration_parameter'] = 1
+					map['lookup_list'] = 14
+					map['lookup_element'] = 69
+					map['form_field'] = 44
+					map['category'] = 265
+					map['item'] = 63
+					map['document'] = 3
+					map['question_response'] = 85
 					
-					reader = new BufferedReader(new FileReader("esa-content/configuration_parameter_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert ConfigurationParameter.count() == 1
-					
-					reader = new BufferedReader(new FileReader("esa-content/lookup_list_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert LookupList.count() == 14
-					
-					reader = new BufferedReader(new FileReader("esa-content/lookup_element_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert LookupElement.count() == 69
-					
-					reader = new BufferedReader(new FileReader("esa-content/form_field_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert FormField.count() == 44
-					
-					reader = new BufferedReader(new FileReader("esa-content/category_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert Category.count() == 265
-					
-					reader = new BufferedReader(new FileReader("esa-content/item_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert Item.count() == 63
-					
-					reader = new BufferedReader(new FileReader("esa-content/document_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert Document.count() == 3
-					
-					reader = new BufferedReader(new FileReader("esa-content/question_response_seed_data.sql"))
-					RunScript.execute(connection, reader)
-					reader.close()
-					assert QuestionResponse.count() == 85
+					map.each
+					{ table,expectedCount ->
+						reader = new BufferedReader(new FileReader("esa-content/" + table + "_seed_data.sql"))
+						RunScript.execute(connection, reader)
+						reader.close()
+						def realCount = Class.forName("org.ihc.esa." + table.tokenize("_").collect
+										{ it.capitalize() }.join(''), false, this.class.getClassLoader()).count()
+						assert realCount == expectedCount
+						s.execute("ALTER SEQUENCE " + table + "_seq RESTART WITH " + (expectedCount + 1))
+					}
 				}
 			}	// end-development
 			test {
