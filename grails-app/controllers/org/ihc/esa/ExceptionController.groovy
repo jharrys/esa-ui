@@ -308,8 +308,7 @@ class ExceptionController
 			log.debug("next section would have been: " + section)
 			section -= 1
 			
-			flash.message = "Saving of section " + section + " has been canceled.<br />" +
-							"Document number " + documentInstance.id + " titled \"" + documentInstance.title + "\" will remain in the database at its last saved point."
+			flash.message = "\"" + documentInstance.title + "\" #" + documentInstance.id + " section " + section + " was not saved."
 			redirect action: 'list'
 		} // end-cancel
 	}
@@ -574,8 +573,7 @@ class ExceptionController
 			log.debug("next section would have been: " + section)
 			section -= 1
 			
-			flash.message = "Update of section " + section + " has been canceled.<br />" +
-							"Document number " + documentInstance.id + " titled \"" + documentInstance.title + "\" will remain in the database at its last saved point."
+			flash.message = "\"" + documentInstance.title + "\" #" + documentInstance.id + " section " + section + " was not changed."
 			redirect action: 'list'
 		} // end-cancel
 	}
