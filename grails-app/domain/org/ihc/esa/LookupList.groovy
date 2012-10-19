@@ -67,6 +67,8 @@ class LookupList
 		table 'LOOKUP_LIST'
 		version false
 		
+		elements sort: 'display'
+		
 		name column: 'NAME'
 		prompt column: 'PROMPT'
 		description column: 'DESCRIPTION'
