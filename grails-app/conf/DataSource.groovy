@@ -14,8 +14,8 @@ environments
 		{
 			// one of 'create', 'create-drop', 'update', 'validate', ''
 			dbCreate = "create"
-			url = "jdbc:h2:mem:testDb;MVCC=TRUE"	//use this URL to connect through http://server/grailsapp/dbconsole
-			//logSql = true
+			url = "jdbc:h2:mem:testDb;MVCC=TRUE;MODE=Oracle"	//use this URL to connect through http://server/grailsapp/dbconsole
+			dialect = "org.hibernate.dialect.Oracle10gDialect"
 		}
 		hibernate
 		{
