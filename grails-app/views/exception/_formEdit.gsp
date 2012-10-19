@@ -4,10 +4,13 @@
 <%@ page import="org.ihc.esa.LookupList"%>
 <%@ page import="org.ihc.esa.LookupElement"%>
 <%@ page import="org.ihc.esa.QuestionResponse"%>
+<%@ page import="java.text.SimpleDateFormat"%>
 
 <g:logMsg level="debug">===========================================================================</g:logMsg>
 <g:logMsg level="debug">Still rendering ... but from template _form for exception saveSection.gsp</g:logMsg>
 <g:logMsg level="debug">===========================================================================</g:logMsg>
+
+<% SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat) %>
 
 <g:logMsg level="debug">Begin looping through formFields: "${formFields }"</g:logMsg>
 <g:each in="${formFields }" var="field">
@@ -34,7 +37,7 @@
 		<g:set var="question_datatype_value" value="${field.dataType ?: '' }" />
 		<g:set var="question_lookuplist_exists" value="${field.lookupList != null ? true:false }" />
 		<g:set var="question_lookuplist_value" value="${field.lookupList ?: 'Pick List Not Setup' }" />
-		<g:set var="question_lookuplist_elements" value="${field.lookupList?.elements }" />
+		<g:set var="question_lookuplist_elements" value="${field?.lookupList?.elements }" />
 		<g:set var="answer_required" value="${field.required == 'Y' ? true:false }" />
 		<g:set var="answer_default" value="${qr?.value ?: field.defaultValue }" />
 		<%

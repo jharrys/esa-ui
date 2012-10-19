@@ -3,10 +3,13 @@
 <%@ page import="org.ihc.esa.FormField"%>
 <%@ page import="org.ihc.esa.LookupList"%>
 <%@ page import="org.ihc.esa.LookupElement"%>
+<%@ page import="java.text.SimpleDateFormat"%>
 
 <g:logMsg level="debug">===========================================================================</g:logMsg>
 <g:logMsg level="debug">Still rendering ... but from template _form for exception saveSection.gsp</g:logMsg>
 <g:logMsg level="debug">===========================================================================</g:logMsg>
+
+<% SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat) %>
 
 <g:logMsg level="debug">Begin looping through formFields: "${formFields }"</g:logMsg>
 <g:each in="${formFields }" var="field">
