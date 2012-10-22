@@ -5,7 +5,7 @@
 	<head>
 		<meta name="layout" content="bootstrap">
 		<g:set var="entityName" value="${message(code: 'item.label', default: 'Item')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
+		<title>Item</title>
 	</head>
 	<body>
 		<div class="row-fluid">
@@ -31,7 +31,7 @@
 			<div class="span9">
 
 				<div class="page-header">
-					<h1><g:message code="default.show.label" args="[entityName]" /></h1>
+					<h1>Details for ${itemInstance?.name }</h1>
 				</div>
 
 				<g:if test="${flash.message}">
@@ -39,20 +39,6 @@
 				</g:if>
 
 				<dl>
-				
-					<g:if test="${itemInstance?.externalId}">
-						<dt><g:message code="item.externalId.label" default="External Id" /></dt>
-						
-							<dd><g:fieldValue bean="${itemInstance}" field="externalId"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${itemInstance?.sourceSystem}">
-						<dt><g:message code="item.sourceSystem.label" default="Source System" /></dt>
-						
-							<dd><g:fieldValue bean="${itemInstance}" field="sourceSystem"/></dd>
-						
-					</g:if>
 				
 					<g:if test="${itemInstance?.standard}">
 						<dt><g:message code="item.standard.label" default="Standard" /></dt>
@@ -110,20 +96,6 @@
 						
 					</g:if>
 				
-					<g:if test="${itemInstance?.intermountainItemNumber}">
-						<dt><g:message code="item.intermountainItemNumber.label" default="Intermountain Item Number" /></dt>
-						
-							<dd><g:fieldValue bean="${itemInstance}" field="intermountainItemNumber"/></dd>
-						
-					</g:if>
-				
-					<g:if test="${itemInstance?.name}">
-						<dt><g:message code="item.name.label" default="Name" /></dt>
-						
-							<dd><g:fieldValue bean="${itemInstance}" field="name"/></dd>
-						
-					</g:if>
-				
 					<g:if test="${itemInstance?.description}">
 						<dt><g:message code="item.description.label" default="Description" /></dt>
 						
@@ -162,28 +134,28 @@
 					<g:if test="${itemInstance?.availableDate}">
 						<dt><g:message code="item.availableDate.label" default="Available Date" /></dt>
 						
-							<dd><g:formatDate date="${itemInstance?.availableDate}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${itemInstance?.availableDate}" /></dd>
 						
 					</g:if>
 				
 					<g:if test="${itemInstance?.ihcActualDecomissioned}">
 						<dt><g:message code="item.ihcActualDecomissioned.label" default="Ihc Actual Decomissioned" /></dt>
 						
-							<dd><g:formatDate date="${itemInstance?.ihcActualDecomissioned}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${itemInstance?.ihcActualDecomissioned}" /></dd>
 						
 					</g:if>
 				
 					<g:if test="${itemInstance?.ihcProposedDecomissioned}">
 						<dt><g:message code="item.ihcProposedDecomissioned.label" default="Ihc Proposed Decomissioned" /></dt>
 						
-							<dd><g:formatDate date="${itemInstance?.ihcProposedDecomissioned}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${itemInstance?.ihcProposedDecomissioned}" /></dd>
 						
 					</g:if>
 				
 					<g:if test="${itemInstance?.vendorDecomissioned}">
 						<dt><g:message code="item.vendorDecomissioned.label" default="Vendor Decomissioned" /></dt>
 						
-							<dd><g:formatDate date="${itemInstance?.vendorDecomissioned}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${itemInstance?.vendorDecomissioned}" /></dd>
 						
 					</g:if>
 				
@@ -253,7 +225,7 @@
 					<g:if test="${itemInstance?.dateCreated}">
 						<dt><g:message code="item.dateCreated.label" default="Date Created" /></dt>
 						
-							<dd><g:formatDate date="${itemInstance?.dateCreated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${itemInstance?.dateCreated}" /></dd>
 						
 					</g:if>
 				
@@ -267,7 +239,7 @@
 					<g:if test="${itemInstance?.lastUpdated}">
 						<dt><g:message code="item.lastUpdated.label" default="Last Updated" /></dt>
 						
-							<dd><g:formatDate date="${itemInstance?.lastUpdated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${itemInstance?.lastUpdated}" /></dd>
 						
 					</g:if>
 				
@@ -287,11 +259,11 @@
 						
 					</g:if>
 				
-					<g:if test="${itemInstance?.categories}">
-						<dt><g:message code="item.categories.label" default="Categories" /></dt>
+					<g:if test="${itemInstance?.itemCategories}">
+						<dt><g:message code="item.itemCategories.label" default="Categories" /></dt>
 						
-							<g:each in="${itemInstance.categories}" var="c">
-							<dd><g:link controller="category" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></dd>
+							<g:each in="${itemInstance.itemCategories}" var="ic">
+							<dd><g:link controller="category" action="show" id="${ic.category.id}">${ic.category.name?.encodeAsHTML()}</g:link></dd>
 							</g:each>
 						
 					</g:if>

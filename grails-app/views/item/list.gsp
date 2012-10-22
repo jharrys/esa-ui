@@ -1,4 +1,5 @@
 
+<%@page import="org.jfree.chart.renderer.xy.DeviationRenderer"%>
 <%@ page import="org.ihc.esa.Item" %>
 <!doctype html>
 <html>
@@ -42,17 +43,13 @@
 					<thead>
 						<tr>
 						
-							<g:sortableColumn property="externalId" title="${message(code: 'item.externalId.label', default: 'External Id')}" />
-						
-							<g:sortableColumn property="sourceSystem" title="${message(code: 'item.sourceSystem.label', default: 'Source System')}" />
+							<g:sortableColumn property="name" title="${message(code: 'item.name.label', default: 'Name')}" />
 						
 							<g:sortableColumn property="standard" title="${message(code: 'item.standard.label', default: 'Standard')}" />
 						
-							<g:sortableColumn property="standardType" title="${message(code: 'item.standardType.label', default: 'Standard Type')}" />
-						
-							<g:sortableColumn property="exception" title="${message(code: 'item.exception.label', default: 'Exception')}" />
-						
-							<g:sortableColumn property="deviation" title="${message(code: 'item.deviation.label', default: 'Deviation')}" />
+							<g:sortableColumn property="productGroup" title="${message(code: 'item.productGroup.label', default: 'Product Group')}" />
+							
+							<g:sortableColumn property="technologyGroup" title="${message(code: 'item.technologyGroup.label', default: 'Technology Group')}" />
 						
 							<th></th>
 						</tr>
@@ -61,17 +58,33 @@
 					<g:each in="${itemInstanceList}" var="itemInstance">
 						<tr>
 						
-							<td>${fieldValue(bean: itemInstance, field: "externalId")}</td>
+							<td>${fieldValue(bean: itemInstance, field: "name")}</td>
 						
-							<td>${fieldValue(bean: itemInstance, field: "sourceSystem")}</td>
+							<td>
+							     <%
+								    String display = ""
+									if (itemInstance.standard.equalsIgnoreCase('Y')) {
+										display = "Standard"
+									} else if (itemInstance.standard.equalsIgnoreCase('A')) {
+									   display = "Standard Alternate"
+									} else {
+									   display = "Non-Standard"
+									}
+									
+									if (itemInstance.exception.equalsIgnoreCase('Y')) {
+										display = display + "; Approved as an Exception."
+									}
+									
+									if (itemInstance.deviation.equalsIgnoreCase('Y')) {
+										display = display + "; Requires a Deviation."
+									}
+								  %>
+							     ${display}
+							</td>
 						
-							<td>${fieldValue(bean: itemInstance, field: "standard")}</td>
+							<td>${fieldValue(bean: itemInstance, field: "productGroup")}</td>
 						
-							<td>${fieldValue(bean: itemInstance, field: "standardType")}</td>
-						
-							<td>${fieldValue(bean: itemInstance, field: "exception")}</td>
-						
-							<td>${fieldValue(bean: itemInstance, field: "deviation")}</td>
+							<td>${fieldValue(bean: itemInstance, field: "technologyGroup")}</td>
 						
 							<td class="link">
 								<g:link action="show" id="${itemInstance.id}" class="btn btn-small">Show &raquo;</g:link>

@@ -113,14 +113,14 @@
 					<g:if test="${addressInstance?.dateCreated}">
 						<dt><g:message code="address.dateCreated.label" default="Date Created" /></dt>
 						
-							<dd><g:formatDate date="${addressInstance?.dateCreated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${addressInstance?.dateCreated}" /></dd>
 						
 					</g:if>
 				
 					<g:if test="${addressInstance?.lastUpdated}">
 						<dt><g:message code="address.lastUpdated.label" default="Last Updated" /></dt>
 						
-							<dd><g:formatDate date="${addressInstance?.lastUpdated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${addressInstance?.lastUpdated}" /></dd>
 						
 					</g:if>
 				

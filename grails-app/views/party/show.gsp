@@ -113,14 +113,14 @@
 					<g:if test="${partyInstance?.dateCreated}">
 						<dt><g:message code="party.dateCreated.label" default="Date Created" /></dt>
 						
-							<dd><g:formatDate date="${partyInstance?.dateCreated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${partyInstance?.dateCreated}" /></dd>
 						
 					</g:if>
 				
 					<g:if test="${partyInstance?.lastUpdated}">
 						<dt><g:message code="party.lastUpdated.label" default="Last Updated" /></dt>
 						
-							<dd><g:formatDate date="${partyInstance?.lastUpdated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${partyInstance?.lastUpdated}" /></dd>
 						
 					</g:if>
 				

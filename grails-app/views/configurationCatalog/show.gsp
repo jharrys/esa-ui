@@ -85,14 +85,14 @@
 					<g:if test="${configurationCatalogInstance?.dateCreated}">
 						<dt><g:message code="configurationCatalog.dateCreated.label" default="Date Created" /></dt>
 						
-							<dd><g:formatDate date="${configurationCatalogInstance?.dateCreated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${configurationCatalogInstance?.dateCreated}" /></dd>
 						
 					</g:if>
 				
 					<g:if test="${configurationCatalogInstance?.lastUpdated}">
 						<dt><g:message code="configurationCatalog.lastUpdated.label" default="Last Updated" /></dt>
 						
-							<dd><g:formatDate date="${configurationCatalogInstance?.lastUpdated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${configurationCatalogInstance?.lastUpdated}" /></dd>
 						
 					</g:if>
 				

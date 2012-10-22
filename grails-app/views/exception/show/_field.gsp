@@ -25,7 +25,13 @@
 	           <g:each in="${list }" var="response">
 	               <g:if test="${!response.formField.dataType.equalsIgnoreCase("Title") }" >
 		               <dt>${response.formField.question } </dt>
-	                   <g:if test="${response.formField.lookupList }" >
+		               <g:if test="${response.formField.dataType.equalsIgnoreCase("DATE_VALUE") }" >
+		                  <dd>
+		                      <g:formatDate format="MM-dd-yyyy" date="${response?.dateValue}" />
+		                  </dd>
+		               </g:if>
+		               
+	                   <g:elseif test="${response.formField.lookupList }" >
 			               <dd>
 			                 <%
 							     String displayString = ""
@@ -34,9 +40,9 @@
 									 displayString = displayString.isEmpty() ? val : (displayString + "<br /> " + val)
 								 }
 							  %>
-							  <%=displayString %>
+							  ${displayString }
 			               </dd>
-	                   </g:if>
+	                   </g:elseif>
 	                   
 	                   <g:else>
 			               <dd>${response.value }</dd>

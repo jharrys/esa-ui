@@ -92,7 +92,7 @@
 					<g:if test="${lookupListInstance?.dateCreated}">
 						<dt><g:message code="lookupList.dateCreated.label" default="Date Created" /></dt>
 						
-							<dd><g:formatDate date="${lookupListInstance?.dateCreated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${lookupListInstance?.dateCreated}" /></dd>
 						
 					</g:if>
 				
@@ -117,7 +117,7 @@
 					<g:if test="${lookupListInstance?.lastUpdated}">
 						<dt><g:message code="lookupList.lastUpdated.label" default="Last Updated" /></dt>
 						
-							<dd><g:formatDate date="${lookupListInstance?.lastUpdated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${lookupListInstance?.lastUpdated}" /></dd>
 						
 					</g:if>
 				

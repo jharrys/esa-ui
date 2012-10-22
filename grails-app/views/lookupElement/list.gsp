@@ -69,9 +69,9 @@
 						
 							<td>${fieldValue(bean: lookupElementInstance, field: "updatedBy")}</td>
 						
-							<td><g:formatDate date="${lookupElementInstance.dateCreated}" /></td>
+							<td><g:formatDate format="MM-dd-yyyy" date="${lookupElementInstance.dateCreated}" /></td>
 						
-							<td><g:formatDate date="${lookupElementInstance.lastUpdated}" /></td>
+							<td><g:formatDate format="MM-dd-yyyy" date="${lookupElementInstance.lastUpdated}" /></td>
 						
 							<td class="link">
 								<g:link action="show" id="${lookupElementInstance.id}" class="btn btn-small">Show &raquo;</g:link>

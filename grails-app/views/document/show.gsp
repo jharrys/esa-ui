@@ -64,7 +64,7 @@
 					<g:if test="${documentInstance?.dateCreated}">
 						<dt><g:message code="document.dateCreated.label" default="Date Created" /></dt>
 						
-							<dd><g:formatDate date="${documentInstance?.dateCreated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${documentInstance?.dateCreated}" /></dd>
 						
 					</g:if>
 				
@@ -80,7 +80,7 @@
 					<g:if test="${documentInstance?.lastUpdated}">
 						<dt><g:message code="document.lastUpdated.label" default="Last Updated" /></dt>
 						
-							<dd><g:formatDate date="${documentInstance?.lastUpdated}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="${documentInstance?.lastUpdated}" /></dd>
 						
 					</g:if>
 				
