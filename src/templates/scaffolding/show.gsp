@@ -57,7 +57,7 @@
 						<%  } else if (p.type == Boolean || p.type == boolean) { %>
 							<dd><g:formatBoolean boolean="\${${propertyName}?.${p.name}}" /></dd>
 						<%  } else if (p.type == Date || p.type == java.sql.Date || p.type == java.sql.Time || p.type == Calendar) { %>
-							<dd><g:formatDate date="\${${propertyName}?.${p.name}}" /></dd>
+							<dd><g:formatDate format="MM-dd-yyyy" date="\${${propertyName}?.${p.name}}" /></dd>
 						<%  } else if(!p.type.isArray()) { %>
 							<dd><g:fieldValue bean="\${${propertyName}}" field="${p.name}"/></dd>
 						<%  } %>
