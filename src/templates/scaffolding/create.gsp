@@ -11,17 +11,15 @@
 			
 			<div class="span2">
 				<div class="well">
-					<ul class="nav nav-list">
+					<ul class="nav nav-pills nav-stacked">
 						<li class="nav-header">\${entityName}</li>
 						<li>
 							<g:link action="list">
-								<i class="icon-list"></i>
 								<g:message code="default.list.label" args="[entityName]" />
 							</g:link>
 						</li>
 						<li class="active">
 							<g:link action="create">
-								<i class="icon-plus icon-white"></i>
 								<g:message code="default.create.label" args="[entityName]" />
 							</g:link>
 						</li>
