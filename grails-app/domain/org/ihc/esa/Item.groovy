@@ -11,10 +11,14 @@ package org.ihc.esa
  * All parameters can be nullable.
  * </p>
  * <p>
- * Item can have multiple categories ({@link Category}).
- * Item can have multiple catalogs ({@link Catalog}).
- * Item can have multiple itemVersions ({@link ItemVersion}).
- * Item can have multiple notes ({@link Note}).
+ * Required fields are: {@link #name}, {@link #standard}, {@link #exception}, {@link #deviation}, {@link #inservice}, {@link #exceptionRequired}.
+ * These along with the creation dates and creation by make up equals and hash code.
+ * </p>
+ * <p>
+ * Item can have multiple categories ({@link Category}).<br />
+ * Item can have multiple catalogs ({@link Catalog}).<br />
+ * Item can have multiple itemVersions ({@link ItemVersion}).<br />
+ * Item can have multiple notes ({@link Note}).<br />
  * </p>
  * @author lpjharri
  * @since 1.0
@@ -51,22 +55,22 @@ class Item
 	String standardType
 	
 	/**
-	 * 'Y' or 'N' whether this Item is an approved exception. Defaults to 'N'.
+	 * Required. 'Y' or 'N' whether this Item is an approved exception. Defaults to 'N'.
 	 */
 	String exception = "N"
 	
 	/**
-	 * 'Y' or 'N' whether this Item is a deviation. Defaults to 'N'.
+	 * Required. 'Y' or 'N' whether this Item is a deviation. Defaults to 'N'.
 	 */
 	String deviation = "N"
 	
 	/**
-	 * 'Y' or 'N' whether this Item is current in service. Defaults to 'Y'.
+	 * Required. 'Y' or 'N' whether this Item is current in service. Defaults to 'Y'.
 	 */
 	String inService = "N"
 	
 	/**
-	 * 'Y' or 'N' whether this Item requires an exception to acquire. Defaults to 'N'.
+	 * Required. 'Y' or 'N' whether this Item requires an exception to acquire. Defaults to 'N'.
 	 */
 	String exceptionRequired = "N"
 	
@@ -97,8 +101,7 @@ class Item
 	BigDecimal intermountainItemNumber
 	
 	/**
-	 * Intermountain name for this item.
-	 * Can be nullable.
+	 * Required. Intermountain name for this item.
 	 */
 	String name
 	
@@ -290,18 +293,18 @@ class Item
 	
 	static constraints =
 	{
+		name nullable: false, blank: false, size: 1..128
+		standard nullable: false, inList: ["Y", "N", "A"], size: 1..1
+		exception nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
+		deviation nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
+		inService nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
+		exceptionRequired nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
 		externalId nullable: true, blank: false, size: 1..256
 		sourceSystem nullable: true, blank: false, size: 1..256
-		standard nullable: true, inList: ["Y", "N", "A"], size: 1..1
 		standardType nullable: true, blank: false, size: 1..40
-		exception nullable: true, blank: false, inList: ["Y", "N"], size: 1..1
-		deviation nullable: true, blank: false, inList: ["Y", "N"], size: 1..1
-		inService nullable: true, blank: false, inList: ["Y", "N"], size: 1..1
-		exceptionRequired nullable: true, blank: false, inList: ["Y", "N"], size: 1..1
 		exceptionCriteria nullable: true, size: 0..2048
 		document nullable: true
 		intermountainItemNumber nullable: true
-		name nullable: true, blank: false, size: 1..128
 		description nullable: true, size: 0..512
 		generalLedgerCode nullable: true, size: 0..256
 		productGroup nullable: true, size: 0..64
@@ -327,21 +330,29 @@ class Item
 	}
 	
 	/**
-	 * equality tests
+	 * name, standard, exception, deviation, inService, exceptionRequired, dateCreated and createdBy
 	 *
-	 * @param c
-	 * @return
+	 * @param
+	 * @return boolean
 	 */
-	@Override public boolean equals(Item o)
+	@Override public boolean equals(Item item)
 	{
 		
-		if (this.is(o)) return true
+		if (this.is(item)) return true
 
-		if (o == null) return false
+		if (item == null) return false
 		
-		if (o.getClass() != getClass()) return false
+		if (item.getClass() != getClass()) return false
 		
-		if (o.document.equals(this.document) && o.name?.equalsIgnoreCase(this.name) && o.dateCreated.equals(this.dateCreated)) return true
+		if (item.name.equalsIgnoreCase(this.name) && item.standard.equalsIgnoreCase(this.standard) && item.exception.equalsIgnoreCase(this.exception)) {
+			if (item.deviation.equalsIgnoreCase(this.deviation) && item.inService.equalsIgnoreCase(this.inService)) {
+				if (item.exceptionRequired.equalsIgnoreCase(this.exceptionRequired)) {
+					if (item.dateCreated.equals(this.dateCreated) && item.createdBy.equalsIgnoreCase(this.createdBy)) {
+						return true
+					}
+				}
+			}
+		}
 		
 		return false
 	}
@@ -351,8 +362,13 @@ class Item
 
 		if (this.hashCode==0) {
 			int result = 17
-			result = (37*result) + this.document.hashCode()
-			result = (37*result) + this.name?.hashCode()
+			result = (37*result) + this.name.toLowerCase().hashCode()
+			result = (37*result) + this.standard.toUpperCase().hashCode()
+			result = (37*result) + this.exception.toUpperCase().hashCode()
+			result = (37*result) + this.deviation.toUpperCase().hashCode()
+			result = (37*result) + this.inService.toUpperCase().hashCode()
+			result = (37*result) + this.exceptionRequired.toUpperCase().hashCode()
+			result = (37*result) + this.createdBy.toLowerCase().hashCode()
 			result = (37*result) + this.dateCreated.hashCode()
 			this.hashCode = result
 		}
