@@ -32,6 +32,10 @@
         FIXME: place this resource in the appropriate configuration files 
     -->
 	<g:javascript src='bootstrap-datepicker.js' />
+	
+	<%
+	       def versionService = grailsApplication.mainContext.getBean("versionService")
+	 %>
 
 	<nav class="navbar navbar-fixed-top navbar-inverse">
 		<div class="navbar-inner">
@@ -51,7 +55,18 @@
 						<li <%= request.forwardURI == "${createLink(uri: '/exception/index')}" ? ' class="active"' : '' %>><g:link controller="exception">Exceptions</g:link></li>
 						<li <%= request.forwardURI == "${createLink(uri: '/earb')}" ? ' class="disabled"' : 'class="disabled"' %>><g:link controller="earb">EARB</g:link></li>
 						<li <%= request.forwardURI == "${createLink(uri: '/admin/admin')}" ? ' class="active"' : '' %>><g:link controller="admin">Administration</g:link></li>
-						<li><a href="#" rel="tooltip" data-placement="bottom" title="Version ${ApplicationHolder.application.metadata['app.version'] }">About</a></li>
+						<li>
+						  <%
+						      def aboutString = "Application: " + versionService.getApplicationVersion()
+						      aboutString = aboutString + "<br /> Database: " + versionService.getDatabaseVersion()
+						   %>
+						  <a href="#" id="version" rel="popover" data-content="${aboutString }" data-original-title="Version">About</a>
+						  <script>
+						    $(function() {
+						    	  $('#version').popover({trigger: 'hover', placement: 'bottom'})
+						    });
+						  </script>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -65,6 +80,7 @@
 
 		<footer>
 			<p>&copy; Intermountain Healthcare 2012. All Rights Reserved.</p>
+			<p><small>build: <g:render template="/git" /></small></p>
 		</footer>
 	</div>
 
