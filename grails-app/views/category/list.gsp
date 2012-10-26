@@ -24,9 +24,6 @@
 								<g:message code="default.create.label" args="[entityName]" />
 							</g:link>
 						</li>
-						<li>
-						    <g:link action="imports" name="imports" class="btn btn-mini">Import</g:link>
-						</li>
 					</ul>
 				</div>
 			</div>

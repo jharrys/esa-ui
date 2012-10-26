@@ -52,6 +52,7 @@
 					<ul class="nav">
 						<li <%= request.forwardURI == "${createLink(uri: '/')}" ? ' class="active"' : '' %>><a href="${createLink(uri: '/')}">Home</a></li>
 						<li <%= request.forwardURI == "${createLink(uri: '/standards/index')}" ? ' class="active"' : '' %>><g:link controller="standards">Standards</g:link></li>
+						<li <%= request.forwardURI == "${createLink(uri: '/category/index')}" ? ' class="active"' : '' %>><g:link controller="category">Category</g:link></li>
 						<li <%= request.forwardURI == "${createLink(uri: '/exception/index')}" ? ' class="active"' : '' %>><g:link controller="exception">Exceptions</g:link></li>
 						<li <%= request.forwardURI == "${createLink(uri: '/earb')}" ? ' class="disabled"' : 'class="disabled"' %>><g:link controller="earb">EARB</g:link></li>
 						<li <%= request.forwardURI == "${createLink(uri: '/admin/admin')}" ? ' class="active"' : '' %>><g:link controller="admin">Administration</g:link></li>
@@ -74,14 +75,24 @@
 	</nav>
 
 	<div class="container-fluid">
-		<g:layoutBody />
-
-		<hr>
-
-		<footer>
-			<p>&copy; Intermountain Healthcare 2012. All Rights Reserved.</p>
-			<p><small>build: <g:render template="/git" /></small></p>
-		</footer>
+	
+		<div class="row-fluid">
+		
+		  <div class="span12">
+		
+				<g:layoutBody />
+				
+				<hr>
+				
+				<footer>
+					<p>&copy; Intermountain Healthcare 2012. All Rights Reserved.</p>
+					<p><small>build: <g:render template="/git" /></small></p>
+				</footer>
+			
+			</div>
+			
+		</div>
+		
 	</div>
 
 	<r:layoutResources />

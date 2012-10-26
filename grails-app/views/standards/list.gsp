@@ -1,4 +1,3 @@
-
 <%@ page import="org.ihc.esa.Document" %>
 <!doctype html>
 <html>
@@ -42,11 +41,11 @@
 					<thead>
 						<tr>
 						
-							<th class="header"><g:message code="item.form.label" default="Item" /></th>
-						
-							<g:sortableColumn property="createdBy" title="${message(code: 'item.createdBy.label', default: 'Created By')}" />
-						
-							<g:sortableColumn property="updatedBy" title="${message(code: 'item.updatedBy.label', default: 'Updated By')}" />
+							<g:sortableColumn property="name" title="${message(code: 'item.name.label', default: 'Item')}" />
+							
+							<g:sortableColumn property="description" title="${message(code: 'item.description.label', default: 'Description')}" />
+							
+							<g:sortableColumn property="comments" title="${message(code: 'item.comments.label', default: 'Comments')}" />
 						
 							<th></th>
 						</tr>
@@ -57,22 +56,10 @@
 						
 							<td>${fieldValue(bean: itemInstance, field: "name")}</td>
 							
-							<td>${fieldValue(bean: itemInstance, field: "description")}</td>
-							
-							<td>${fieldValue(bean: itemInstance, field: "usefulLife")}</td>
-							
-							<td>${fieldValue(bean: itemInstance, field: "availableDate")}</td>
-							
-							<td>${fieldValue(bean: itemInstance, field: "inService")}</td>
+							<td><div style="word-wrap: break-word">${fieldValue(bean: itemInstance, field: "description")}</div></td>
 							
 							<td>${fieldValue(bean: itemInstance, field: "comments")}</td>
 							
-							<td>${fieldValue(bean: itemInstance, field: "sourceSystem")}</td>
-						
-							<td>${fieldValue(bean: itemInstance, field: "createdBy")}</td>
-						
-							<td>${fieldValue(bean: itemInstance, field: "updatedBy")}</td>
-						
 							<td class="link">
 								<g:link action="show" id="${itemInstance.id}" class="btn btn-small">Show &raquo;</g:link>
 							</td>
@@ -81,7 +68,7 @@
 					</tbody>
 				</table>
 				<div class="pagination">
-					<bootstrap:paginate total="${documentInstanceTotal}" />
+					<bootstrap:paginate total="${itemInstanceTotal}" />
 				</div>
 			</div>
 
