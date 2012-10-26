@@ -67,6 +67,8 @@ class Category implements Comparable<Category>
 		table 'CATEGORY'
 		version false
 		
+		categories sort: 'name'
+		
 		parentCategory column: 'PARENT_CATEGORY_ID'
 		parentCategoryPath column: 'PARENT_CATEGORY_PATH'
 		name column: 'NAME'

@@ -224,7 +224,7 @@ class Item
 		catalogs: Catalog,							//validated
 		itemVersions: ItemVersion,					//validated
 		notes: Note,								//validated
-		itemCategories: ItemCategory,
+		categories: Category,
 		itemConversions: ItemUnitsConversion,
 		replacementForItems: ReplacementItem,
 		replacementItems: ReplacementItem,
@@ -282,7 +282,7 @@ class Item
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
 		
-		itemCategories joinTable: [name: 'ITEM_CATEGORY',
+		categories joinTable: [name: 'ITEM_CATEGORY',
 			key: 'ITEM_ID',
 			column: 'CATEGORY_ID']
 		
