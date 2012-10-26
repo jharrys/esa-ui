@@ -4,6 +4,9 @@ import org.h2.tools.*
 
 class BootStrap
 {
+	private final String databaseVersion = "1.1"
+	private final String applicationVersion = "0.6"
+	
 	def grailsApplication
 	def sessionFactory
 	def init =
@@ -71,7 +74,7 @@ class BootStrap
 					
 					map['form'] = 4
 					map['party'] = 42
-					map['configuration_parameter'] = 1
+					map['configuration_parameter'] = 2
 					map['lookup_list'] = 14
 					map['lookup_element'] = 69
 					map['form_field'] = 44
@@ -91,6 +94,12 @@ class BootStrap
 						s.execute("ALTER SEQUENCE " + table + "_seq RESTART WITH " + (expectedCount + 1))
 					}
 				}
+				
+				String dbVersion = ConfigurationParameter.findByName('database.version').value
+				String appVersion = ConfigurationParameter.findByName('esaui.version').value
+				
+				assert dbVersion.equals(databaseVersion)
+				assert appVersion.equals(applicationVersion)
 			}	// end-development
 			test {
 				def adminRole = new EsaRole(authority: 'ROLE_ESA_ADMIN').save(flush: true)
