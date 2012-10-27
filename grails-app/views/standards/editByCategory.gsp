@@ -93,8 +93,7 @@
                             var display = sourceElement.options[index].text;
 
 		                    // not using it right now
-	                        var isSuccessful = ${remoteFunction(action: 'addItemToCategory', params: '\'toCategory=\'+category+\'&itemId=\'+value',
-								on401="alert('authentication error')")};
+	                        var isSuccessful = ${remoteFunction(action: 'addItemToCategory', params: '\'toCategory=\'+category+\'&itemId=\'+value')};
 
 	                        // remove from allitems
 	                        sourceElement.remove(index);

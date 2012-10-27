@@ -83,13 +83,14 @@ class StandardsController
 		
 		boolean result = false
 		
-		if (!c.save(flush:true)) {
+		if (!c.save(flush:true, failOnError:true)) {
 			result = true
 		}
 		
 		render result
 	}
 	
+	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def editByCategory()
 	{
 		int result = 0
