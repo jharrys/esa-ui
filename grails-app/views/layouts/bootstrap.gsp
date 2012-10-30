@@ -85,8 +85,11 @@
 				<hr>
 				
 				<footer>
-					<p>&copy; Intermountain Healthcare 2012. All Rights Reserved.</p>
-					<p><small>build: <g:render template="/git" /></small></p>
+					<p>
+						&copy; Intermountain Healthcare 2012. All Rights Reserved.
+						<br />
+						<small><small>build: <g:render template="/git" /></small></small>
+					</p>
 				</footer>
 			
 			</div>
