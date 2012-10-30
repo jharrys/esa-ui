@@ -23,6 +23,11 @@
 								<g:message code="default.create.label" args="[entityName]" />
 							</g:link>
 						</li>
+						<li>
+							<g:link action="editByCategory">
+								Standards By Category
+							</g:link>
+						</li>
 					</ul>
 				</div>
 			</div>

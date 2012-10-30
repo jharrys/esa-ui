@@ -23,18 +23,38 @@ class StandardsController
 		[itemInstanceList: Item.list(params), itemInstanceTotal: Item.count()]
 	}
 	
+	/**
+	 * 
+	 * @return if catId is not null, then return the list of {@link Item}s associated with this {@link Category}
+	 */
 	def itemsInCategoryList() {
-		log.debug("listing items in category")
-		log.debug("params are: " + params)
 		
-		Category c = Category.get(params.catId)
-		grails.converters.JSON itemList = c.items as grails.converters.JSON
+		log.debug("====================================================================================")
+		log.debug("itemsInCategoryList() in standards controller called with params: " + params)
+		log.debug("====================================================================================")
 		
-		log.debug(itemList)
+		def itemList = null
 		
-		render (itemList)
+		if (params.catId) {
+			Category c = Category.get(params.catId)
+			itemList = c.items
+			
+			itemList = itemList.sort { a,b ->
+				a.name <=> b.name
+			}
+			
+			log.debug("found itemList: " + itemList)
+			render (itemList as grails.converters.JSON)
+		} else {
+			log.debug("catId is null, returning empty result")
+			render ""
+		}
 	}
 	
+	/**
+	 * used as an ajax call to add the sent {@link Item} to the provided {@link Category}
+	 * @return true if successful, false otherwise
+	 */
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def addItemToCategory() {
 		def user = null
@@ -42,11 +62,11 @@ class StandardsController
 		
 		log.debug(user.username)
 		
-		log.error("====================================================================================")
-		log.error("addItemToCategory() in standards controller called with params: " + params)
-		log.error("username == " + user?.username)
-		log.error("roles == " + user?.authorities)
-		log.error("====================================================================================")
+		log.debug("====================================================================================")
+		log.debug("addItemToCategory() in standards controller called with params: " + params)
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
 		
 		Item i = Item.get(params.itemId)
 		Category c = Category.get(params.toCategory)
@@ -64,17 +84,21 @@ class StandardsController
 		render result
 	}
 	
+	/**
+	 * used as an ajax call to remove supplied {@link Item} from provided {@link Category}
+	 * @return true if successful, false otherwise
+	 */
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def removeItemFromCategory() {
 		
 		def user = null
 		user = springSecurityService.currentUser
 		
-		log.error("====================================================================================")
-		log.error("removeItemFromCategory() in standards controller called with params: " + params)
-		log.error("username == " + user?.username)
-		log.error("roles == " + user?.authorities)
-		log.error("====================================================================================")
+		log.debug("====================================================================================")
+		log.debug("removeItemFromCategory() in standards controller called with params: " + params)
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
 		
 		Item i = Item.get(params.itemId)
 		Category c = Category.get(params.fromCategory)
@@ -90,6 +114,73 @@ class StandardsController
 		render result
 	}
 	
+	/**
+	 * used as an ajax call to rename the supplied {@link Category} name
+	 * FIXME: ugly, ugly, ugly ... need to move this to a service and/or change the implementation of Category name and Category parentCategoryPath
+	 * @return a success message as a string
+	 */
+	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
+	def renameCategory() {
+		def user = null
+		user = springSecurityService.currentUser
+		
+		log.debug("====================================================================================")
+		log.debug("renameCategory() in standards controller called with params: " + params)
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
+		log.debug("params: " + params)
+		
+		String successMessage = ""
+		
+		successMessage = params.categoryId ? "" : "No Category was selected."
+		
+		successMessage = successMessage + (params.categoryName ? "" : "New name cannot be empty.")
+		
+		// FIXME: Actually - the database implementation of category is not a good idea. We actually have to iterate through all progeny, not just nearest children!
+		
+		if (!successMessage) {
+			Category c = Category.get(params.categoryId);
+			
+			if (c.name.equals(params.categoryName)) {
+				successMessage = "Submitted name is not different, no change has been made."
+			} else {
+				List<Category> children = Category.findAllByParentCategory(c)
+				
+				String pathToReplace = c.parentCategoryPath + "/" + c.name
+				String newPath = c.parentCategoryPath + "/" + params.categoryName
+				
+				c.name = params.categoryName
+				
+				children.each { cat ->
+					log.debug("old path: " + cat.parentCategoryPath)
+					cat.parentCategoryPath = cat.parentCategoryPath.replaceAll(pathToReplace, newPath)
+					log.debug("new path: " + cat.parentCategoryPath)
+					
+					// FIXME: add transaction checking
+					cat.save(flush:true)
+				}
+				
+				if (c.save(flush:true)) {
+					successMessage = "Category name changed successfully!" 
+				} else {
+					successMessage = "Category was not saved."
+				} 
+			}
+		}
+		
+		render successMessage
+	}
+	
+	/**
+	 * provides the controlling mechanism for adding/removing {@link Item}s from a {@link Category} and renaming of the
+	 * {@link Category} name. These activites are done through ajax calls themselves.
+	 * 
+	 * see {@link #renameCategory}, {@link #addItemToCategory} and {@link #removeItemFromCategory}
+	 * 
+	 * @return list of all {@link Category}ies sorted by path
+	 */
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def editByCategory()
 	{
@@ -113,11 +204,11 @@ class StandardsController
 		def user = null
 		user = springSecurityService.currentUser
 		
-		log.error("====================================================================================")
-		log.error("error() in standards controller called with params: " + params)
-		log.error("username == " + user?.username)
-		log.error("roles == " + user?.authorities)
-		log.error("====================================================================================")
+		log.debug("====================================================================================")
+		log.debug("error() in standards controller called with params: " + params)
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
 		
 		def subjectString = "error with esa-ui version " + grailsApplication.metadata['app.version']
 		def htmlBodyString = "<p>params this error page was called with: " + params + "</p>"
