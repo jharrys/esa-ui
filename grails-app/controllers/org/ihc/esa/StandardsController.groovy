@@ -2,8 +2,6 @@ package org.ihc.esa
 
 import grails.plugins.springsecurity.Secured
 
-import org.codehaus.groovy.grails.commons.GrailsApplication
-
 class StandardsController
 {
 	static allowedMethods = [create: ['GET', 'POST'], edit: ['GET', 'POST'], delete: 'POST', itemsInCategory: 'POST']
@@ -40,7 +38,7 @@ class StandardsController
 			itemList = c.items
 			
 			itemList = itemList.sort { a,b ->
-				a.name <=> b.name
+				a.name.toLowerCase() <=> b.name.toLowerCase()
 			}
 			
 			log.debug("found itemList: " + itemList)
@@ -76,9 +74,9 @@ class StandardsController
 		
 		ItemCategory ic = new ItemCategory(item: i, category: c, createdBy: user.username, updatedBy: user.username)
 		
-		boolean result = false
-		if (!ic.save(flush:true, failOnError:true)) {
-			result = true
+		String result = ""
+		if (ic.save(flush:true, failOnError:true)) {
+			result = "succeeded"
 		}
 		
 		render result
@@ -105,10 +103,10 @@ class StandardsController
 		
 		c.removeFromItems(i)
 		
-		boolean result = false
+		String result = ""
 		
 		if (!c.save(flush:true, failOnError:true)) {
-			result = true
+			result = "succeeded"
 		}
 		
 		render result
@@ -146,20 +144,30 @@ class StandardsController
 			if (c.name.equals(params.categoryName)) {
 				successMessage = "Submitted name is not different, no change has been made."
 			} else {
-				List<Category> children = Category.findAllByParentCategory(c)
+				List<Category> children = Category.list();
 				
-				String pathToReplace = c.parentCategoryPath + "/" + c.name
-				String newPath = c.parentCategoryPath + "/" + params.categoryName
+				String regex = /((\/[^\/]*){0,})\/${c.name}((\/[^\/]+){0,})/
 				
 				c.name = params.categoryName
 				
 				children.each { cat ->
-					log.debug("old path: " + cat.parentCategoryPath)
-					cat.parentCategoryPath = cat.parentCategoryPath.replaceAll(pathToReplace, newPath)
-					log.debug("new path: " + cat.parentCategoryPath)
+					java.util.regex.Matcher matcher = (cat.parentCategoryPath =~ regex)
 					
-					// FIXME: add transaction checking
-					cat.save(flush:true)
+					log.debug("regex is: " + regex)
+					log.debug("matcher is: " + matcher)
+					
+					if (matcher.matches()) {
+						log.debug("**************match found!******************")
+						log.debug("old path: " + cat.parentCategoryPath)
+						cat.parentCategoryPath = matcher[0][1] + "/" + c.name + matcher[0][3]
+						log.debug("new path: " + cat.parentCategoryPath)
+						log.debug("********************************************")
+						
+						// FIXME: add transaction checking
+						cat.save(flush:true)
+					} else {
+						log.debug("no match found for " + cat.name + "(" + cat.parentCategoryPath + ")")
+					}
 				}
 				
 				if (c.save(flush:true)) {
@@ -170,7 +178,9 @@ class StandardsController
 			}
 		}
 		
-		render successMessage
+		def categories = this.getCategories()
+		
+		render categories as grails.converters.JSON
 	}
 	
 	/**
@@ -184,8 +194,11 @@ class StandardsController
 	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
 	def editByCategory()
 	{
-		int result = 0
-		def categories = Category.list()
+		[categories: this.getCategories(), itemInstance: new Item()]
+	}
+	
+	private List<Category> getCategories() {
+		List<Category> categories = Category.list()
 		
 		categories = categories.sort { a,b ->
 			String aSlash = a.parentCategoryPath.equals("/") ? '' : '/'
@@ -193,10 +206,10 @@ class StandardsController
 			String aCombined = a.parentCategoryPath + aSlash + a.name
 			String bCombined = b.parentCategoryPath + bSlash + b.name
 			
-			return aCombined.compareTo(bCombined)
+			return aCombined.toLowerCase().compareTo(bCombined.toLowerCase())
 		}
 		
-		[categories: categories]
+		return categories
 	}
 	
 	def error() {
