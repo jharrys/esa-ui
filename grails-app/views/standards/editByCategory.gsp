@@ -1,5 +1,5 @@
 <%@page import="grails.converters.JSON"%>
-<%@ page import="org.ihc.esa.*"%>
+<%@ page import="org.ihc.esa.Item"%>
 <!doctype html>
 <html>
 <head>
@@ -137,8 +137,10 @@ function updateItemList(initialItemsArray, textStatus) {
         // enable the allitems and itemsincategory select boxes
         realItemsElement.disabled = false;
         allItemsElement.disabled = false;
-        document.getElementById('editCategoryButton').disabled = false;
-        document.getElementById('addNewItemButton').disabled = false;
+        $('#editCategoryLi').removeClass('disabled');
+        $('#editCategoryButton').attr('data-toggle', 'modal');
+        $('#addNewItemLi').removeClass('disabled');
+        $('#addNewItemButton').attr('data-toggle', 'modal');
     } else {
         // if we're here it means that 'no selection' was made, clear out the itemsincategory select box
         while (realItemsElement.length) {
@@ -148,7 +150,10 @@ function updateItemList(initialItemsArray, textStatus) {
         // enable the allitems and itemsincategory select boxes
         realItemsElement.disabled = true;
         allItemsElement.disabled = true;
-        document.getElementById('editCategoryButton').disabled = true;
+        $('#editCategoryLi').addClass('disabled');
+        $('#editCategoryButton').removeAttr('data-toggle');
+        $('#addNewItemLi').addClass('disabled');
+        $('#addNewItemButton').removeAttr('data-toggle');
     }
 };
 
@@ -215,6 +220,21 @@ function removeMeFromCategory(value) {
                             </g:link></li>
 				</ul>
 			</div>
+			
+			<div class="well">
+			     <ul class="nav nav-pills nav-stacked">
+			         <li class="nav-header">
+			             Actions
+		             </li>
+		             <li id="editCategoryLi" class="disabled">
+		                  <a href="#" id="editCategoryButton" data-target="#editCategoryModal"> Rename Category </a>
+		             </li>
+		             <li id="addNewItemLi" class="disabled">
+		                  <a href="#" id="addNewItemButton" data-target="#addNewItemModal"> New Item </a>
+		             </li>
+			     </ul>
+			</div>
+			
 		</div>
 
 		<div class="span10">
@@ -245,21 +265,18 @@ function removeMeFromCategory(value) {
 			<div class="row-fluid">
 
 				<div class="span4">
-				    Items To Choose From:
+				    <span class="label label-info">Items To Choose From:</span>
 					<g:select disabled="true" id="allitems" name="allitems" size="10" style="width: 100%" from="${Item.list(sort: 'name') }" optionKey="id" optionValue="name"
 						ondblclick="addMeToCategory(this.value);"
 					/>
 				</div>
 
 				<div class="span4">
-				    Items Already Part of Category:
+				    <span class="label label-info">Items Already Part of Category:</span>
 					<g:select disabled="true" id="itemsincategory" name="itemsincategory" size="10" style="width: 100%" from="" ondblclick="removeMeFromCategory(this);" />
 				</div>
 
 			</div>
-
-			<button id="editCategoryButton" role="button" class="btn" disabled="true" data-target="#editCategoryModal" data-toggle="modal"> Rename Category </button>
-			<button id="addNewItemButton" role="button" class="btn" disabled="true" data-target="#addNewItemModal" data-toggle="modal"> New Item </button>
 
 			<%-- Modal box for renaming selected Category --%>
 			<g:render template="editCategoryModal" />

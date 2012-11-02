@@ -1,4 +1,3 @@
-<%@ page import="org.ihc.esa.*"%>
 <!-- Modal -->
 <div class="modal hide fade" id="addNewItemModal" tabindex="-1" role="dialog" aria-labelledby="addNewItemModalLabel" aria-hidden="true">
 
@@ -15,7 +14,9 @@
         <div class="modal-body">
                 <p>
                     <%-- FIXME: this cannot be left in for production - it's purely dev --%>
-                    <f:all bean="itemInstance"/>
+                    <f:all bean="itemInstance" except="categories,catalogs,itemVersions,itemConversions,
+                        replacementForItems,replacementItems,configurationElements,partOfConfigurations,
+                        createdBy,updatedBy"/>
                 </p>
         </div>
         

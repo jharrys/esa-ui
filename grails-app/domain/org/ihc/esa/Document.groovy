@@ -60,21 +60,19 @@ class Document
 	/**
 	 * title is derived from hydrated object.
 	 */
-	String title = null
+	private String title = null
 	
 	/**
 	 * The {@link FormField} element for this {@link Form}
 	 * that maps to the <code>Title</code> of the document instance.
 	 * By convention it the DataType column is named "Title"
 	 */
-	FormField titleFormField = null
+	private FormField titleFormField = null
 	
 	String getTitle() {
-		if (this.titleFormField == null) {
-			this.titleFormField = FormField.findByDataType("Title")
-		}
 		
 		if (this.title == null) {
+			this.getTitleFormField()
 			this.title = QuestionResponse.findByDocumentAndFormField(this, this.titleFormField)?.stringValue
 		}
 		
@@ -84,6 +82,7 @@ class Document
 	FormField getTitleFormField() {
 		if (this.titleFormField == null) {
 			this.titleFormField = FormField.findByDataType("Title")
+			this.getTitle()
 		}
 		
 		return this.titleFormField
@@ -158,5 +157,20 @@ class Document
 		}
 		
 		return this.hashCode
+	}
+	
+	/**
+	 * Natural order based strictly off of name
+	 * TODO: does compareTo have to satisfy the equals and hashCode? verify ...
+	 */
+	public int compareTo(Document d)
+	{
+		int EQUAL = 0
+		
+		if (this.is(d)) return EQUAL
+		
+		if (this.equals(d)) return EQUAL
+		
+		return this.getTitle().compareToIgnoreCase(d.getTitle())
 	}
 }
