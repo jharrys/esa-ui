@@ -95,7 +95,8 @@ class Document
 	
 	static hasMany = [
 		items: Item,
-		responses: QuestionResponse
+		responses: QuestionResponse,
+		attachments: Attachment
 	]
 	
 	static belongsTo = Form
@@ -108,6 +109,8 @@ class Document
 		id generator:'sequence', params:[sequence:'DOCUMENT_SEQ']
 		table 'DOCUMENT'
 		version false
+		
+		attachments sort: 'name'
 		
 		form column: 'FORM_ID'
 		dateCreated column: 'DATE_CREATED'
