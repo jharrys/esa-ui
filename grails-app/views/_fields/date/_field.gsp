@@ -7,7 +7,7 @@
 <div class="control-group ${invalid ? 'error' : ''}">
     <label class="control-label" for="${property}">${label}</label>
     <div class="controls">
-	    <input id="${property }" name="${property }" size="16" type="text" value="${value ?: dateFormatter.format(new Date()) }">
+	    <input id="${property }" name="${property }" size="16" type="text">
 	    <script>
 	       $(function() {
 	           $('#${property }').datepicker({format: 'mm/dd/yyyy'});

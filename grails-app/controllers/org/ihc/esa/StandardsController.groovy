@@ -4,7 +4,8 @@ import grails.plugins.springsecurity.Secured
 
 class StandardsController
 {
-	static allowedMethods = [create: ['GET', 'POST'], edit: ['GET', 'POST'], delete: 'POST', itemsInCategory: 'POST']
+	static allowedMethods = [create: ['GET', 'POST'], edit: ['GET', 'POST'], delete: 'POST', list: 'GET', editByCategory: 'GET', itemsInCategory: 'POST', addItemToCategory: 'POST', 
+		removeItemFromCategory: 'POST', renameCategory: 'POST', addNewItem: ['GET', 'POST'], error: 'GET']
 	
 	def springSecurityService
 	
@@ -210,6 +211,62 @@ class StandardsController
 		}
 		
 		return categories
+	}
+	
+	def addNewItem() {
+		def user = null
+		user = springSecurityService.currentUser
+		
+		log.debug("====================================================================================")
+		log.debug("addNewItem() in standards controller called with params: " + params)
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
+		switch (request.method) {
+			case 'GET': 
+				Item itemInstance = new Item()
+				render view: 'addNewItem', model: [itemInstance: itemInstance, categoryId: params.categoryId]
+				break
+			
+			case 'POST':
+				Category category = null
+				if (params.categoryId) {
+					category = Category.get(params.categoryId)
+				}
+
+				params.party = params.party ? Party.get(params.party) : null
+				params.document = params.document ? Document.get(params.document) : null
+				params.createdBy = user?.username
+				params.updatedBy = user?.username
+				params.ihcProposedDecomissioned = params.ihcProposedDecomissioned ? new Date(params.ihcProposedDecomissioned) : null
+				params.availableDate = params.availableDate ? new Date(params.availableDate) : null
+				params.ihcActualDecomissioned = params.ihcActualDecomissioned ? new Date(params.ihcActualDecomissioned) : null
+				params.vendorDecomissioned = params.vendorDecomissioned ? new Date(params.vendorDecomissioned) : null
+																																				
+				Item item = new Item(params)
+				
+				if (category) {
+					category.addToItems(item)
+					
+					if (!category.save(flush:true)) {
+						log.error("error saving \"" + category + "\" along with item \"" + item + "\"")
+						flash.message = "unable to save item"
+						render view: 'addNewItem'
+					} else {
+						log.debug("successfully saved: \"" + category + "\" with item \"" + item + "\"")
+						render view: 'editByCategory'
+					}
+				} else if (!item.save(flush:true)) {
+					log.error("unable to save new Item")
+					render view: 'addNewItem'
+				} else {
+					log.debug("successfully saved: \"" + item + "\"")
+					render view: 'editByCategory'
+				}
+				break
+		}
+		
 	}
 	
 	def error() {

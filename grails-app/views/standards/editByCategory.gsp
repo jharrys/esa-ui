@@ -8,9 +8,26 @@
 <g:javascript library="jquery" />
 <g:javascript src="spin.js" />
 <title><g:message code="default.list.label" args="[entityName]" /></title>
+
 </head>
 <body>
 <script>
+/*
+ * Popup Window
+ */
+ var windowSizeArray = ["width=500,height=800", "width=300,height=400,scrollbars=yes"];
+ $(document).ready(function() {
+     $('.actionRef').click(function(event) {
+           var url = $(this).attr('href');
+           var windowName = 'popUp';
+           var windowSize = windowSizeArray[$(this).attr('rel')];
+
+           window.open(url, windowName, windowSize);
+
+           event.preventDefault();
+     });
+ });
+ 
 /*
 
 You can now create a spinner using any of the variants below:
@@ -141,6 +158,8 @@ function updateItemList(initialItemsArray, textStatus) {
         $('#editCategoryButton').attr('data-toggle', 'modal');
         $('#addNewItemLi').removeClass('disabled');
         $('#addNewItemButton').attr('data-toggle', 'modal');
+        var newUrlCategory = $('#addNewItemLink').attr('href').split("?")[0] + "?categoryId=" + catIdElement.value;
+        $('#addNewItemLink').attr('href', newUrlCategory);
     } else {
         // if we're here it means that 'no selection' was made, clear out the itemsincategory select box
         while (realItemsElement.length) {
@@ -230,7 +249,8 @@ function removeMeFromCategory(value) {
 		                  <a href="#" id="editCategoryButton" data-target="#editCategoryModal"> Rename Category </a>
 		             </li>
 		             <li id="addNewItemLi" class="disabled">
-		                  <a href="#" id="addNewItemButton" data-target="#addNewItemModal"> New Item </a>
+		                  <g:link elementId="addNewItemLink" action="addNewItem" rel="0" class="actionRef">New Item</g:link>
+<%--		                  <a href="/esa-ui/standards/addNewItem/1" rel="0" class="actionRef"> New Item </a>--%>
 		             </li>
 			     </ul>
 			</div>
@@ -281,9 +301,6 @@ function removeMeFromCategory(value) {
 			<%-- Modal box for renaming selected Category --%>
 			<g:render template="editCategoryModal" />
 			
-			<%-- Modal box for adding a new Item --%>
-			<g:render template="addNewItemModal" />
-
 		</div>
 
 	</div>

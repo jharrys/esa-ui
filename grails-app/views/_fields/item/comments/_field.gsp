@@ -2,6 +2,6 @@
 <div class="control-group ${invalid ? 'error' : ''}">
     <label class="control-label" for="${property}">${label}</label>
     <div class="controls">
-		<g:field type="text" name="${property }" type="hidden" value="${value }" />
+        <g:textArea type="text" name="${property }" value="${value }" class="input-xlarge" rows="3" required="required" />
     </div>
 </div>

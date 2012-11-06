@@ -3,7 +3,7 @@
 <div class="control-group ${invalid ? 'error' : ''}">
     <label class="control-label" for="${property}">${label}</label>
     <div class="controls">
-        <g:select name="${property }" from="${Document.list().sort() }" optionKey="id" optionValue="title" />
+        <g:select name="${property }" from="${Document.list().sort() }" optionKey="id" optionValue="title" noSelection="['':'-None Selected-']" />
         <g:if test="${invalid}"><span class="help-inline">${errors.join('<br>')}</span></g:if>
     </div>
 </div>

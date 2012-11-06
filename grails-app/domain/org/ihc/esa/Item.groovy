@@ -48,11 +48,28 @@ class Item
 	 */
 	String standard = "N"
 	
+	enum StandardType {
+		ENTERPRISE("Enterprise"), 
+		INTERMOUNTAIN("Intermountain"), 
+		SELECTHEALTH("SelectHealth"), 
+		FINANCIAL("Financial"), 
+		CLINICAL("Clinical"), 
+		REGIONAL("Regional"), 
+		DEPARTMENT("Department")
+		
+		private String value
+		
+		StandardType(String value) { this.value = value }
+		
+		public String value() { return this.value }
+	}
+	
 	/**
 	 * Describes type of standard.
+	 * Such as Enterprise, Intermountain, SelectHealth, Financial, Clinical, Regional, Department.
 	 * Can be nullable.
 	 */
-	String standardType
+	String standardType = StandardType.Enterprise
 	
 	/**
 	 * Required. 'Y' or 'N' whether this Item is an approved exception. Defaults to 'N'.
@@ -293,36 +310,36 @@ class Item
 	
 	static constraints =
 	{
-		name nullable: false, blank: false, size: 1..128
-		standard nullable: false, inList: ["Y", "N", "A"], size: 1..1
-		exception nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
-		deviation nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
-		inService nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
-		exceptionRequired nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
-		externalId nullable: true, blank: false, size: 1..256
 		sourceSystem nullable: true, blank: false, size: 1..256
-		standardType nullable: true, blank: false, size: 1..40
-		exceptionCriteria nullable: true, size: 0..2048
-		document nullable: true
-		intermountainItemNumber nullable: true
+		name nullable: false, blank: false, size: 1..128
 		description nullable: true, size: 0..512
-		generalLedgerCode nullable: true, size: 0..256
+		comments nullable: true, blank: false, size: 1..4000
+		document nullable: true
+		usefulLife nullable: true, blank: false, size: 1..128
+		party nullable: true
 		productGroup nullable: true, size: 0..64
 		technologyGroup nullable: true, size: 0..64
-		contract nullable: true
+		standard nullable: false, inList: ["Y", "N", "A"], size: 1..1
+		standardType nullable: true, blank: false, inList: StandardType.values().toList(), size: 1..40
+		exceptionRequired nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
+		exception nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
+		exceptionCriteria nullable: true, size: 0..2048
+		deviation nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
+		inService nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
+		intermountainItemNumber nullable: true
+		generalLedgerCode nullable: true, size: 0..256
+		externalId nullable: true, blank: false, size: 1..256
+		vendorCatalogNumber nullable: true, blank: false, size: 1..20
+		purchasingUnitOfMeasure nullable: true, blank: false, size: 1..64
+		purchasingUnitPrice nullable: true
+		manufacturerCatalogNumber nullable: true, blank: false, size: 1..256
+		manufacturerPartId nullable: true
+		unspscNumber nullable: true, size: 0..20
 		availableDate nullable: true, display: true, format: 'yyyy-MM-dd'
 		ihcActualDecomissioned nullable: true, display: true, format: 'yyyy-MM-dd'
 		ihcProposedDecomissioned nullable: true, display: true, format: 'yyyy-MM-dd'
 		vendorDecomissioned nullable: true, display: true, format: 'yyyy-MM-dd'
-		vendorCatalogNumber nullable: true, blank: false, size: 1..20
-		manufacturerPartId nullable: true
-		manufacturerCatalogNumber nullable: true, blank: false, size: 1..256
-		purchasingUnitOfMeasure nullable: true, blank: false, size: 1..64
-		purchasingUnitPrice nullable: true
-		unspscNumber nullable: true, size: 0..20
-		usefulLife nullable: true, blank: false, size: 1..128
-		comments nullable: true, blank: false, size: 1..4000
-		party nullable: true
+		contract nullable: true
 		dateCreated nullable: true, display: false, format: 'yyyy-MM-dd'
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
@@ -344,10 +361,10 @@ class Item
 		
 		if (item.getClass() != getClass()) return false
 		
-		if (item.name.equalsIgnoreCase(this.name) && item.standard.equalsIgnoreCase(this.standard) && item.exception.equalsIgnoreCase(this.exception)) {
+		if (item.name.equalsIgnoreCase(this.name) && item.standard.equalsIgnoreCase(this.standard) && item.standardType.equals(this.standardType) && item.exception.equalsIgnoreCase(this.exception)) {
 			if (item.deviation.equalsIgnoreCase(this.deviation) && item.inService.equalsIgnoreCase(this.inService)) {
 				if (item.exceptionRequired.equalsIgnoreCase(this.exceptionRequired)) {
-					if (item.dateCreated.equals(this.dateCreated) && item.createdBy.equalsIgnoreCase(this.createdBy)) {
+					if (item.createdBy.equalsIgnoreCase(this.createdBy)) {
 						return true
 					}
 				}
@@ -364,12 +381,12 @@ class Item
 			int result = 17
 			result = (37*result) + this.name.toLowerCase().hashCode()
 			result = (37*result) + this.standard.toUpperCase().hashCode()
+			result = (37*result) + (this.standardType ? this.standardType.hashCode() : 0)
 			result = (37*result) + this.exception.toUpperCase().hashCode()
 			result = (37*result) + this.deviation.toUpperCase().hashCode()
 			result = (37*result) + this.inService.toUpperCase().hashCode()
 			result = (37*result) + this.exceptionRequired.toUpperCase().hashCode()
 			result = (37*result) + this.createdBy.toLowerCase().hashCode()
-			result = (37*result) + this.dateCreated.hashCode()
 			this.hashCode = result
 		}
 		
