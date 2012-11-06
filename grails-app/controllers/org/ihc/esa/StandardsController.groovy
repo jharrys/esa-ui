@@ -245,24 +245,27 @@ class StandardsController
 				params.vendorDecomissioned = params.vendorDecomissioned ? new Date(params.vendorDecomissioned) : null
 																																				
 				Item item = new Item(params)
+				if (!item.save(flush:true)) {
+					log.error("unable to save new Item")
+					render view: 'addNewItem'
+					return
+				} else {
+					log.debug("successfully saved: \"" + item + "\"")
+				}
 				
 				if (category) {
-					category.addToItems(item)
+					ItemCategory ic = new ItemCategory(createdBy: params.createdBy, updatedBy: params.updatedBy)
+					ic.item = item
+					ic.category = category
 					
-					if (!category.save(flush:true)) {
-						log.error("error saving \"" + category + "\" along with item \"" + item + "\"")
+					if (!ic.save(flush:true)) {
+						log.error("error saving \"" + item + "\" to \"" + category + "\"")
 						flash.message = "unable to save item"
 						render view: 'addNewItem'
 					} else {
-						log.debug("successfully saved: \"" + category + "\" with item \"" + item + "\"")
+						log.debug("successfully saved: \"" + item + "\" to \"" + category + "\"")
 						render view: 'editByCategory'
 					}
-				} else if (!item.save(flush:true)) {
-					log.error("unable to save new Item")
-					render view: 'addNewItem'
-				} else {
-					log.debug("successfully saved: \"" + item + "\"")
-					render view: 'editByCategory'
 				}
 				break
 		}

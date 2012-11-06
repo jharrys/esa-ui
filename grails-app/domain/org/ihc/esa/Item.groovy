@@ -69,7 +69,7 @@ class Item
 	 * Such as Enterprise, Intermountain, SelectHealth, Financial, Clinical, Regional, Department.
 	 * Can be nullable.
 	 */
-	String standardType = StandardType.Enterprise
+	String standardType = "Enterprise"
 	
 	/**
 	 * Required. 'Y' or 'N' whether this Item is an approved exception. Defaults to 'N'.
@@ -320,7 +320,8 @@ class Item
 		productGroup nullable: true, size: 0..64
 		technologyGroup nullable: true, size: 0..64
 		standard nullable: false, inList: ["Y", "N", "A"], size: 1..1
-		standardType nullable: true, blank: false, inList: StandardType.values().toList(), size: 1..40
+		// FIXME: gotta figure out the enums thing for constraints
+		standardType nullable: true, blank: false, inList: ["Enterprise", "Department", "Intermountain", "SelectHealth", "Clinical", "Financial"], size: 1..40
 		exceptionRequired nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
 		exception nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
 		exceptionCriteria nullable: true, size: 0..2048
