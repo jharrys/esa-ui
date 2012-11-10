@@ -4,8 +4,8 @@ import grails.plugins.springsecurity.Secured
 
 class StandardsController
 {
-	static allowedMethods = [create: ['GET', 'POST'], edit: ['GET', 'POST'], delete: 'POST', list: 'GET', editByCategory: 'GET', itemsInCategory: 'POST', addItemToCategory: 'POST', 
-		removeItemFromCategory: 'POST', renameCategory: 'POST', addNewItem: ['GET', 'POST'], error: 'GET']
+	static allowedMethods = [addItemToCategory: 'POST', addNewItem: ['GET', 'POST'], cancel: 'POST', deleteItem: 'POST', editByCategory: 'GET', 
+		editItem: ['GET', 'POST'], error: 'GET', index: 'GET', itemsInCategory: 'POST', list: 'GET', removeItemFromCategory: 'POST', renameCategory: 'POST']
 	
 	def springSecurityService
 	
@@ -16,7 +16,7 @@ class StandardsController
 	
 	def list()
 	{
-		params.max = Math.min(params.max ? params.int('max') : 10, 100)
+		params.max = Math.min(params.max ? params.int('max') : 20, 100)
 		params['standard'] = 'Y'
 		params['sort'] = 'name'
 		[itemInstanceList: Item.list(params), itemInstanceTotal: Item.count()]
@@ -67,20 +67,55 @@ class StandardsController
 		log.debug("roles == " + user?.authorities)
 		log.debug("====================================================================================")
 		
-		Item i = Item.get(params.itemId)
-		Category c = Category.get(params.toCategory)
+		Item item = null
+		Category category = null
 		
-		log.debug(i)
-		log.debug(c)
-		
-		ItemCategory ic = new ItemCategory(item: i, category: c, createdBy: user.username, updatedBy: user.username)
-		
-		String result = ""
-		if (ic.save(flush:true, failOnError:true)) {
-			result = "succeeded"
+		if (!params.itemId) {
+			log.error("itemId was null so sending 412 error code")
+			// http response code 412 is Precondition Failed - the request evaluated to false (null item)
+			render status: 412, text: "No item was selected."
+			return
+		} else { 
+			item = Item.get(params.itemId)
+			log.debug("found item \"" + item?.name + "\"")
+			if (!item) {
+				log.error("sending response code 406 because we couldn't find the item with id " + params.itemId)
+				// http response code 406 is Not Acceptable - the request evaluated to false (null item)
+				render status: 406, text: "The item you selected was not found, please refresh page."
+				return
+			}
 		}
 		
-		render result
+		if (!params.toCategoryId) {
+			log.error("toCategoryId was null, so sending 412 code.")
+			// http response code 412 is Precondition Failed - the request evaluated to false (null item)
+			render status: 412, text: "No category was sent."
+			return
+		} else {
+			category = Category.get(params.toCategoryId)
+			log.debug("found category \"" + category?.name + "\"")
+			if (!category) {
+				log.error("sending response code 406 because we couldn't find the category with id " + params.toCategoryId)
+				// http response code 406 is Not Acceptable - the request evaluated to false (null item)
+				render status: 406, text: "The category you selected was not found, please refresh page."
+				return
+			}
+		}
+		
+		log.debug(item)
+		log.debug(category)
+		
+		ItemCategory ic = new ItemCategory(item: item, category: category, createdBy: user.username, updatedBy: user.username)
+		
+		if (ic.save(flush:true, failOnError:true)) {
+			flash.message = item.name + " was successfully associated with " + category.name
+			render status: 200
+			return
+		} else {
+			flash.message = "An error occurred attempting to associate item with id \"" + item.id + "\" to category with id \"" + category.id + "\""
+			render status: 500
+			return
+		}
 	}
 	
 	/**
@@ -99,18 +134,48 @@ class StandardsController
 		log.debug("roles == " + user?.authorities)
 		log.debug("====================================================================================")
 		
-		Item i = Item.get(params.itemId)
-		Category c = Category.get(params.fromCategory)
+		Item item = null
+		Category category = null
 		
-		c.removeFromItems(i)
-		
-		String result = ""
-		
-		if (!c.save(flush:true, failOnError:true)) {
-			result = "succeeded"
+		if (!params.itemId) {
+			log.error("itemId was null so sending 412 error code")
+			// http response code 412 is Precondition Failed - the request evaluated to false (null item)
+			render status: 412, text: "No item was selected."
+			return
+		} else {
+			item = Item.get(params.itemId)
+			log.debug("found item \"" + item?.name + "\"")
+			if (!item) {
+				log.error("sending response code 406 because we couldn't find the item with id " + params.itemId)
+				// http response code 406 is Not Acceptable - the request evaluated to false (null item)
+				render status: 406, text: "The item you selected was not found, please refresh page."
+				return
+			}
 		}
 		
-		render result
+		if (!params.fromCategoryId) {
+			log.error("fromCategoryId was null, so sending 412 code.")
+			// http response code 412 is Precondition Failed - the request evaluated to false (null item)
+			render status: 412, text: "No category was sent."
+			return
+		} else {
+			category = Category.get(params.fromCategoryId)
+			log.debug("found category \"" + category?.name + "\"")
+			if (!category) {
+				log.error("sending response code 406 because we couldn't find the category with id " + params.fromCategoryId)
+				// http response code 406 is Not Acceptable - the request evaluated to false (null item)
+				render status: 406, text: "The category you selected was not found, please refresh page."
+				return
+			}
+		}
+		
+		category.removeFromItems(item)
+		
+		if (!category.save(flush:true, failOnError:true)) {
+			flash.message = "succeeded removing item from category"
+		} else {
+			flash.message = "error removing item from category"
+		}
 	}
 	
 	/**
@@ -243,32 +308,139 @@ class StandardsController
 				params.availableDate = params.availableDate ? new Date(params.availableDate) : null
 				params.ihcActualDecomissioned = params.ihcActualDecomissioned ? new Date(params.ihcActualDecomissioned) : null
 				params.vendorDecomissioned = params.vendorDecomissioned ? new Date(params.vendorDecomissioned) : null
-																																				
+											
+				boolean error = false																									
 				Item item = new Item(params)
+				
 				if (!item.save(flush:true)) {
-					log.error("unable to save new Item")
-					render view: 'addNewItem'
+					Date d = new Date()
+					log.error("user: " + user?.username + " attempted to create a new item, but the item failed to save.")
+					log.error("params are: " + params)
+					flash.message = item.name + " could not be saved. The error was logged at " + d
+					render status: 500
 					return
 				} else {
-					log.debug("successfully saved: \"" + item + "\"")
+					log.debug("successfully saved: \"" + item.name + "\"")
+					// allow instruction to fall through to next if
 				}
 				
+				/*
+				 * if a category was submitted and successfully looked up in the database then user wants to add the item and associate it with
+				 * a particular category.
+				 */
 				if (category) {
 					ItemCategory ic = new ItemCategory(createdBy: params.createdBy, updatedBy: params.updatedBy)
 					ic.item = item
 					ic.category = category
 					
 					if (!ic.save(flush:true)) {
-						log.error("error saving \"" + item + "\" to \"" + category + "\"")
-						flash.message = "unable to save item"
-						render view: 'addNewItem'
+						Date d = new Date()
+						log.error("user: " + user?.username + " was able to create item " + item.name + " however the service failed to save to join table item_category")
+						log.error("error saving \"" + item.name + "\" to \"" + category.name + "\"")
+						flash.message = item.name + " was saved, but could not be associated with the category " + category.name + ". This error occurred at " + d
+						render status: 500
+						return
 					} else {
-						log.debug("successfully saved: \"" + item + "\" to \"" + category + "\"")
-						render view: 'editByCategory'
+						log.debug("successfully saved: \"" + item.name + "\" to \"" + category.name + "\"")
+						render status: 201, text: item.name + " created successfully with ID of " + item.id + " and associated with category " + category.name
+						return
 					}
+				} else {
+					// since we're here then item saved correctly and so did item_category
+					render status: 201, text: item.name + " was created successfully with ID of " + item.id
 				}
+				
 				break
 		}
+		
+	}
+	
+	def editItem() {
+		
+		def user = null
+		user = springSecurityService.currentUser
+		
+		log.debug("====================================================================================")
+		log.debug("editItem() in standards controller called with params: " + params)
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
+		switch (request.method) {
+			case 'GET':
+				// some calls may specify id (show), others may be itemId (editByCategory)
+				def itemId = params.id ?: params.itemId
+				log.debug("in GET method retrieving item with id " + itemId)
+				Item itemInstance = Item.get(itemId)
+				render view: 'editItem', model: [itemInstance: itemInstance]
+				break
+			
+			case 'POST':
+				log.debug("in POST method pretending to save an item")
+				render view: 'editByCategory'
+				break
+		}
+		
+	}
+	
+	def deleteItem() {
+		
+		def user = null
+		user = springSecurityService.currentUser
+		
+		log.debug("====================================================================================")
+		log.debug("deleteItem() in standards controller called with params: " + params)
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
+		switch (request.method) {
+			case 'POST':
+				//some calls may specify id (show), others may be itemId (editByCategory)
+				def itemId = params.id ?: params.itemId
+				
+				log.debug("in POST method getting ready to delete item \"" + itemId + "\"")
+				
+				Item item = null
+				
+				if (!itemId) {
+					log.error("itemId was null so sending 412 error code")
+					// http response code 412 is Precondition Failed - the request evaluated to false (null item)
+					render status: 412, text: "No item was selected."
+					return
+				} else {
+					item = Item.get(itemId)
+					log.debug("found item \"" + item?.name + "\"")
+					if (!item) {
+						log.error("sending response code 406 because we couldn't find the item with id " + params.itemId)
+						// http response code 406 is Not Acceptable - the request evaluated to false (null item)
+						render status: 406, text: "The item you selected was not found, please refresh page."
+						return
+					}
+				}
+				
+				List<ItemCategory> icList = ItemCategory.findAllByItem(item)
+				for (ItemCategory ic in icList) {
+					ic.delete(flush: true)
+				}
+				
+				item.delete(flush: true)
+				
+				render status: 200
+				break
+		}
+		
+	}
+	
+	def cancel() {
+		def user = null
+		user = springSecurityService.currentUser
+		
+		log.debug("====================================================================================")
+		log.debug("cancel() in standards controller called with params: " + params)
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
 		
 	}
 	
@@ -302,5 +474,39 @@ class StandardsController
 		
 		log.debug("pass rendering to /confirmation.gsp")
 		render(view:"/confirmation")
+	}
+	
+	def show() {
+		def user = null
+		user = springSecurityService.currentUser
+		
+		log.debug("====================================================================================")
+		log.debug("show() in standards controller called with params: " + params)
+		log.debug("username == " + user?.username)
+		log.debug("roles == " + user?.authorities)
+		log.debug("====================================================================================")
+		
+		//some calls may specify id (show), others may be itemId (editByCategory)
+		def itemId = params.id ?: params.itemId
+		
+		Item item = null
+		
+		if (!itemId) {
+			log.error("itemId was null so sending 412 error code")
+			// http response code 412 is Precondition Failed - the request evaluated to false (null item)
+			render status: 412, text: "No item was selected."
+			return
+		} else {
+			item = Item.get(itemId)
+			log.debug("found item \"" + item?.name + "\"")
+			if (!item) {
+				log.error("sending response code 406 because we couldn't find the item with id " + params.itemId)
+				// http response code 406 is Not Acceptable - the request evaluated to false (null item)
+				redirect action: 'list'
+				return
+			}
+		}
+		
+		[itemInstance: item]
 	}
 }
