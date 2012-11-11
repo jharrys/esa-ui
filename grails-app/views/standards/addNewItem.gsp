@@ -1,7 +1,8 @@
 <!doctype html>
 <html>
 	<head>
-		<title>New Item</title>
+	   <meta name="layout" content="general" />
+	   <title>New Item</title>
 	</head>
 	<body>
 	    <div class="row-fluid">

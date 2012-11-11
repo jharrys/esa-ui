@@ -315,7 +315,7 @@
 				<g:form>
 					<g:hiddenField name="id" value="${itemInstance?.id}" />
 					<div class="form-actions">
-						<g:link class="btn" action="editItem" id="${itemInstance?.id}">
+						<g:link class="btn actionRef" action="editItem" id="${itemInstance?.id}" rel="0">
 							<i class="icon-pencil"></i>
 							<g:message code="default.button.edit.label" default="Edit" />
 						</g:link>

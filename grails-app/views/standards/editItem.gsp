@@ -1,7 +1,8 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Edit Item</title>
+	   <meta name="layout" content="general" />
+       <title>Edit Item</title>
 	</head>
 	<body>
 		
@@ -9,7 +10,7 @@
 
             <div class="page-header">
                 <h1>
-                    Add New Item
+                    Edit Item "${itemInstance.name }"
                 </h1>
             </div>
 
