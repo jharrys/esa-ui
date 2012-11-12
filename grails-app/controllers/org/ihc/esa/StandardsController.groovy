@@ -4,7 +4,7 @@ import grails.plugins.springsecurity.Secured
 
 class StandardsController
 {
-	static allowedMethods = [addItemToCategory: 'POST', addNewItem: ['GET', 'POST'], cancel: 'POST', deleteItem: 'POST', editByCategory: 'GET',
+	static allowedMethods = [addItemToCategory: 'POST', addNewItem: ['GET', 'POST'], cancel: 'POST', deleteItem: ['GET', 'POST'], editByCategory: 'GET',
 		editItem: ['GET', 'POST'], error: 'GET', index: 'GET', itemsInCategory: 'POST', list: 'GET', removeItemFromCategory: 'POST', renameCategory: 'POST']
 
 	def springSecurityService
@@ -394,7 +394,7 @@ class StandardsController
 		log.debug("====================================================================================")
 
 		switch (request.method) {
-			case 'POST':
+			case 'GET':
 				//some calls may specify id (show), others may be itemId (editByCategory)
 				def itemId = params.id ?: params.itemId
 
@@ -405,7 +405,8 @@ class StandardsController
 				if (!itemId) {
 					log.error("itemId was null so sending 412 error code")
 					// http response code 412 is Precondition Failed - the request evaluated to false (null item)
-					render status: 412, text: "No item was selected."
+					flash.message = "alert-warning:No item was selected."
+					redirect action: 'list'
 					return
 				} else {
 					item = Item.get(itemId)
@@ -413,7 +414,8 @@ class StandardsController
 					if (!item) {
 						log.error("sending response code 406 because we couldn't find the item with id " + params.itemId)
 						// http response code 406 is Not Acceptable - the request evaluated to false (null item)
-						render status: 406, text: "The item you selected was not found, please refresh page."
+						flash.message "alert-error:The item you selected was not found in the database."
+						redirect action: 'list'
 						return
 					}
 				}
@@ -425,7 +427,8 @@ class StandardsController
 
 				item.delete(flush: true)
 
-				render status: 200
+				flash.message = "alert-success:\"" + item.name + "\" was successfully removed."
+				redirect action: 'list'
 				break
 		}
 
