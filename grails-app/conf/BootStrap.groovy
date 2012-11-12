@@ -1,6 +1,7 @@
 import java.sql.Statement
-import org.ihc.esa.*
+
 import org.h2.tools.*
+import org.ihc.esa.*
 
 class BootStrap
 {
@@ -65,8 +66,15 @@ class BootStrap
 				{
 					Statement s = connection.createStatement()
 					s.execute("CREATE ALIAS TO_TIMESTAMP AS \$\$ " +
-									"java.sql.Date toTimestamp(String one, String two) " +
-									"{ return new java.sql.Date((new java.util.Date()).getTime()); } \$\$")
+									"java.sql.Date toTimestamp(String one, String two) throws Exception " +
+									"{ " +
+									"java.text.SimpleDateFormat sdf1 = new java.text.SimpleDateFormat(\"dd-MMM-yy hh.mm.ss.S a\");" +
+									"java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat(\"dd-MMM-yy\");" +
+									"sdf1.setLenient(true);" +
+									"sdf2.setLenient(true);" +
+									"java.util.Date date = null;" +
+									"try { date = sdf1.parse(one); } catch (java.text.ParseException pe) { date = sdf2.parse(one); }" +
+									"return new java.sql.Date(date.getTime()); } \$\$")
 					
 					Reader reader = null
 					
