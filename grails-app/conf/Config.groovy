@@ -233,6 +233,12 @@ grails.plugins.twitterbootstrap.defaultBundle = 'bundle_bootstrap'
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.ihc.esa.EsaUser'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.ihc.esa.EsaUserEsaRole'
 grails.plugins.springsecurity.authority.className = 'org.ihc.esa.EsaRole'
+grails.plugins.springsecurity.controllerAnnotations.staticRules = [
+	'/user/**': ['ROLE_ESA_ADMIN'],
+	'/role/**': ['ROLE_ESA_ADMIN'],
+	'/registrationCode/**': ['ROLE_ESA_ADMIN'],
+	'/securityInfo/**': ['ROLE_ESA_ADMIN']
+]
 
 /* ******************************************************************************************************************
  * spring-security-ui specific settings
