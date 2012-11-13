@@ -43,10 +43,8 @@ grails.project.dependency.resolution =
 		compile ":spring-security-core:1.2.7.3"
 		compile ":spring-security-eventlog:0.2"
 		compile ":spring-security-ldap:1.0.6"
-		compile ":spring-security-mock:1.0.1"
 		compile ":spring-security-ui:0.2"
 		compile ":searchable:0.6.4"
-		compile ":external-config-reload:1.2.1"
 		compile ":jasper:1.6.1"
 		compile ":webxml:1.4.1"
 		compile ":jmx:0.7.2"
@@ -56,6 +54,7 @@ grails.project.dependency.resolution =
 		//		compile ":bootstrap-theme:1.0.BUILD-SNAPSHOT"
 		//		compile ":bootstrap-ui:1.0.BUILD-SNAPSHOT"
 		
+		runtime ":external-config-reload:1.2.2"
 		runtime ":fields:1.3"
 		runtime ":cache-headers:1.1.5"
 		runtime ":zipped-resources:1.0"

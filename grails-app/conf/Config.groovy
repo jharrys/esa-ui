@@ -1,5 +1,15 @@
-grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
-grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
+/* ******************************************************************************************************************
+ * Main configuration that defines global settings, including sensible defaults
+ *
+ * Many of these settings can be overridden as shown in the code at the end of this script.
+ * Automatic reloading of changed configurations has been addded in this application as a plugin
+ * called external-config-reload.
+ *
+ * Author: John Harris
+ * *****************************************************************************************************************/
+
+grails.project.groupId = appName 		// change this to alter the default package name and Maven publishing destination
+grails.mime.file.extensions = true 		// enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
 grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
                       xml: ['text/xml', 'application/xml'],
@@ -50,172 +60,147 @@ grails.exceptionresolver.params.exclude = ['password']
 // enable query caching by default
 grails.hibernate.cache.queries = true
 
-// configure mail plugin
-//grails {
-//	mail {
-//		host = "smtp.co.ihc.com"
-//		port = 25
-//	}
-//}
+/* ******************************************************************************************************************
+ * mail plugin configuration parameters
+ * *****************************************************************************************************************/
 
 grails {
 	mail {
-		host = "smtp.gmail.com"
-		port = 465
-		username = "harris.johnny@gmail.com"
-		password = "eyrodujhipahspco"
-		props = ["mail.smtp.auth":"true",
-				"mail.smtp.socketFactory.port":"465",
-				"mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
-				"mail.smtp.socketFactory.fallback":"false"]
+		host = "smtp.co.ihc.com"
+		port = 25
 	}
 }
 
+/* ******************************************************************************************************************
+ * Environment specific settings
+ * *****************************************************************************************************************/
 environments {
     development {
         grails.logging.jul.usebridge = true
-		
+
 		// mask out secure fields - keep this off in development. FIXME: create tests for this
 		// grails.exceptionresolver.params.exclude = ['password', 'creditCard']
-		
-		// spring-security-mock plugin
-		// for user details service see conf/spring/resources.groovy
-		grails.plugins.springsecurity.mock.active = false
-		//	grails.plugins.springsecurity.mock.fullName = "Mock Mockster"
-		//	grails.plugins.springsecurity.mock.email = "harris.johnny@gmail.com"
-		//	grails.plugins.springsecurity.mock.username =  "mmockster"
-		//	grails.plugins.springsecurity.mock.roles = [ 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_EXCEPTION' ]
+
+		/* *****************************************************************************
+		 * spring-security settings
+		 * for details about service see conf/spring/resources.groovy
+		 * the full DN will be equivalent to "cn=${username},${userDnBase}"
+		 * ****************************************************************************/
+
 		//	grails.plugins.springsecurity.ipRestrictions = [ '/**': ['127.0.0.0/8', '::1/128'] ]
-		
-		// All 3 of these must be set to true if you want spring-security-mock to load roles from ldap rather than mock.roles setting
 		grails.plugins.springsecurity.ldap.active = false
 		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = false
-		// the full DN will be equivalent to "cn=${username},${userDnBase}"
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
     }
-	
+
 	test {
 		grails.logging.jul.usebridge = true
-		
+
 		// mask out secure fields
 		grails.exceptionresolver.params.exclude = ['password', 'creditCard']
-		
-		// spring-security-mock exposes a large security hole
-		grails.plugins.springsecurity.mock.active = false
-		
-		// All 3 of these must be set to true if you want spring-security-mock to load roles from ldap rather than mock.roles setting
+
+		/* *****************************************************************************
+		 * spring-security settings
+		 * for details about service see conf/spring/resources.groovy
+		 * the full DN will be equivalent to "cn=${username},${userDnBase}"
+		 * ****************************************************************************/
+
 		grails.plugins.springsecurity.ldap.active = false
 		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = false
-		// the full DN will be equivalent to "cn=${username},${userDnBase}"
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
 	}
-	
+
     production {
         grails.logging.jul.usebridge = true
-		
+
 		// mask out secure fields
 		grails.exceptionresolver.params.exclude = ['password', 'creditCard']
-		
-		// spring-security-mock exposes a large security hole
-		grails.plugins.springsecurity.mock.active = false
-		
-		// All 3 of these must be set to true if you want spring-security-mock to load roles from ldap rather than mock.roles setting
+
+		/* *****************************************************************************
+		 * spring-security settings
+		 * for details about service see conf/spring/resources.groovy
+		 * the full DN will be equivalent to "cn=${username},${userDnBase}"
+		 * ****************************************************************************/
+
 		grails.plugins.springsecurity.ldap.active = true
 		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = true
-		// the full DN will be equivalent to "cn=${username},${userDnBase}"
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = true
-		
-        //grails.serverURL = ""
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* ******************************************************************************************************************
+ * Log4j specific settings
+ * *****************************************************************************************************************/
 
 log4j =
 {
 	// sensible defaults under Tomcat 6.x and Tomcat 7.x
 	def catalinaBase = System.properties.getProperty('catalina.base')
 	if (!catalinaBase) catalinaBase = '.'
-	//	def logDirectory = "${catalinaBase}/logs"
-	def logf = "c:/tmp/esaui.log"
-	
-	//println "logDirectory: " + logDirectory
-	
+	def logDirectory = "${catalinaBase}/logs"
+	def logFile = "${logDirectory}/esaui.log"
+
 	appenders {
 		console		name: 'stdout'
-		file		name: 'file', file: logf, append: true
+		file		name: 'file', file: logFile, append: true
 	}
-	
+
 	environments {
-		
+
 		development {
+
 			/*
 			 * 'org.hibernate.SQL'  // sql output
 			 * 'org.hibernate.type' // binding variables for sql output
+			 * 'org.codehaus.groovy.grails.web.sitemesh' // for Layout debugging
+			 * 'grails.plugins.twitterbootstrap // for the css twitter bootstrap plugin
 			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
 			 */
-			
+
 			debug 	'grails.app.controllers.org.ihc.esa',					//My Controllers
 					'grails.app.domain.org.ihc.esa',						//My Domain
 					'grails.app.taglib.org.ihc.esa'							//My Tag library
-					//'org.hibernate.SQL'									//SQL
-					//'org.codehaus.groovy.grails.web.sitemesh',			//Layout
-					//'org.codehaus.groovy.grails.orm.hibernate',
-					//'net.sf.ehcache.hibernate',
-					//'org.springframework',
-					//'grails.app.domain',
-					//'grails.app'
-					//'grails.plugins.twitterbootstrap'						//css twitter bootstrap plugin
-			
+
 			trace	'org.hibernate.SQL',									//with param values
 					'org.hibernate.type'
-			
-			//warn 	'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
 		}
-		
+
 		test {
+
 			/*
 			 * 'org.hibernate.SQL'  // sql output
 			 * 'org.hibernate.type' // binding variables for sql output
+			 * 'org.codehaus.groovy.grails.web.sitemesh' // for Layout debugging
+			 * 'grails.plugins.twitterbootstrap // for the css twitter bootstrap plugin
 			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
 			 */
-			
+
 			debug 	'grails.app.controllers.org.ihc.esa',					//My Controllers
 					'grails.app.domain.org.ihc.esa',						//My Domain
 					'grails.app.taglib.org.ihc.esa'							//My Tag library
-					//'org.hibernate.SQL'									//SQL
-					//'org.codehaus.groovy.grails.web.sitemesh',			//Layout
-					//'org.codehaus.groovy.grails.orm.hibernate',
-					//'net.sf.ehcache.hibernate',
-					//'org.springframework',
-					//'grails.app.domain',
-					//'grails.app'
-					//'grails.plugins.twitterbootstrap'						//css twitter bootstrap plugin
-			
+
 			trace	'grails.app.services.grails.plugins.springsecurity'
 		}
-		
+
 		production {
+
 			/*
 			 * 'org.hibernate.SQL'  // sql output
 			 * 'org.hibernate.type' // binding variables for sql output
+			 * 'org.codehaus.groovy.grails.web.sitemesh' // for Layout debugging
+			 * 'grails.plugins.twitterbootstrap // for the css twitter bootstrap plugin
 			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
 			 */
-			
-			// set appropriate defaults for production
+
+			// FIXME: set appropriate production default logging
 		}
-		
 	}
-	
-	/*
-	root {
-		error 'stdout'
-	}*/
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* ******************************************************************************************************************
+ * joda specific settings
+ * *****************************************************************************************************************/
 
-// Added by the Joda-Time plugin:
 grails.gorm.default.mapping = {
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentDateMidnight, class: org.joda.time.DateMidnight
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentDateTime, class: org.joda.time.DateTime
@@ -234,19 +219,25 @@ grails.gorm.default.mapping = {
 
 jodatime.format.html5 = true
 
+/* ******************************************************************************************************************
+ * twitter bootstrap specific settings
+ * *****************************************************************************************************************/
+
 grails.plugins.twitterbootstrap.fixtaglib = true
 grails.plugins.twitterbootstrap.defaultBundle = 'bundle_bootstrap'
 
-// Added by the Spring Security Core plugin:
+/* ******************************************************************************************************************
+ * spring-security specific settings
+ * *****************************************************************************************************************/
+
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.ihc.esa.EsaUser'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.ihc.esa.EsaUserEsaRole'
 grails.plugins.springsecurity.authority.className = 'org.ihc.esa.EsaRole'
-//grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
-//grails.plugins.springsecurity.interceptUrlMap = [
-//	'/user/**':		['ROLE_ADMIN', 'IS_AUTHENTICATED_FULLY']	
-//]
 
-// Spring Security UI
+/* ******************************************************************************************************************
+ * spring-security-ui specific settings
+ * *****************************************************************************************************************/
+
 grails.plugins.springsecurity.ui.register.postRegisterUrl = '/welcome'	//DEPLOY: make this sensible
 grails.plugins.springsecurity.ui.register.emailBody = '...'				//DEPLOY: security registration
 grails.plugins.springsecurity.ui.register.emailFrom = '...'				//DEPLOY: security registration
@@ -256,34 +247,47 @@ grails.plugins.springsecurity.ui.register.defaultRoleNames = [] 		//DEPLOY: no r
 //FIXME: grails s2ui-override register to copy the registration controller and GSPs into your application to be customized
 //FIXME: s2-create-persistent-token
 //FIXME: customizations: s2ui-override <type> <controller-package>
-//FIXME: The plugin defines its CSS styles in web-app/css/spring-security-ui.css and most of the jQuery plugins have corresponding CSS files. 
+//FIXME: The plugin defines its CSS styles in web-app/css/spring-security-ui.css and most of the jQuery plugins have corresponding CSS files.
 //These can be overridden by overriding the springSecurityUI.gsp template and including your CSS file(s).
 
-// See http://grails.org/doc/latest/guide/conf.html#configExternalized
+/* ******************************************************************************************************************
+ * externalized configuration files
+ * see http://grails.org/doc/latest/guid/conf.html#configExternalized
+ * *****************************************************************************************************************/
+
 grails.config.locations = [ "classpath:log4j.properties" ]
 
-// Add the ability to have a configuration file external to the WAR defined by environment variable pointed to by ESA_EXTERNAL_CONFIG
 def ESA_EXTERNAL_CONFIG = "ESAUI_CONFIG_FILE"
-boolean locationSet = false
+
+boolean externalLocationSet = false
+
 if(!grails.config.locations || !(grails.config.locations instanceof List)) {
 	grails.config.locations = []
 } else {
-	locationSet = true
+	externalLocationSet = true
 }
 
-// Check environment and add external configuration file
 if(System.getenv(ESA_EXTERNAL_CONFIG)) {
 	grails.config.locations << "file:" + System.getenv(ESA_EXTERNAL_CONFIG)
-	locationSet = true
+	externalLocationSet = true
 } else if(System.getProperty(ESA_EXTERNAL_CONFIG)) {
 	grails.config.locations << "file:" + System.getProperty(ESA_EXTERNAL_CONFIG)
-	locationSet = true
+	externalLocationSet = true
 }
 
-// Print out whether location was set or not
-if (locationSet) {
+if (externalLocationSet) {
 	println "grails.config.locations: " + grails.config.locations
 } else {
 	println "grails.config.locations: <not set>"
 }
 
+/* ******************************************************************************************************************
+ * external-config-reload settings
+ * *****************************************************************************************************************/
+
+grails.plugin.reloadConfig.files = []
+grails.plugins.reloadConfig.includeConfigLocations = true
+grails.plugins.reloadConfig.interval = 5000
+grails.plugins.reloadConfig.enabled = true
+grails.plugins.reloadConfig.notifyPlugins = ["mail", "external-config-reload", "twitter-bootstrap"]
+grails.plugins.reloadConfig.automerge = true
