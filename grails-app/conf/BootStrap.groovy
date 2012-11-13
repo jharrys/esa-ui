@@ -143,9 +143,9 @@ class BootStrap
 				EsaUserEsaRole.create user6, bogusRole, true
 				EsaUserEsaRole.create user7, bogusRole, true
 				
-				assert EsaUser.count() == 9
-				assert EsaRole.count() == 3
-				assert EsaUserEsaRole.count() == 9
+				assert EsaUser.count() >= 9
+				assert EsaRole.count() >= 3
+				assert EsaUserEsaRole.count() >= 9
 			} // end-test
 			production {
 				def adminRole = new EsaRole(authority: 'ROLE_ESA_ADMIN').save(flush: true)
@@ -181,9 +181,9 @@ class BootStrap
 				EsaUserEsaRole.create user6, bogusRole, true
 				EsaUserEsaRole.create user7, bogusRole, true
 				
-				assert EsaUser.count() == 9
-				assert EsaRole.count() == 3
-				assert EsaUserEsaRole.count() == 9
+				assert EsaUser.count() >= 9
+				assert EsaRole.count() >= 3
+				assert EsaUserEsaRole.count() >= 9
 			} // end-production
 		}
 	}
