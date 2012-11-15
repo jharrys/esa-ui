@@ -6,7 +6,7 @@ import org.ihc.esa.*
 class BootStrap
 {
 	private final String databaseVersion = "1.1"
-	private final String applicationVersion = "0.71"
+	private final String applicationVersion = "0.8"
 	
 	def grailsApplication
 	def sessionFactory
@@ -16,8 +16,18 @@ class BootStrap
 		{
 			development
 			{
+				// real roles
 				def adminRole = new EsaRole(authority: 'ROLE_ESA_ADMIN').save(flush: true)
 				def userRole = new EsaRole(authority: 'ROLE_ESA_USER').save(flush: true)
+				def earbContributorRole = new EsaRole(authority: 'ROLE_ESA_EARB_CONTRIBUTOR').save(flush: true)
+				def earbMemberRole = new EsaRole(authority: 'ROLE_ESA_EARB_MEMBER').save(flush: true)
+				def earbAdminRole = new EsaRole(authority: 'ROLE_ESA_EARB_ADMIN').save(flush: true)
+				def exceptionContributorRole = new EsaRole(authority: 'ROLE_ESA_EXCEPTION_CONTRIBUTOR').save(flush: true)
+				def exceptionAdminRole = new EsaRole(authority: 'ROLE_ESA_EXCEPTION_ADMIN').save(flush: true)
+				def contentContributorRole = new EsaRole(authority: 'ROLE_ESA_CONTENT_CONTRIBUTOR').save(flush: true)
+				def contentAdminRole = new EsaRole(authority: 'ROLE_ESA_CONTENT_ADMIN').save(flush: true)
+				
+				// role for testing
 				def bogusRole = new EsaRole(authority: 'ROLE_ESA_BOGUS').save(flush: true)
 				
 				def manager = new EsaUser(username: 'manager', email_address: 'john.harris@imail.org', enabled: true, password: 'esa')
@@ -50,7 +60,7 @@ class BootStrap
 				EsaUserEsaRole.create user7, bogusRole, true
 				
 				assert EsaUser.count() == 9
-				assert EsaRole.count() == 3
+				assert EsaRole.count() == 10
 				assert EsaUserEsaRole.count() == 9
 				/*-----------------------------------------------------------*/
 				def session = null
@@ -110,8 +120,18 @@ class BootStrap
 				assert appVersion.equals(applicationVersion)
 			}	// end-development
 			test {
+				// real roles
 				def adminRole = new EsaRole(authority: 'ROLE_ESA_ADMIN').save(flush: true)
 				def userRole = new EsaRole(authority: 'ROLE_ESA_USER').save(flush: true)
+				def earbContributorRole = new EsaRole(authority: 'ROLE_ESA_EARB_CONTRIBUTOR').save(flush: true)
+				def earbMemberRole = new EsaRole(authority: 'ROLE_ESA_EARB_MEMBER').save(flush: true)
+				def earbAdminRole = new EsaRole(authority: 'ROLE_ESA_EARB_ADMIN').save(flush: true)
+				def exceptionContributorRole = new EsaRole(authority: 'ROLE_ESA_EXCEPTION_CONTRIBUTOR').save(flush: true)
+				def exceptionAdminRole = new EsaRole(authority: 'ROLE_ESA_EXCEPTION_ADMIN').save(flush: true)
+				def contentContributorRole = new EsaRole(authority: 'ROLE_ESA_CONTENT_CONTRIBUTOR').save(flush: true)
+				def contentAdminRole = new EsaRole(authority: 'ROLE_ESA_CONTENT_ADMIN').save(flush: true)
+				
+				// role for testing
 				def bogusRole = new EsaRole(authority: 'ROLE_ESA_BOGUS').save(flush: true)
 				
 				def manager = new EsaUser(username: 'manager', email_address: 'john.harris@imail.org', enabled: true, password: 'esa')
@@ -144,13 +164,19 @@ class BootStrap
 				EsaUserEsaRole.create user7, bogusRole, true
 				
 				assert EsaUser.count() >= 9
-				assert EsaRole.count() >= 3
+				assert EsaRole.count() >= 10
 				assert EsaUserEsaRole.count() >= 9
 			} // end-test
 			production {
 				def adminRole = new EsaRole(authority: 'ROLE_ESA_ADMIN').save(flush: true)
 				def userRole = new EsaRole(authority: 'ROLE_ESA_USER').save(flush: true)
-				def bogusRole = new EsaRole(authority: 'ROLE_ESA_BOGUS').save(flush: true)
+				def earbContributorRole = new EsaRole(authority: 'ROLE_ESA_EARB_CONTRIBUTOR').save(flush: true)
+				def earbMemberRole = new EsaRole(authority: 'ROLE_ESA_EARB_MEMBER').save(flush: true)
+				def earbAdminRole = new EsaRole(authority: 'ROLE_ESA_EARB_ADMIN').save(flush: true)
+				def exceptionContributorRole = new EsaRole(authority: 'ROLE_ESA_EXCEPTION_CONTRIBUTOR').save(flush: true)
+				def exceptionAdminRole = new EsaRole(authority: 'ROLE_ESA_EXCEPTION_ADMIN').save(flush: true)
+				def contentContributorRole = new EsaRole(authority: 'ROLE_ESA_CONTENT_CONTRIBUTOR').save(flush: true)
+				def contentAdminRole = new EsaRole(authority: 'ROLE_ESA_CONTENT_ADMIN').save(flush: true)
 				
 				def manager = new EsaUser(username: 'manager', email_address: 'john.harris@imail.org', enabled: true, password: 'esa')
 				def user = new EsaUser(username: 'lpjharri', email_address: 'john.harris@imail.org', enabled: true, password: 'esa')
@@ -178,12 +204,10 @@ class BootStrap
 				EsaUserEsaRole.create user3, userRole, true
 				EsaUserEsaRole.create user4, userRole, true
 				EsaUserEsaRole.create user5, userRole, true
-				EsaUserEsaRole.create user6, bogusRole, true
-				EsaUserEsaRole.create user7, bogusRole, true
 				
 				assert EsaUser.count() >= 9
-				assert EsaRole.count() >= 3
-				assert EsaUserEsaRole.count() >= 9
+				assert EsaRole.count() >= 9
+				assert EsaUserEsaRole.count() >= 7
 			} // end-production
 		}
 	}

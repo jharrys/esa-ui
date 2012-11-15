@@ -53,7 +53,7 @@ class StandardsController
 	 * used as an ajax call to add the sent {@link Item} to the provided {@link Category}
 	 * @return true if successful, false otherwise
 	 */
-	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
+	@Secured(['ROLE_ESA_CONTENT_CONTRIBUTOR', 'ROLE_ESA_CONTENT_ADMIN', 'ROLE_ESA_ADMIN', 'IS_AUTHENTICATED_FULLY'])
 	def addItemToCategory() {
 		def user = null
 		user = springSecurityService.currentUser
@@ -121,7 +121,7 @@ class StandardsController
 	 * used as an ajax call to remove supplied {@link Item} from provided {@link Category}
 	 * @return true if successful, false otherwise
 	 */
-	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
+	@Secured(['ROLE_ESA_CONTENT_CONTRIBUTOR', 'ROLE_ESA_CONTENT_ADMIN', 'ROLE_ESA_ADMIN', 'IS_AUTHENTICATED_FULLY'])
 	def removeItemFromCategory() {
 
 		def user = null
@@ -182,7 +182,7 @@ class StandardsController
 	 * FIXME: ugly, ugly, ugly ... need to move this to a service and/or change the implementation of Category name and Category parentCategoryPath
 	 * @return a success message as a string
 	 */
-	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
+	@Secured(['ROLE_ESA_CONTENT_CONTRIBUTOR', 'ROLE_ESA_CONTENT_ADMIN', 'ROLE_ESA_ADMIN', 'IS_AUTHENTICATED_FULLY'])
 	def renameCategory() {
 		def user = null
 		user = springSecurityService.currentUser
@@ -256,7 +256,7 @@ class StandardsController
 	 *
 	 * @return list of all {@link Category}ies sorted by path
 	 */
-	@Secured(['ROLE_ESA_USER', 'ROLE_ESA_ADMIN'])
+	@Secured(['ROLE_ESA_CONTENT_CONTRIBUTOR', 'ROLE_ESA_CONTENT_ADMIN', 'ROLE_ESA_ADMIN'])
 	def editByCategory()
 	{
 		[categories: this.getCategories(), itemInstance: new Item()]
@@ -277,6 +277,7 @@ class StandardsController
 		return categories
 	}
 
+	@Secured(['ROLE_ESA_CONTENT_CONTRIBUTOR', 'ROLE_ESA_CONTENT_ADMIN', 'ROLE_ESA_ADMIN', 'IS_AUTHENTICATED_FULLY'])
 	def addNewItem() {
 		def user = null
 		user = springSecurityService.currentUser
@@ -354,6 +355,7 @@ class StandardsController
 
 	}
 
+	@Secured(['ROLE_ESA_CONTENT_CONTRIBUTOR', 'ROLE_ESA_CONTENT_ADMIN', 'ROLE_ESA_ADMIN', 'IS_AUTHENTICATED_FULLY'])
 	def editItem() {
 
 		def user = null
@@ -382,6 +384,7 @@ class StandardsController
 
 	}
 
+	@Secured(['ROLE_ESA_CONTENT_ADMIN', 'ROLE_ESA_ADMIN', 'IS_AUTHENTICATED_FULLY'])
 	def deleteItem() {
 
 		def user = null
