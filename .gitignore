@@ -5,6 +5,7 @@
 
 # IDE support files
 /.classpath
+/.externalToolBuilders
 /.launch
 /.project
 /.settings
