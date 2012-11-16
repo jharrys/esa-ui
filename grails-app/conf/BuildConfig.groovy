@@ -60,6 +60,8 @@ grails.project.dependency.resolution =
 		runtime ":zipped-resources:1.0"
 		runtime ":cached-resources:1.0"
 		
+		test ":spock:0.6"
+		
 		build ":tomcat:$grailsVersion"
 	}
 }
