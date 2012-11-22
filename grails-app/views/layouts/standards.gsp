@@ -24,13 +24,19 @@
 <g:javascript src="spin.js" />
 
 <!--
-    padding as required by twitter bootstrap for .navbar-fixed-top; needs to come after the core Bootstrap CSS and
-    before the optional responsive CSS
+    padding-top & @media screen and (max-width: 768px): padding as required by twitter bootstrap for .navbar-fixed-top;
+        needs to come after the core Bootstrap CSS and before the optional responsive CSS.
+
+    *[hidden]: IE doesn't support new HTML 5 global 'hidden' attribute; this is a way of adding it that i thought was clean
+        not sure of the repercussions.
 -->
 <style>
 	body { padding-top: 50px; }
 	@media screen and (max-width: 768px) {
         body { padding-top: 0px; }
+	}
+	*[hidden] {
+	   display: none;
 	}
 </style>
 
