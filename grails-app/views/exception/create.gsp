@@ -5,40 +5,40 @@
 <%@ page import="org.ihc.esa.LookupElement"%>
 <!doctype html>
 <html>
-<head>
-<meta name="layout" content="bootstrap">
-<title>New Exception</title>
-</head>
-<body>
+	<head>
+	    <meta name="layout" content="bootstrap">
+	    <title>New Exception</title>
+	</head>
+	<body>
 
-	<div class="row-fluid">
+		<div class="row-fluid">
 
-		<g:if test="${flash.message}">
-			<bootstrap:alert class="alert-warning">
-				${flash.message}
-			</bootstrap:alert>
-		</g:if>
+			<g:if test="${flash.message}">
+				<bootstrap:alert class="alert-warning">
+					${flash.message}
+				</bootstrap:alert>
+			</g:if>
 
-		<fieldset>
-			<g:form class="form-horizontal" action="save">
-				<fieldset>
-					<legend>Application for Exception</legend>
-					<div class="control-group ${invalid ? 'error' : ''}">
-						<label class="control-label" for="title"> Requester: <span class="required-indicator">*</span>
-						</label>
-						<div class="controls">
-							<g:field id="title" name="title" type="text" placeholder="Title For Exception" required="true" />
+			<fieldset>
+				<g:form class="form-horizontal" action="save">
+					<fieldset>
+						<legend>Application for Exception</legend>
+						<div class="control-group ${invalid ? 'error' : ''}">
+							<label class="control-label" for="title"> Requester: <span class="required-indicator">*</span>
+							</label>
+							<div class="controls">
+								<g:field id="title" name="title" type="text" placeholder="Title For Exception" required="true" />
+							</div>
+							<div class="form-actions">
+								<button type="submit" class="btn btn-primary">
+									<i class="icon-ok icon-white"></i> Start Application Process...
+								</button>
+							</div>
 						</div>
-						<div class="form-actions">
-							<button type="submit" class="btn btn-primary">
-								<i class="icon-ok icon-white"></i> Start Application Process...
-							</button>
-						</div>
-					</div>
-				</fieldset>
-			</g:form>
-		</fieldset>
+					</fieldset>
+				</g:form>
+			</fieldset>
 
-	</div>
-</body>
+		</div>
+	</body>
 </html>

@@ -15,7 +15,6 @@
         <!-- use gsp title, if not then use default -->
 		<title><g:layoutTitle default="Enterprise Architecture" /></title>
 
-
 		<!-- required resources -->
 		<r:require module="application" />
 
