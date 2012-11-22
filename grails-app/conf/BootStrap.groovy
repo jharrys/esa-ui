@@ -5,8 +5,8 @@ import org.ihc.esa.*
 
 class BootStrap
 {
-	private final String minimumDatabaseVersion = "1.1"
-	private final String minimumApplicationVersion = "0.8"
+	private final double minimumDatabaseVersion = 1.1
+	private final double minimumApplicationVersion = 0.8
 	
 	def grailsApplication
 	def sessionFactory
