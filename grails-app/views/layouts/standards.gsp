@@ -1,5 +1,3 @@
-<%@page import="org.codehaus.groovy.grails.commons.ApplicationHolder"%>
-<%@ page import="org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes"%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -25,6 +23,17 @@
 <g:javascript library="jquery-ui" />
 <g:javascript src="spin.js" />
 
+<!--
+    padding as required by twitter bootstrap for .navbar-fixed-top; needs to come after the core Bootstrap CSS and
+    before the optional responsive CSS
+-->
+<style>
+	body { padding-top: 50px; }
+	@media screen and (max-width: 768px) {
+        body { padding-top: 0px; }
+	}
+</style>
+
 <g:layoutHead />
 <r:layoutResources />
 </head>
@@ -35,30 +44,30 @@
 	/*
 	 * Popup Window
 	 */
-	 var windowSizeArray = ["width=500,height=800", "width=300,height=400,scrollbars=yes"];
+	 var windowSizeArray = ["width=500,height=800,scrollbars=yes,resizable=yes", "width=300,height=400,scrollbars=yes"];
 	 $(document).ready(function() {
 	     $('.actionRef').click(function(event) {
 	           var url = $(this).attr('href');
 	           var windowName = 'popUp';
 	           var windowSize = windowSizeArray[$(this).attr('rel')];
-	
+
 	           window.open(url, windowName, windowSize);
-	
+
 	           event.preventDefault();
 	     });
 	 });
-	 
+
 	/*
-	
+
 	You can now create a spinner using any of the variants below:
-	
+
 	$("#el").spin(); // Produces default Spinner using the text color of #el.
 	$("#el").spin("small"); // Produces a 'small' Spinner using the text color of #el.
 	$("#el").spin("large", "white"); // Produces a 'large' Spinner in white (or any valid CSS color).
 	$("#el").spin({ ... }); // Produces a Spinner using your custom settings.
-	
+
 	$("#el").spin(false); // Kills the spinner.
-	
+
 	*/
 	(function($) {
 	    $.fn.spin = function(opts, color) {
@@ -71,12 +80,12 @@
 	            return this.each(function() {
 	                var $this = $(this),
 	                    data = $this.data();
-	            
+
 	                if (data.spinner) {
 	                    data.spinner.stop();
 	                    delete data.spinner;
 	                }
-	                
+
 	                if (opts !== false) {
 	                    if (typeof opts === "string") {
 	                        if (opts in presets) {
@@ -102,7 +111,7 @@
         $('#editItemLink').attr('href', editItemButtonUrlCategory);
         $('#editItemLi').removeClass('disabled');
     }
-    
+
     function setDeleteItemLink(itemId) {
         var deleteItemButtonUrlCategory = $('#deleteItemLink').attr('href').split("?")[0] + "?itemId=" + itemId;
         $('#deleteItemLink').attr('href', deleteItemButtonUrlCategory);
@@ -111,8 +120,8 @@
 </script>
 
 	<!--
-        bootstrap twitter doesn't include one, so I'm using this one http://www.eyecon.ro/bootstrap-datepicker/ 
-        FIXME: place this resource in the appropriate configuration files 
+        bootstrap twitter doesn't include one, so I'm using this one http://www.eyecon.ro/bootstrap-datepicker/
+        FIXME: place this resource in the appropriate configuration files
     -->
 	<g:javascript src='bootstrap-datepicker.js' />
 
@@ -120,14 +129,17 @@
 	       def versionService = grailsApplication.mainContext.getBean("versionService")
 	 %>
 
-	<nav class="navbar navbar-fixed-top navbar-inverse">
+	<div class="navbar navbar-fixed-top navbar-inverse">
 		<div class="navbar-inner">
 			<div class="container-fluid">
 
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"
-				></span>
-				</a> <a class="brand" href="${createLink(uri: '/')}">Enterprise Architecture</a>
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+
+				<a class="brand" href="${createLink(uri: '/')}">Enterprise Architecture</a>
 
 				<div class="nav-collapse">
 					<ul class="nav">
@@ -149,7 +161,7 @@
 				</div>
 			</div>
 		</div>
-	</nav>
+	</div>
 
 	<div class="container-fluid">
 
