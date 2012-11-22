@@ -34,6 +34,25 @@
 						</script>
 					</li>
 				</ul>
+				<ul class="nav pull-right">
+
+				    <li>
+						<sec:ifLoggedIn>
+				    		<g:link controller='logout'>Logout (<sec:username/>)</g:link>
+				        </sec:ifLoggedIn>
+
+						<sec:ifNotLoggedIn>
+				            <g:link controller='login'>Login</g:link>
+						</sec:ifNotLoggedIn>
+
+						<sec:ifSwitched>
+							<a href='${request.contextPath}/j_spring_security_exit_user'>
+				                Resume as <sec:switchedUserOriginalUsername/>
+							</a>
+						</sec:ifSwitched>
+				    </li>
+
+				</ul>
 			</div>
 		</div>
 	</div>

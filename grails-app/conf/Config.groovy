@@ -245,6 +245,13 @@ grails.plugins.springsecurity.controllerAnnotations.staticRules = [
 	'/securityInfo/**': ['ROLE_ESA_ADMIN']
 ]
 
+// springsecurity Login Config Settings; authenticationProcessingFilter
+grails.plugins.springsecurity.apf.allowSessionCreation = true
+
+// successHandler
+grails.plugins.springsecurity.successHandler.useReferrer = true
+grails.plugins.springsecurity.successHandler.alwaysUseDefault = false
+
 /* ******************************************************************************************************************
  * spring-security-ui specific settings
  * *****************************************************************************************************************/
