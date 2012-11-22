@@ -5,8 +5,8 @@ import org.ihc.esa.*
 
 class BootStrap
 {
-	private final String databaseVersion = "1.1"
-	private final String applicationVersion = "0.8"
+	private final String minimumDatabaseVersion = "1.1"
+	private final String minimumApplicationVersion = "0.8"
 	
 	def grailsApplication
 	def sessionFactory
@@ -116,8 +116,8 @@ class BootStrap
 				String dbVersion = ConfigurationParameter.findByName('database.version').value
 				String appVersion = ConfigurationParameter.findByName('esaui.version').value
 				
-				assert dbVersion.equals(databaseVersion)
-				assert appVersion.equals(applicationVersion)
+				assert dbVersion.isDouble() && ((dbVersion as double) >= minimumDatabaseVersion)
+				assert appVersion.isDouble() && ((appVersion as double) >= minimumApplicationVersion)
 			}	// end-development
 			test {
 				// real roles
