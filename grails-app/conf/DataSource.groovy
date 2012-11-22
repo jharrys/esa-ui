@@ -21,9 +21,8 @@ environments
 		{
 			cache.use_second_level_cache = true
 			cache.use_query_cache = false
-			show_sql = false
-			format_sql = false
-			use_sql_comments = false
+			format_sql = true
+			use_sql_comments = true
 			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
 		}
 	}
@@ -43,10 +42,9 @@ environments
 		hibernate
 		{
 			cache.use_second_level_cache = true
-			cache.use_query_cache = true
-			show_sql = false
-			format_sql = false
-			use_sql_comments = false
+			cache.use_query_cache = false
+			format_sql = true
+			use_sql_comments = true
 			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
 		}
 	}
@@ -67,7 +65,6 @@ environments
 		{
 			cache.use_second_level_cache = true
 			cache.use_query_cache = true
-			show_sql = false
 			format_sql = false
 			use_sql_comments = false
 			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'

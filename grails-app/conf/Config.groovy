@@ -152,6 +152,7 @@ log4j =
 			/*
 			 * 'org.hibernate.SQL'  // sql output
 			 * 'org.hibernate.type' // binding variables for sql output
+			 * 'org.hibernate.type.descriptor.sql.BasicBinder' // better than just org.hibernate.type (with hibernate 3.6) - see http://burtbeckwith.com/blog/?p=1604
 			 * 'org.codehaus.groovy.grails.web.sitemesh' // for Layout debugging
 			 * 'grails.plugins.twitterbootstrap // for the css twitter bootstrap plugin
 			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
@@ -159,10 +160,10 @@ log4j =
 
 			debug 	'grails.app.controllers.org.ihc.esa',					//My Controllers
 					'grails.app.domain.org.ihc.esa',						//My Domain
-					'grails.app.taglib.org.ihc.esa'							//My Tag library
+					'grails.app.taglib.org.ihc.esa',						//My Tag library
+					'org.hibernate.SQL'
 
-			trace	'org.hibernate.SQL',									//with param values
-					'org.hibernate.type'
+			trace	'org.hibernate.type.descriptor.sql.BasicBinder'			//with parameter bindings
 		}
 
 		test {
@@ -170,6 +171,7 @@ log4j =
 			/*
 			 * 'org.hibernate.SQL'  // sql output
 			 * 'org.hibernate.type' // binding variables for sql output
+			 * 'org.hibernate.type.descriptor.sql.BasicBinder' // better than just org.hibernate.type (with hibernate 3.6) - see http://burtbeckwith.com/blog/?p=1604
 			 * 'org.codehaus.groovy.grails.web.sitemesh' // for Layout debugging
 			 * 'grails.plugins.twitterbootstrap // for the css twitter bootstrap plugin
 			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
@@ -177,9 +179,11 @@ log4j =
 
 			debug 	'grails.app.controllers.org.ihc.esa',					//My Controllers
 					'grails.app.domain.org.ihc.esa',						//My Domain
-					'grails.app.taglib.org.ihc.esa'							//My Tag library
+					'grails.app.taglib.org.ihc.esa',						//My Tag library
+					'org.hibernate.SQL'
 
-			trace	'grails.app.services.grails.plugins.springsecurity'
+			trace	'org.hibernate.type.descriptor.sql.BasicBinder',		//with parameter bindings
+					'grails.app.services.grails.plugins.springsecurity'
 		}
 
 		production {
@@ -187,6 +191,7 @@ log4j =
 			/*
 			 * 'org.hibernate.SQL'  // sql output
 			 * 'org.hibernate.type' // binding variables for sql output
+			 * 'org.hibernate.type.descriptor.sql.BasicBinder' // better than just org.hibernate.type (with hibernate 3.6) - see http://burtbeckwith.com/blog/?p=1604
 			 * 'org.codehaus.groovy.grails.web.sitemesh' // for Layout debugging
 			 * 'grails.plugins.twitterbootstrap // for the css twitter bootstrap plugin
 			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
