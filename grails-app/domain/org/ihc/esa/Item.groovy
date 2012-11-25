@@ -36,207 +36,207 @@ class Item
 	 * This can be nullable.
 	 */
 	String externalId
-	
+
 	/**
 	 * Source of this data.
 	 * May be nullable.
 	 */
 	String sourceSystem
-	
+
 	/**
 	 * 'Y' or 'N' or 'A' whether this Item is part of Intermountain standards ('Y'), an alternate standard ('A') or not a standard ('N'). Defaults to 'N'.
 	 */
 	String standard = "N"
-	
-	enum StandardType {
-		ENTERPRISE("Enterprise"), 
-		INTERMOUNTAIN("Intermountain"), 
-		SELECTHEALTH("SelectHealth"), 
-		FINANCIAL("Financial"), 
-		CLINICAL("Clinical"), 
-		REGIONAL("Regional"), 
-		DEPARTMENT("Department")
-		
-		private String value
-		
-		StandardType(String value) { this.value = value }
-		
-		public String value() { return this.value }
-	}
-	
+
 	/**
 	 * Describes type of standard.
 	 * Such as Enterprise, Intermountain, SelectHealth, Financial, Clinical, Regional, Department.
 	 * Can be nullable.
 	 */
-	String standardType = "Enterprise"
-	
+	StandardType standardType = StandardType.ENTERPRISE
+
+	enum StandardType {
+		ENTERPRISE("Enterprise"),
+		INTERMOUNTAIN("Intermountain"),
+		SELECTHEALTH("SelectHealth"),
+		FINANCIAL("Financial"),
+		CLINICAL("Clinical"),
+		REGIONAL("Regional"),
+		DEPARTMENT("Department")
+
+		private String value
+
+		StandardType(String value) { this.value = value }
+
+		public String value() { return this.value }
+	}
+
 	/**
 	 * Required. 'Y' or 'N' whether this Item is an approved exception. Defaults to 'N'.
 	 */
 	String exception = "N"
-	
+
 	/**
 	 * Required. 'Y' or 'N' whether this Item is a deviation. Defaults to 'N'.
 	 */
 	String deviation = "N"
-	
+
 	/**
 	 * Required. 'Y' or 'N' whether this Item is current in service. Defaults to 'Y'.
 	 */
 	String inService = "N"
-	
+
 	/**
 	 * Required. 'Y' or 'N' whether this Item requires an exception to acquire. Defaults to 'N'.
 	 */
 	String exceptionRequired = "N"
-	
+
 	/**
 	 * String describing the criteria required to approve.
 	 * Can be nullable.
 	 */
 	String exceptionCriteria
-	
+
 	/**
 	 * document meant to link to the {@link Document}
 	 * that is the standard or the exception for allowing this
 	 * Item at Intermountain. Can be nullable.
 	 */
 	Document document
-	
+
 	/**
 	 * The vendor ({@link Party}) that this Item is related to.
 	 * Can be nullable.
 	 */
 	Party party
-	
+
 	/**
 	 * Intermountain specific identifier.
 	 * Can be nullable.
 	 * FIXME: Correct number type
 	 */
 	BigDecimal intermountainItemNumber
-	
+
 	/**
 	 * Required. Intermountain name for this item.
 	 */
 	String name
-	
+
 	/**
 	 * Description for this item.
 	 * Can be nullable.
 	 */
 	String description
-	
+
 	/**
 	 * Billing code for this item.
 	 * Can be nullable.
 	 */
 	String generalLedgerCode
-	
+
 	/**
 	 * Group that has stewardship over this item.
 	 * Can be nullable.
 	 */
 	String productGroup
-	
+
 	/**
 	 * Technical team that has stewardship over this item.
 	 * Can be nullable.
 	 */
 	String technologyGroup
-	
+
 	/**
 	 * {@link Contract} tied to this Item.
 	 * Can be nullable.
 	 */
 	Contract contract
-	
+
 	/**
 	 * Date this item is available.
 	 * Can be nullable.
 	 */
 	Date availableDate
-	
+
 	/**
 	 * Date this item is set for decommission.
 	 * Can be nullable.
 	 */
 	Date ihcActualDecomissioned
-	
+
 	/**
 	 * Date this item is proposed to decommission.
 	 * Can be nullable.
 	 */
 	Date ihcProposedDecomissioned
-	
+
 	/**
 	 * Date vendor has set to decommission Item.
 	 */
 	Date vendorDecomissioned
-	
+
 	/**
 	 * Vendor's catalog identifier.
 	 * Can be nullable.
 	 */
 	String vendorCatalogNumber
-	
+
 	/**
 	 * Manufacturer's part number.
 	 * Can be nullable.
 	 * FIXME: Correct number type
 	 */
 	BigDecimal manufacturerPartId
-	
+
 	/**
 	 * Manufacturer's catalog number.
 	 * Can be nullable.
 	 */
 	String manufacturerCatalogNumber
-	
+
 	/**
 	 * Measuring unit such as box or each.
 	 * Can be nullable.
 	 */
 	String purchasingUnitOfMeasure
-	
+
 	/**
 	 * Price per unit.
 	 * Can be nullable.
 	 * FIXME: Correct number type
 	 */
 	BigDecimal purchasingUnitPrice
-	
+
 	/**
 	 * Some number.
 	 * Can be nullable.
 	 */
 	String unspscNumber
-	
+
 	/**
 	 * Notes about the length of useful life for this Item.
 	 * Can be nullable.
 	 */
 	String usefulLife
-	
+
 	/**
 	 * Comments about this Item.
 	 * Can be nullable.
 	 */
 	String comments
-	
+
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
-	
+
 	int hashCode = 0
-	
+
 	// part of searchable plugin
 	static searchable = true
-	
+
 	static transients = ['hashCode']
-	
+
 	static hasMany = [
 		catalogs: Catalog,							//validated
 		itemVersions: ItemVersion,					//validated
@@ -248,22 +248,22 @@ class Item
 		configurationElements: ConfigurationCatalog,
 		partOfConfigurations: ConfigurationCatalog
 	]
-	
+
 	static mappedBy = [
 		configurationElements:"parentItem",
 		partOfConfigurations:"elementItem",
 		replacementForItems:"replacementItem",
 		replacementItems:"item"
 	]
-	
+
 	static belongsTo = [ Contract, Document, Party,	Category, Catalog ]
-	
+
 	static mapping =
 	{
 		id generator:'sequence', params:[sequence:'ITEM_SEQ']
 		table 'ITEM'
 		version false
-		
+
 		externalId column: 'EXTERNAL_ID'
 		sourceSystem column: 'SOURCE_SYSTEM'
 		standard column: 'STANDARD'
@@ -298,16 +298,16 @@ class Item
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
-		
+
 		categories joinTable: [name: 'ITEM_CATEGORY',
 			key: 'ITEM_ID',
 			column: 'CATEGORY_ID']
-		
+
 		catalogs joinTable: [name: 'CATALOG_ITEM',
 			key: 'ITEM_ID',
 			column: 'CATALOG_ID']
 	}
-	
+
 	static constraints =
 	{
 		sourceSystem nullable: true, blank: false, size: 1..256
@@ -320,8 +320,7 @@ class Item
 		productGroup nullable: true, size: 0..64
 		technologyGroup nullable: true, size: 0..64
 		standard nullable: false, inList: ["Y", "N", "A"], size: 1..1
-		// FIXME: gotta figure out the enums thing for constraints
-		standardType nullable: true, blank: false, inList: ["Enterprise", "Department", "Intermountain", "SelectHealth", "Clinical", "Financial"], size: 1..40
+		standardType nullable: true, blank: false
 		exceptionRequired nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
 		exception nullable: false, blank: false, inList: ["Y", "N"], size: 1..1
 		exceptionCriteria nullable: true, size: 0..2048
@@ -346,7 +345,7 @@ class Item
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
 	}
-	
+
 	/**
 	 * name, standard, exception, deviation, inService, exceptionRequired, dateCreated and createdBy
 	 *
@@ -355,13 +354,13 @@ class Item
 	 */
 	@Override public boolean equals(Item item)
 	{
-		
+
 		if (this.is(item)) return true
 
 		if (item == null) return false
-		
+
 		if (item.getClass() != getClass()) return false
-		
+
 		if (item.name.equalsIgnoreCase(this.name) && item.standard.equalsIgnoreCase(this.standard) && item.standardType.equals(this.standardType) && item.exception.equalsIgnoreCase(this.exception)) {
 			if (item.deviation.equalsIgnoreCase(this.deviation) && item.inService.equalsIgnoreCase(this.inService)) {
 				if (item.exceptionRequired.equalsIgnoreCase(this.exceptionRequired)) {
@@ -371,10 +370,10 @@ class Item
 				}
 			}
 		}
-		
+
 		return false
 	}
-	
+
 	@Override public int hashCode()
 	{
 
@@ -390,7 +389,7 @@ class Item
 			result = (37*result) + this.createdBy.toLowerCase().hashCode()
 			this.hashCode = result
 		}
-		
+
 		return this.hashCode
 	}
 }
