@@ -2,6 +2,7 @@
 
 # web application files
 /web-app/WEB-INF
+_git.gsp
 
 # IDE support files
 /.classpath
