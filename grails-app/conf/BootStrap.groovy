@@ -5,8 +5,10 @@ import org.ihc.esa.*
 
 class BootStrap
 {
-	private final double minimumDatabaseVersion = 1.1
-	private final double minimumApplicationVersion = 0.8
+	// TODO: compatibility matrix: [app 0.5.0-0.8.1 with db 1.1], [app 0.9.0 with db 1.2]
+	// FIXME: need to fix how i calculate versions - split into major version & minor version
+	private final double minimumDatabaseVersion = 1.2
+	private final double minimumApplicationVersion = 0.9
 	
 	def grailsApplication
 	def sessionFactory

@@ -1,5 +1,5 @@
 <%@page import="org.codehaus.groovy.grails.commons.ApplicationHolder"%>
-<%@ page import="org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes"%>
+<%@page import="org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes"%>
 <%
        def versionService = grailsApplication.mainContext.getBean("versionService")
 %>
@@ -24,12 +24,12 @@
 					<li>
 						<%
 							def aboutString = "Application: " + versionService.getApplicationVersion()
-							aboutString = aboutString + "<br /> Database: " + versionService.getDatabaseVersion()
+							aboutString = aboutString + "<br>Database: " + versionService.getDatabaseVersion()
 						%>
 						<a href="#" id="version" rel="popover" data-content="${aboutString }" data-original-title="Version">About</a>
 						<script>
 							$(function() {
-							    $('#version').popover({trigger: 'hover', placement: 'bottom'})
+							    $('#version').popover({trigger: 'hover', placement: 'bottom', html: true})
 							});
 						</script>
 					</li>

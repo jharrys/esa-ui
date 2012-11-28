@@ -184,9 +184,8 @@ class Item
 	/**
 	 * Manufacturer's part number.
 	 * Can be nullable.
-	 * FIXME: Correct number type
 	 */
-	BigDecimal manufacturerPartId
+	Party manufacturerParty
 
 	/**
 	 * Manufacturer's catalog number.
@@ -232,9 +231,6 @@ class Item
 
 	int hashCode = 0
 
-	// part of searchable plugin
-	static searchable = true
-
 	static transients = ['hashCode']
 
 	static hasMany = [
@@ -256,7 +252,14 @@ class Item
 		replacementItems:"item"
 	]
 
-	static belongsTo = [ Contract, Document, Party,	Category, Catalog ]
+	/*
+	 * Documenting some decisions here.
+	 * Removed Document: an Item's life cycle will not be tied to a Document
+	 * Category: because this is a many-many relationship, gorm requires an owner
+	 * Catalog: because this is a many-many relationship, gorm requires an owner
+	 * FIXME: Do I have to manage the bi-directional relationship between the two Party elements (manufacturerParty & party)?
+	 */
+	static belongsTo = [ Contract, Party, Catalog, Category ]
 
 	static mapping =
 	{
@@ -287,7 +290,7 @@ class Item
 		ihcProposedDecomissioned column: 'IHC_PROPOSED_DECOMISSIONED'
 		vendorDecomissioned column: 'VENDOR_DECOMISSIONED'
 		vendorCatalogNumber column: 'VENDOR_CATALOG_NUMBER'
-		manufacturerPartId column: 'MANUFACTURER_PART_ID'
+		manufacturerParty column: 'MANUFACTURER_PARTY_ID'
 		manufacturerCatalogNumber column: 'MANUFACTURER_CATALOG_NUMBER'
 		purchasingUnitOfMeasure column: 'PURCHASING_UNIT_OF_MEASURE'
 		purchasingUnitPrice column: 'PURCHASING_UNIT_PRICE'
@@ -329,11 +332,11 @@ class Item
 		intermountainItemNumber nullable: true
 		generalLedgerCode nullable: true, size: 0..256
 		externalId nullable: true, blank: false, size: 1..256
-		vendorCatalogNumber nullable: true, blank: false, size: 1..20
+		vendorCatalogNumber nullable: true, blank: false, size: 1..256
 		purchasingUnitOfMeasure nullable: true, blank: false, size: 1..64
 		purchasingUnitPrice nullable: true
 		manufacturerCatalogNumber nullable: true, blank: false, size: 1..256
-		manufacturerPartId nullable: true
+		manufacturerParty nullable: true
 		unspscNumber nullable: true, size: 0..20
 		availableDate nullable: true, display: true, format: 'yyyy-MM-dd'
 		ihcActualDecomissioned nullable: true, display: true, format: 'yyyy-MM-dd'
