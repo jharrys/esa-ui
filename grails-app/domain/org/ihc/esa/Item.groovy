@@ -64,11 +64,12 @@ class Item
 		REGIONAL("Regional"),
 		DEPARTMENT("Department")
 
-		private String value
+		final String value
 
 		StandardType(String value) { this.value = value }
 
-		public String value() { return this.value }
+		String toString() { value }
+		String getKey() { name() }
 	}
 
 	/**

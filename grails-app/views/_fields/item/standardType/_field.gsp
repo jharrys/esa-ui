@@ -1,14 +1,9 @@
 <%@ page defaultCodec="html" %>
+<%@ page import="org.ihc.esa.Item" %>
 <div class="control-group ${invalid ? 'error' : ''}">
     <label class="control-label" for="${property}">${label}</label>
     <div class="controls">
-        <%-- FIXME: The pick list should come from the database, but for now this will have to do --%>
-        <%
-		  map = ["": "-None Selected-", "Enterprise": "Enterprise", "Intermountain": "Intermountain", "SelectHealth": "SelectHealth", "Financial": "Financial", "Clinical": "Clinical",
-		      "Regional": "Regional", "Department": "Department"]
-		 %>
-        <g:select name="${property }" from="${map }" value="${value }" optionKey="${{it.key } }" 
-           optionValue="${{it.value } }" />
+        <g:select name="${property }" from="${Item.StandardType }" value="${value?.key }" noSelection="${['null':'-Select One-'] }" optionKey="key" />
         <span class="help-inline">(e.g., Enterprise, Intermountain, SelectHealth, Financial, Clinical, Regional, Department)</span>
     </div>
 </div>
