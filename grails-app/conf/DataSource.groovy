@@ -24,6 +24,10 @@ environments
 			format_sql = true
 			use_sql_comments = true
 			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
+			
+			// hibernate-search configuration
+			search.default.directory_provider = 'filesystem'
+			search.default.indexBase = '/tmp/esaui-indexes'
 		}
 	}
 	

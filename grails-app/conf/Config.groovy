@@ -91,6 +91,16 @@ environments {
 		grails.plugins.springsecurity.ldap.active = false
 		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = false
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
+
+		// hibernate-search plugin configuration
+		grails.plugins.hibernatesearch = {
+			rebuildIndexOnStart true
+			//batchSizeToLoadObjects 30
+			//threadsForSubsequentFetching 8
+			//threadsToLoadObjects 4
+			//threadsForIndexWriter 3
+			//cacheMode CacheMode.NORMAL
+		}
     }
 
 	test {
