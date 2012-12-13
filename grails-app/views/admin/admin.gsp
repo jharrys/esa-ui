@@ -12,6 +12,7 @@
 			<div class="well sidebar-nav">
 				<h3>Screens</h3>
 				<ul class="nav nav-pills nav-stacked">
+					<li><g:link action="updateIndices">Update All Lucene Indexes</g:link></li>
 					<li><g:link action="lookupLists">Manage Lookup Lists</g:link></li>
 					<li><g:link action="lookupElements">Manage Lookup Elements</g:link></li>
 					<li><g:link action="documents">Manage Documents</g:link></li>
@@ -29,52 +30,22 @@
 
 			<div class="row-fluid">
 
-				<div class="span4">
-					<h4>List 1</h4>
-					<ul id="nav nav-list">
-						<li>sub-list 1</li>
-						<li>sub-list 2</li>
-						<li>sub-list 3</li>
-						<li>sub-list 4</li>
-					</ul>
+				<div class="span8">
+				    <div id="message">
+						<g:if test="${flash.message}">
+		                    <bootstrap:alert class="alert-info">
+		                        ${flash.message}
+		                    </bootstrap:alert>
+		                </g:if>
+	                </div>
+
+	                <div id="help">
+
+	                </div>
 				</div>
 
-				<div class="span4">
-					<h4>List 2</h4>
-					<ul>
-						<li>sub-list 1</li>
-                        <li>sub-list 2</li>
-                        <li>sub-list 3</li>
-                        <li>sub-list 4</li>
-					</ul>
-				</div>
+			</div> <!-- end row-fluid -->
 
-			</div>
-			
-			<div class="row-fluid">
-
-                <div class="span4">
-                    <h4>List 3</h4>
-                    <ul id="nav nav-list">
-                        <li>sub-list 1</li>
-                        <li>sub-list 2</li>
-                        <li>sub-list 3</li>
-                        <li>sub-list 4</li>
-                    </ul>
-                </div>
-
-                <div class="span4">
-                    <h4>List 4</h4>
-                    <ul>
-                        <li>sub-list 1</li>
-                        <li>sub-list 2</li>
-                        <li>sub-list 3</li>
-                        <li>sub-list 4</li>
-                    </ul>
-                </div>
-
-            </div>
-			
 		</section>
 
 	</div>

@@ -1,5 +1,9 @@
 package org.ihc.esa
 
+import org.codehaus.groovy.grails.commons.ClassPropertyFetcher
+import org.hibernate.search.annotations.Indexed
+import org.springframework.core.annotation.AnnotationUtils
+
 class ApplicationUpgradeService
 {
 	static transactional = false
@@ -15,7 +19,7 @@ class ApplicationUpgradeService
 
 	void updateAllDomainClassIndices()
 	{
-		isSearchable =
+		def isSearchable =
 		{ domainClass ->
 			ClassPropertyFetcher.forClass( domainClass ).getStaticPropertyValue( "search", Closure ) || AnnotationUtils.isAnnotationDeclaredLocally( Indexed, domainClass )
 		}
@@ -23,11 +27,11 @@ class ApplicationUpgradeService
 		grailsApplication.domainClasses*.clazz.findAll( isSearchable ).each
 		{
 
-			println "Creating Lucene index for entity [${it.name}]...."
+			log.debug("Creating Lucene index for entity [${it.name}]....")
 
 			it.search().createIndexAndWait()
 		}
 
-		println "Done."
+		log.debug("Finished indexing all domain classes.")
 	}
 }

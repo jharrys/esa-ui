@@ -5,11 +5,19 @@ import grails.plugins.springsecurity.Secured
 @Secured(['ROLE_ESA_ADMIN', 'IS_AUTHENTICATED_FULLY'])
 class AdminController {
 
+	def applicationUpgradeService
+
 	static allowedMethods = [create: ['GET', 'POST'], edit: ['GET', 'POST'], delete: 'POST']
 
     def index() {
 		log.debug("redirecting to admin action")
 		redirect action: 'admin', params: params
+	}
+
+	def updateIndices() {
+		applicationUpgradeService.updateAllDomainClassIndices()
+		flash.message = 'Update of all domain class indices has been scheduled.'
+		render(view: 'admin')
 	}
 
 	def admin() {
