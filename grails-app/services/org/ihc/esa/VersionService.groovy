@@ -3,6 +3,7 @@ package org.ihc.esa
 class VersionService
 {
 	static scope = "singleton"
+	static transactional = false
 	
 	private final String databaseVersion
 	private final String applicationVersion
