@@ -232,6 +232,22 @@ class Item
 
 	int hashCode = 0
 
+	static search = {
+		availableDate date: 'day'
+		comments index: 'tokenized'
+		createdBy index: 'tokenized'
+		description index: 'tokenized'
+		deviation index: 'un_tokenized'
+		exception index: 'un_tokenized'
+		exceptionCriteria index: 'tokenized'
+		exceptionRequired index: 'un_tokenized'
+		inService index: 'un_tokenized'
+		name index: 'tokenized'
+		sourceSystem index: 'tokenized'
+		standard index: 'un_tokenized'
+		standardType index: 'un_tokenized'
+	}
+
 	static transients = ['hashCode']
 
 	static hasMany = [

@@ -16,9 +16,9 @@ package org.ihc.esa
  * to allow any type of document object to be represented.
  * </p>
  * <p>
- * A document is an instance of the {@link Form} object. Each discrete data element is 
- * defined by a question and a response. The question is defined for a given {@link Form} 
- * in the {@link FormField} class. The responses entered by an end-user as answers to 
+ * A document is an instance of the {@link Form} object. Each discrete data element is
+ * defined by a question and a response. The question is defined for a given {@link Form}
+ * in the {@link FormField} class. The responses entered by an end-user as answers to
  * the questions are stored in the {@link QuestionResponse} class.
  * </p>
  * <p>
@@ -26,7 +26,7 @@ package org.ihc.esa
  * The derived field {@link #title} depends on a {@link #titleFormField} existing in the
  * FORM_FIELD database with the DATA_TYPE column set to "Title". The response to this
  * question (as noted above would be stored in the QUESTION_RESPONSE table) will serve
- * as the <code>Title</code> of this document instance. 
+ * as the <code>Title</code> of this document instance.
  * </p>
  * <p>
  * A document instance may also be associated with multiple items ({@link Item}).
@@ -49,58 +49,55 @@ class Document
 	 * Required.
 	 */
 	Form form
-	
+
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
-	
+
 	int hashCode = 0
-	
+
 	/**
 	 * title is derived from hydrated object.
 	 */
 	private String title = null
-	
+
 	/**
 	 * The {@link FormField} element for this {@link Form}
 	 * that maps to the <code>Title</code> of the document instance.
 	 * By convention it the DataType column is named "Title"
 	 */
 	private FormField titleFormField = null
-	
+
 	String getTitle() {
-		
+
 		if (this.title == null) {
 			this.getTitleFormField()
 			this.title = QuestionResponse.findByDocumentAndFormField(this, this.titleFormField)?.stringValue
 		}
-		
+
 		return this.title
 	}
-	
+
 	FormField getTitleFormField() {
 		if (this.titleFormField == null) {
 			this.titleFormField = FormField.findByDataType("Title")
 			this.getTitle()
 		}
-		
+
 		return this.titleFormField
 	}
-	
-	// part of searchable plugin
-	static searchable = true
-	
+
 	static transients = ['title', 'titleFormField', 'hashCode']
-	
+
 	static hasMany = [
 		items: Item,
 		responses: QuestionResponse,
 		attachments: Attachment
 	]
-	
+
 	static belongsTo = Form
-	
+
 	/**
 	 * Document maps to table DOCUMENT
 	 */
@@ -109,16 +106,16 @@ class Document
 		id generator:'sequence', params:[sequence:'DOCUMENT_SEQ']
 		table 'DOCUMENT'
 		version false
-		
+
 		attachments sort: 'name'
-		
+
 		form column: 'FORM_ID'
 		dateCreated column: 'DATE_CREATED'
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
 	}
-	
+
 	static constraints =
 	{
 		form nullable: false
@@ -127,7 +124,7 @@ class Document
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
 	}
-	
+
 	/**
 	 * equality based on id and form
 	 *
@@ -136,18 +133,18 @@ class Document
 	 */
 	@Override public boolean equals(Document o)
 	{
-		
+
 		if (this.is(o)) return true
-		
+
 		if (o == null) return false
-						
+
 		if (o.getClass() != getClass()) return false
-		
+
 		if (o.form.equals(this.form) && o.dateCreated.equals(this.dateCreated) && o.createdBy.equals(this.createdBy)) return true
-		
+
 		return false
 	}
-	
+
 	@Override public int hashCode()
 	{
 
@@ -158,10 +155,10 @@ class Document
 			result = (37*result) + this.createdBy.hashCode()
 			this.hashCode = result
 		}
-		
+
 		return this.hashCode
 	}
-	
+
 	/**
 	 * Natural order based strictly off of name
 	 * TODO: does compareTo have to satisfy the equals and hashCode? verify ...
@@ -169,11 +166,11 @@ class Document
 	public int compareTo(Document d)
 	{
 		int EQUAL = 0
-		
+
 		if (this.is(d)) return EQUAL
-		
+
 		if (this.equals(d)) return EQUAL
-		
+
 		return this.getTitle().compareToIgnoreCase(d.getTitle())
 	}
 }
