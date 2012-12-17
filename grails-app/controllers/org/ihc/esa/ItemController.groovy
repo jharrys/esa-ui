@@ -4,7 +4,9 @@ import org.springframework.dao.DataIntegrityViolationException
 
 class ItemController {
 
-    static allowedMethods = [create: ['GET', 'POST'], edit: ['GET', 'POST'], delete: 'POST']
+	def searchService
+
+    static allowedMethods = [create: ['GET', 'POST'], edit: ['GET', 'POST'], delete: 'POST', search: ['GET', 'POST']]
 
     def index() {
         redirect action: 'list', params: params
@@ -106,4 +108,28 @@ class ItemController {
             redirect action: 'show', id: params.id
         }
     }
+
+	def search() {
+
+		log.debug("====================================================================================")
+		log.debug("search() action in Item controller called with: " + params)
+		log.debug("====================================================================================")
+
+		switch (request.method) {
+			case 'GET':
+				log.debug("in GET case")
+				break
+
+			case 'POST':
+				log.debug("in POST case")
+				List<String> keywords = params.keywords.tokenize()
+				log.debug("tokenized keywords: " + keywords)
+
+				List<Item> foundItems = searchService.searchSimpleAllItems(keywords)
+				log.debug("found items: " + foundItems)
+
+				render(view: 'searchResults', model: [foundItems:foundItems])
+				break
+		} // end switch
+	}
 }
