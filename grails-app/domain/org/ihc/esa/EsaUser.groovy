@@ -13,6 +13,7 @@ class EsaUser
 	boolean accountLocked = false
 	boolean passwordExpired = false
 	BigDecimal version
+	Party party
 	
 	static mapping =
 	{
@@ -27,6 +28,7 @@ class EsaUser
 		accountLocked column: 'ACCOUNT_LOCKED'
 		passwordExpired column: 'PASSWORD_EXPIRED'
 		version column: 'VERSION'
+		party column: 'PARTY_ID'
 	}
 	
 	static constraints =
@@ -39,6 +41,7 @@ class EsaUser
 		accountLocked nullable: true
 		passwordExpired nullable: true
 		version nullable: true
+		party nullable: false
 	}
 	
 	Set<EsaRole> getAuthorities()

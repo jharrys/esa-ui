@@ -10,6 +10,7 @@ class LogoutController
 	def index =
 	{
 		// FIXME: put any pre-logout code here
+		request['architectId'] = null
 		redirect uri: SpringSecurityUtils.securityConfig.logout.filterProcessesUrl // '/j_spring_security_logout'
 	}
 }

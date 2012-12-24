@@ -59,6 +59,12 @@ class Party
 	String updatedBy
 	
 	/**
+	 * Return list of architects
+	 */
+	static listArchitects = where
+	{ type == 'architect' }
+	
+	/**
 	 * Party can have many of type {@link Item}
 	 * Party can have many of type {@link Address}; join table is PARTY_ADDRESS
 	 * Party can also have relationships with multiple other parties.
