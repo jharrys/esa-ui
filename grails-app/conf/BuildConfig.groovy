@@ -37,6 +37,7 @@ grails.project.dependency.resolution =
 		compile ":hibernate-search:0.7"
 		compile ":external-config-reload:1.2.2"
 		compile ":joda-time:1.4"
+		compile ":fields:1.3"
 		compile ":jquery:1.8.3"
 		compile ":resources:1.2.RC2"
 		compile ":famfamfam:1.0.1"
@@ -51,7 +52,6 @@ grails.project.dependency.resolution =
 		compile ":jmx:0.7.2"
 		compile ":twitter-bootstrap:2.2.1"
 		
-		runtime ":fields:1.3"
 		runtime ":cache-headers:1.1.5"
 		runtime ":zipped-resources:1.0"
 		runtime ":cached-resources:1.0"
