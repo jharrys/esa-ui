@@ -9,8 +9,6 @@ eventCompileStart = { msg ->
 		println "found tag named " + tagName + " - writing commit " + headCommit + " to _git.gsp"
 		gitFile.text = headCommit
 	} else {
-		if (!gitFile.exists()) {
-			gitFile.text = 'in development mode'
-		}
+		gitFile.text = 'in development mode'
 	}
 }
