@@ -1,2 +1,2 @@
 <%@ page defaultCodec="html" %>
-${bean.projectManager.name }
+${bean?.projectManager?.name }

@@ -1,2 +1,2 @@
 <%@ page defaultCodec="html" %>
-${bean.architect.name }
+${bean?.architect?.name }
