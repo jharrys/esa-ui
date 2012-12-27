@@ -123,6 +123,46 @@ class ProjectController
 		[projectInstance: projectInstance]
 	}
 
+	def create() {
+
+		log.debug("====================================================================================")
+		log.debug("create() in project controller called with params: " + params)
+		log.debug("====================================================================================")
+
+		switch (request.method) {
+		case 'GET':
+			params.createdBy = springSecurityService.currentUser.username
+			params.updatedBy = springSecurityService.currentUser.username
+			[projectInstance: new Project(params)]
+			break
+		case 'POST':
+
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy")
+
+			if (params.dateStart) {
+				params.dateStart = sdf.parse(params.dateStart)
+			} else {
+				params.remove("dateStart")
+			}
+
+			if (params.dateCompleted) {
+				params.dateCompleted = sdf.parse(params.dateCompleted)
+			} else {
+				params.remove("dateCompleted")
+			}
+
+			def projectInstance = new Project(params)
+			if (!projectInstance.save(flush: true)) {
+				render view: 'create', model: [projectInstance: projectInstance]
+				return
+			}
+
+			flash.message = message(code: 'default.created.message', args: ['ACID', projectInstance.id])
+			redirect action: 'show', id: projectInstance.id
+			break
+		}
+	}
+
 	def edit() {
 
 		log.debug("====================================================================================")

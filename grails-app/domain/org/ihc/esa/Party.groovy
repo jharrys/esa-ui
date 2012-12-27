@@ -65,6 +65,12 @@ class Party
 	{ type == 'architect' }
 	
 	/**
+	 * Return list of persons
+	 */
+	static listPersons = where
+	{ type == 'person' || type == 'architect'}
+	
+	/**
 	 * Party can have many of type {@link Item}
 	 * Party can have many of type {@link Address}; join table is PARTY_ADDRESS
 	 * Party can also have relationships with multiple other parties.

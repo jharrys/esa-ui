@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<div class="row-fluid">
-			
+
 			<div class="span2">
 				<div class="well">
 					<ul class="nav nav-pills nav-stacked">
@@ -18,6 +18,11 @@
 								<g:message code="default.list.label" args="[entityName]" />
 							</g:link>
 						</li>
+						<li>
+                            <g:link action="list" params="[mine: 'true', sort: 'name', order: 'asc', ]">
+                                My Project List
+                            </g:link>
+                        </li>
 						<li class="active">
 							<g:link action="create">
 								<g:message code="default.create.label" args="[entityName]" />
@@ -26,7 +31,7 @@
 					</ul>
 				</div>
 			</div>
-			
+
 			<div class="span9">
 
 				<div class="page-header">
@@ -50,7 +55,7 @@
 				<fieldset>
 					<g:form class="form-horizontal" action="create" >
 						<fieldset>
-							<f:all bean="projectInstance"/>
+							<f:all bean="projectInstance" />
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary">
 									<i class="icon-ok icon-white"></i>
@@ -60,7 +65,7 @@
 						</fieldset>
 					</g:form>
 				</fieldset>
-				
+
 			</div>
 
 		</div>
