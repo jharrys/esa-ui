@@ -56,34 +56,101 @@ class BootStrap
 					map['document'] = 3
 					map['question_response'] = 85
 					map['project'] = 108
+					map['project_architect'] = 108
 					
 					map.each
 					{ table,expectedCount ->
 						reader = new BufferedReader(new FileReader("esa-content/" + table + "_seed_data.sql"))
 						
+						/*
+						 *  The Project seed data is weird because of the many-many associations. We don't know before hand
+						 *  the ID assignments, so we have to do lookups.
+						 *
+						 *  NOTE: The Project seed data file does not reflect the true database structure, so we have to untangle it here.
+						 *
+						 *  TODO: This all should be a call to a service
+						 */
 						if (table.equals("project")) {
 							String line = ""
 							while ((line = reader.readLine()) != null) {
-								log.debug("line: " + line)
-								println ("line: " + line)
+								
+								/* ------------------------------------------------------------------------------------------------
+								 * Match and capture the PROJECT_MANAGER_PARTY_ID field; if match is found
+								 * then do a look up in the Party table (because this field really contains the name, not the ID).
+								 * At the end generate a new sql statement with the correct field name and associated integer
+								 -------------------------------------------------------------------------------------------------*/
 								if (!(line =~ /^--/)) {
-									def match = line =~ /values \([^,]*,[^,]*,[^,]*,[^,]*,\'([^,]*)\',/
+									// look for fourth field and capture it (PROJECT_MANAGER_PARTY_ID field)
+									def match = line =~ /values \([^,]*,[^,]*,[^,]*,\'([^,]*)\',/
 									Party party = null
 									String name = "null"
 									
+									// if match found, then it is captured in [0][1] - do a lookup in Party table
 									if (match.size() > 0) {
 										name = match[0][1]
 										party = Party.findByName(name)
 									}
 									
-									// if a ${name} was found in the party table, then use its ID. If not use ID 1 which is 'unknown'
+									/*
+									 *  if the name was found in the party table, then use its ID.
+									 *  If not found use ID 1 which is 'unknown'
+									 */
 									def newId = party ? party.id : 1
 									
+									/*
+									 * create anew sql statement with the PROJECT_MANAGER_PARTY_ID substituted for the correct
+									 * integer
+									 */
 									def newSQL = (line =~ /\'${name}\'/).replaceAll(newId.toString())
-									log.debug("newSQL: " + newSQL)
-									println ("newSQL: " + newSQL)
+									log.error("newSQL: " + newSQL)
 									
 									s.execute(newSQL)
+									log.error("**************** project saved? " + s.updateCount)
+								}
+							}
+							//s.close()
+						} else if (table.equals("project_architect")) {
+							String line = ""
+							log.error("+++++++++++++++++" + Project.list().size())
+							while ((line = reader.readLine()) != null) {
+								
+								/* ------------------------------------------------------------------------------------------------
+								 * Match and capture the PARTY_ID field & PROJECT_ID field; if match is found
+								 * then do a look up in the Party table (because this field really contains the name, not the ID) &
+								 * the Project table respectively.
+								 * At the end generate a new sql statement with the correct field name and associated integer
+								 -------------------------------------------------------------------------------------------------*/
+								if (!(line =~ /^--/)) {
+									// look for second field and capture it (PARTY_ID field)
+									def matchArchitect = line =~ /nextval,'([^,]*)',/
+									Party party = null
+									String architectName = "null"
+									
+									// if match found, then it is captured in [0][1] - do a lookup in Party table
+									if (matchArchitect.size() > 0) {
+										architectName = matchArchitect[0][1]
+										party = Party.findByName(architectName)
+										log.error("party name: " + architectName + " party: " + party?.id)
+									}
+									
+									// look for the third field and capture it (PROJECT_ID field)
+									def matchProject = line =~ /nextval,[^,]*,'([^,]*)',/
+									Project project = null
+									String projectName = "null"
+									
+									// if match found, then iti is captured in [0][1] - do a lookup in Project table
+									if (matchProject.size() > 0) {
+										projectName = matchProject[0][1]
+										project = Project.findByName(projectName)
+										log.error("project name:: " + projectName + " project: " + project?.id)
+									}
+									
+									if ((party) && (project)) {
+										ProjectArchitect pa = new ProjectArchitect(party: party, project: project, createdBy: 'tssimpso', updatedBy: 'tssimpso')
+										pa.save(flush: true)
+									} else {
+										log.error("party or project was not found. party: " + architectName + " project: " + projectName)
+									}
 								}
 							}
 						} else {
