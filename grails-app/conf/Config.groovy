@@ -132,9 +132,9 @@ environments {
 		 * the full DN will be equivalent to "cn=${username},${userDnBase}"
 		 * ****************************************************************************/
 
-		grails.plugins.springsecurity.ldap.active = true
-		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = true
-		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = true
+		grails.plugins.springsecurity.ldap.active = false
+		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = false
+		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
     }
 }
 
