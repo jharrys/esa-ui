@@ -1,9 +1,10 @@
 package org.ihc.esa
 
-
 /*--------------------------------------------------------------------------
  Copyright 2012 by Intermountain Healthcare
  --------------------------------------------------------------------------*/
+
+import org.apache.log4j.Logger
 
 /**
  * Project class used to represent all projects, evaluations, exceptions that ESA is working on.
@@ -88,11 +89,6 @@ class Project
 	String externalProjectNumber
 
 	/**
-	 * Optional. The architect assigned to this project.
-	 */
-	Party architect
-
-	/**
 	 * Optional. The project manager assigned to this project.
 	 */
 	Party projectManager
@@ -116,6 +112,10 @@ class Project
 
 	static transients = ['hashCode']
 
+	static hasMany = [architects: Party]
+
+	static fetchMode = [architects: 'eager']
+
 	/**
 	 * Project maps to table PROJECT
 	 */
@@ -129,7 +129,6 @@ class Project
 		type column: 'TYPE'
 		status column: 'STATUS'
 		externalProjectNumber column: 'EXTERNAL_PROJECT_NUMBER'
-		architect column: 'ARCHITECT_PARTY_ID'
 		projectManager column: 'PROJECT_MANAGER_PARTY_ID'
 		dateStart column: 'DATE_START'
 		dateCompleted column: 'DATE_COMPLETED'
@@ -137,6 +136,8 @@ class Project
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
+
+		architects joinTable: [ name: 'PROJECT_ARCHITECT', key: 'PROJECT_ID', column: 'PARTY_ID' ]
 	}
 
 	static constraints =
@@ -145,7 +146,6 @@ class Project
 		type nullable: true, size: 0..40
 		status nullable: true, size: 0..40
 		externalProjectNumber nullable: true, size: 0..64
-		architect nullable: true
 		projectManager nullable: true
 		dateStart nullable: true, format: 'yyyy-MM-dd'
 		dateCompleted nullable: true, format: 'yyyy-MM-dd'
@@ -197,5 +197,41 @@ class Project
 		}
 
 		return this.hashCode
+	}
+
+	/**
+	 * Get a list of Projects owned by a specific partyId.
+	 *
+	 * @param architect as a partyId (note this is the integer id not the object)
+	 * @param namedParams
+	 * @return list of Projects
+	 */
+	static List<Project> findAllByPartyId(long partyId, Map namedParams) {
+
+		namedParams.offset = namedParams.offset ?: 0
+
+		// CAUTION - brittle code below
+		Logger staticLogger = Logger.getLogger("grails.app.domain.org.ihc.esa.Project")
+		staticLogger.debug("called with partyId: " + partyId)
+		staticLogger.debug("called with namedParams: " + namedParams)
+
+		namedParams['party'] = Party.get(partyId)
+
+		List<Project> result = new ArrayList<Project>()
+		findAll ('from ProjectArchitect where party=:party order by lastUpdated', namedParams).each {
+			result.add(it.project)
+		}
+		return result
+	}
+	
+	/**
+	 * Return count
+	 * 
+	 * @param partyId
+	 * @return
+	 */
+	static int countAllByPartyId(long partyId) {
+		Party party = Party.get(partyId)
+		return ProjectArchitect.countByParty(party)
 	}
 }

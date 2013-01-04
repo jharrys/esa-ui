@@ -68,10 +68,12 @@
 
 					</g:if>
 
-					<g:if test="${projectInstance?.architect}">
+					<g:if test="${projectInstance?.architects}">
 						<dt><g:message code="project.architect.label" default="Architect" /></dt>
 
-							<dd><g:link controller="party" action="show" id="${projectInstance?.architect?.id}">${projectInstance?.architect?.encodeAsHTML()}</g:link></dd>
+                            <g:each in="${projectInstance.architects }" var="architect">
+                                <dd><g:link controller="party" action="show" id="${architect?.id}">${architect?.name.encodeAsHTML()}</g:link></dd>
+							</g:each>
 
 					</g:if>
 

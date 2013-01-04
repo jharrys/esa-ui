@@ -16,100 +16,161 @@ class ProjectController
 
 	def index()
 	{
-		log.debug("====================================================================================")
+		log.debug("***********************************************************************************************")
 		log.debug("index() in project controller called with params: " + params)
 		log.debug("redirecting to list")
-		log.debug("====================================================================================")
+		log.debug("***********************************************************************************************")
 
 		redirect action: 'list', params: params
 	}
 
 	def list()
 	{
-		log.debug("====================================================================================")
+		log.debug("***********************************************************************************************")
 		log.debug("list() in project controller called with params: " + params)
-		log.debug("====================================================================================")
+		log.debug("***********************************************************************************************")
 
-		def architectId = session['architectId'] ?: springSecurityService.currentUser.party.id
-		log.debug("architectId value from session is <" + architectId + ">")
+		def architectId = null
+		if (session['architectId'])
+		{
+			architectId = session['architectId']
+			log.debug("*** architectId value from session is <" + architectId + "> ***")
+		} else
+		{
+			architectId = springSecurityService.currentUser.party.id
+			session['architectId'] = architectId
+			log.debug("*** architectId value from springSecurityService is <" + architectId + "> ***")
+			log.debug("*** placed architectId into session ***")
+		}
 
-		def projectInstanceList = null
+		List<Project> projectInstanceList = null
+		int projectInstanceTotal = 0
 
 		switch (request.method)
 		{
-
 			case 'GET':
-			log.debug("in GET method")
+			log.debug("*** in GET method ***")
 
 			if (params.mine && params.mine.equals('true'))
 			{
 				params.filter = "on"
+				log.debug("*** param 'mine' found and is 'true' ***")
+				log.debug("*** filter is set to 'on' ***")
 				if (architectId)
 				{
-					log.debug("architectId value from session does not exist, getting it from currentUser")
-					architectId = springSecurityService.currentUser.party.id
-					log.debug("architectId value from currentUser is <" + architectId + ">")
+					log.debug("*** filtering for projects owned by " + architectId)
+					params.max = Math.min(params.max ? params.int('max') : 5, 100)
+					params.offset = params.int('offset')
 
-					log.debug("architectId value from currentUser is <" + architectId + ">")
-					session['architectId'] = architectId
-					log.debug("placed architectId value into session")
+					def paginationParams = [max: params.max, offset: params.offset, cache: true]
 
-					params.max = Math.min(params.max ? params.int('max') : 20, 100)
-					params.sort = params.sort ?: 'name'
-
-					def metaParams = [max: params.max, sort: params.sort, order: params.order, offset: params.offset]
-
-					projectInstanceList = Project.findAllByArchitect(Party.load(architectId), metaParams)
+					projectInstanceList = Project.findAllByPartyId(architectId, paginationParams)
+					projectInstanceTotal = Project.countAllByPartyId(architectId)
 					params.filterByArchitect = architectId
 				} else
 				{
-					log.debug("no architectId found ...")
+					log.debug("*** although param 'mine' was defined and set to 'true', no architectId <" + architectId + "> was found")
+					log.debug("*** returning an empty list")
 					projectInstanceList = [:]
+					projectInstanceTotal = 0
 				}
 			} else
 			{
+				log.debug("*** no filter set, returning full list of projects")
 				params.filter = "off"
-				params.max = Math.min(params.max ? params.int('max') : 20, 100)
+				params.max = Math.min(params.max ? params.int('max') : 5, 100)
 				params.sort = params.sort ?: 'name'
 				projectInstanceList = Project.list(params)
+				projectInstanceTotal = Project.count()
 			}
 
-			break
+			log.debug("*** returning the following:")
+			log.debug("*** projectInstanceList: " + projectInstanceList)
+			log.debug("*** projectInstanceTotal: " + projectInstanceTotal)
+
+			log.debug("*** finished get method ***")
+			log.debug("*** passing torch over to viewer ***")
+			return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, params: params]
+
+			break		// end GET
 
 			case 'POST':
-			log.debug("in POST method")
+			log.debug("*** in POST method ***")
+			String previousQuery = flash.projectControllerPreviousQuery ?: ""
+			log.debug("*** previousQuery: " + previousQuery)
 
 			if (params.setFilter.equals('off')) {
-				log.debug("asked to clear filter")
-				params.filterByType = null
-				params.filterByStatus = null
-				params.filterByArchitect = null
+				log.debug("*** start clear filter ***")
+				params.max = Math.min(params.max ? params.int('max') : 5, 100)
+				params.remove('filterByType')
+				params.remove('filterByStatus')
+				params.remove('filterByArchitect')
 				params.filter = "off"
 				projectInstanceList = Project.list(params)
+				projectInstanceTotal = Project.count()
+				log.debug("*** finished clear filter ***")
 			} else {
-				log.debug("adding filter")
+				log.debug("*** adding filter")
 				params.filter = "on"
-				projectInstanceList = Project.findAll {
-					if (params.filterByType) {
-						type == Project.ProjectType."${params.filterByType}"
-					}
+				params.max = Math.min(params.max ? params.int('max') : 5, 100)
 
-					if (params.filterByStatus) {
-						status == Project.ProjectStatus."${params.filterByStatus}"
-					}
-
-					if (params.filterByArchitect) {
-						architect == Party.get(params.filterByArchitect)
-					}
+				List<Long> projectListForArchitect = new ArrayList<Long>()
+				if (params.filterByArchitect) {
+					log.debug("*** start querying project_architect by architect ***")
+					Party architect = Party.get(params.filterByArchitect)
+					ProjectArchitect.findAllByParty(architect).each { projectListForArchitect.add(it.project.id) }
+					log.debug("*** finished querying project_architect by architect ***")
+				} else {
+					log.debug("*** filterByArchitect not set, skipping...")
 				}
+
+				def query = "FROM Project"
+
+				if (params.filterByType) {
+					query = query + " WHERE type = '${params.filterByType}'"
+					log.debug("*** query after type filter: " + query)
+				}
+
+				if (params.filterByStatus) {
+					query = query + (params.filterByType ? " AND " : " ") + "status = ${params.filterByStatus}"
+					log.debug("*** query after status filter: " + query)
+				}
+
+				if (params.filterByArchitect) {
+					query = query + ((params.filterByType || params.filterByStatus) ? " AND " : " ") + "id in ${projectListForArchitect}"
+					log.debug("*** query after architect filter: " + query)
+				}
+
+				log.debug("*** final query: " + query)
+
+				flash.projectControllerPreviousQuery = query
+
+				if (!previousQuery.equals(query)) {
+					projectInstanceTotal = Project.findAll(query, [cache: true]).size()
+					flash.projectControllerProjectInstanceTotal
+					log.debug("*** executed findAll on query")
+				} else {
+					projectInstanceTotal = flash.projectControllerProjectInstanceTotal
+				}
+				params.offset = params.offset ? params.int('offset') : 0
+				projectInstanceList = Project.findAll(query, [max: params.max, offset: params.offset, cache: true])
+
 			}
 
-			break
+			log.debug("*** returning the following:")
+			log.debug("*** projectInstanceList: " + projectInstanceList)
+			log.debug("*** projectInstanceTotal: " + projectInstanceTotal)
 
-		}
+			log.debug("*** finished post method ***")
+			log.debug("*** passing torch over to viewer ***")
 
-		[projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceList?.size(), filterByType: params.filterByType,
-			filterByStatus: params.filterByStatus, filterByArchitect: params.filterByArchitect, filter: params.filter]
+			return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, filterByType: params.filterByType,
+				filterByStatus: params.filterByStatus, filterByArchitect: params.filterByArchitect, filter: params.filter]
+
+			break	// end POST
+
+		} // end switch
+
 	}
 
 	def show() {
@@ -130,14 +191,15 @@ class ProjectController
 		log.debug("====================================================================================")
 
 		switch (request.method) {
-		case 'GET':
+			case 'GET':
 			params.createdBy = springSecurityService.currentUser.username
 			params.updatedBy = springSecurityService.currentUser.username
 			[projectInstance: new Project(params)]
 			break
-		case 'POST':
+			case 'POST':
 
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy")
+			String userMessage = ""
 
 			if (params.dateStart) {
 				params.dateStart = sdf.parse(params.dateStart)
@@ -151,13 +213,41 @@ class ProjectController
 				params.remove("dateCompleted")
 			}
 
+			if (params.projectManager) {
+				params.projectManager = Party.get(params.projectManager)
+			} else {
+				params.remove("projectManager")
+			}
+
+			List<Party> architects = new ArrayList<Party>()
+			if (params.architects) {
+				for (String architectId in params.architects) {
+					architects.add(Party.get(architectId))
+				}
+				params.remove("architects")
+			} else {
+				params.remove("architects")
+			}
+
 			def projectInstance = new Project(params)
 			if (!projectInstance.save(flush: true)) {
 				render view: 'create', model: [projectInstance: projectInstance]
 				return
 			}
 
-			flash.message = message(code: 'default.created.message', args: ['ACID', projectInstance.id])
+			userMessage = "ACID " + projectInstance.id + " created successfully."
+
+			if (!architects.empty) {
+				for (Party architect in architects) {
+					ProjectArchitect pa = new ProjectArchitect(party: architect, project: projectInstance, createdBy: params.createdBy, updatedBy: params.updatedBy)
+					if (!pa.save(flush: true)) {
+						userMessage = ((userMessage) ? userMessage + "<br>Unable to save association to Architect with PARTY_ID <" + architect.id + "> and PROJECT_ID <" +
+						projectInstance.id + ">" : "Unable to save association to Architect with PARTY_ID <" + architect.id + "> and PROJECT_ID <" + projectInstance.id + ">" )
+					}
+				}
+			}
+
+			flash.message = userMessage
 			redirect action: 'show', id: projectInstance.id
 			break
 		}
@@ -170,7 +260,7 @@ class ProjectController
 		log.debug("====================================================================================")
 
 		switch (request.method) {
-		case 'GET':
+			case 'GET':
 			def projectInstance = Project.get(params.id)
 			if (!projectInstance) {
 				flash.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.id])
@@ -180,8 +270,10 @@ class ProjectController
 
 			[projectInstance: projectInstance]
 			break
-		case 'POST':
+			case 'POST':
 			def projectInstance = Project.get(params.id)
+			String userMessage = ""
+
 			if (!projectInstance) {
 				flash.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.id])
 				redirect action: 'list'
@@ -189,7 +281,7 @@ class ProjectController
 			}
 
 			/*
-			 * fixed/convert appropriate parameters
+			 * fix/convert appropriate parameters
 			 */
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy")
 
@@ -217,6 +309,16 @@ class ProjectController
 				params.remove("dateCompleted")
 			}
 
+			List<Party> architects = new ArrayList<Party>()
+			if (params.architects) {
+				for (String architectId in params.architects) {
+					architects.add(Party.get(architectId))
+				}
+				params.remove("architects")
+			} else {
+				params.remove("architects")
+			}
+
 			projectInstance.properties = params
 
 			if (!projectInstance.save(flush: true)) {
@@ -224,7 +326,19 @@ class ProjectController
 				return
 			}
 
-			flash.message = message(code: 'default.updated.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])
+			userMessage = "ACID " + projectInstance.id + " updated."
+
+			if (!architects.empty) {
+				for (Party architect in architects) {
+					ProjectArchitect pa = new ProjectArchitect(party: architect, project: projectInstance, createdBy: params.createdBy, updatedBy: params.updatedBy)
+					if (!pa.save(flush: true)) {
+						userMessage = ((userMessage) ? userMessage + "<br>Unable to save association to Architect with PARTY_ID <" + architect.id + "> and PROJECT_ID <" +
+						projectInstance.id + ">" : "Unable to save association to Architect with PARTY_ID <" + architect.id + "> and PROJECT_ID <" + projectInstance.id + ">" )
+					}
+				}
+			}
+
+			flash.message = userMessage
 			redirect action: 'show', id: projectInstance.id
 			break
 		}
@@ -239,6 +353,7 @@ class ProjectController
 		}
 
 		try {
+			ProjectArchitect.removeAll(projectInstance)
 			projectInstance.delete(flush: true)
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'project.label', default: 'Project'), params.id])
 			redirect action: 'list'

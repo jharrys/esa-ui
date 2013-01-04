@@ -1,3 +1,5 @@
+<g:logMsg level="debug">= begin rendering of project/list view =</g:logMsg>
+<g:logMsg level="debug">= params: ${params } =</g:logMsg>
 <%@ page import="org.ihc.esa.Project" %>
 <%@ page import="org.ihc.esa.Party" %>
 
@@ -23,7 +25,7 @@
 							</g:link>
 						</li>
 						<li>
-							<g:link action="list" params="[mine: 'true', sort: 'name', order: 'asc', ]">
+							<g:link action="list" params="[mine: 'true']">
 								My Project List
 							</g:link>
 						</li>
@@ -38,25 +40,45 @@
 
 			<div class="span9">
 
+                <g:logMsg level="debug">= identifying filter button values =</g:logMsg>
+                <g:logMsg level="debug">= filter: "${params.filter }" =</g:logMsg>
+
+				<%
+				String projectFilterClass = ""
+				String projectFilterButtonText = ""
+				String projectFilterNewValue = ""
+
+				 if (params.filter?.equals("off")) {
+					 projectFilterClass = "btn btn-primary pull-right"
+					 projectFilterButtonText = "Filter"
+					 projectFilterNewValue = "on"
+				 } else if (params.filter?.equals("on")) {
+				     projectFilterClass = "btn btn-danger pull-right"
+					 projectFilterButtonText = "Clear Filter"
+					 projectFilterNewValue = "off"
+				 } else {
+					params.filter = "off"
+				    projectFilterClass = "btn btn-primary pull-right disabled"
+					projectFilterButtonText = "Filter"
+					projectFilterNewValue = "on"
+				 }
+				 %>
+
+				<g:logMsg level="debug">projectFilterClass = ${projectFilterClass }</g:logMsg>
+				<g:logMsg level="debug">projectFilterButtonText = ${projectFilterButtonText }</g:logMsg>
+				<g:logMsg level="debug">projectFilterNewValue = ${projectFilterNewValue }</g:logMsg>
+
                 <g:form action="list">
                     <fieldset>
 						<div class="page-header">
 							<h1><g:message code="default.list.label" args="[entityName]" /></h1>
-							<g:field type="hidden" name="filter" value="${filter ?: 'off' }" />
+							<g:field type="hidden" name="filter" value="${params.filter }" />
                             <g:select from="${Project.ProjectType }" name="filterByType"  optionKey="key" noSelection="['':'-Project Type-']"  value="${filterByType }"/>
                             <g:select from="${Project.ProjectStatus }" name="filterByStatus"  optionKey="key" noSelection="['':'-Project Status-']"  value="${filterByStatus }"/>
                             <g:select from="${Party.listArchitects }" name="filterByArchitect"  optionKey="id" optionValue="name" noSelection="['':'-Architect-']"  value="${filterByArchitect }"/>
-                            <%
-							String projectFilterClass = ""
-							 if (filter.equals("off")) {
-								 projectFilterClass = "btn btn-primary pull-right"
-							 } else {
-							     projectFilterClass = "btn btn-danger pull-right"
-							 }
-							 %>
-							<button id="projectFilter" type="submit" class="${projectFilterClass }" name="setFilter" value="${filter.equals('off') ? 'on' : 'off' }" >
+							<button id="projectFilter" type="submit" class="${projectFilterClass }" name="setFilter" value="${projectFilterNewValue }" >
 							    <i class="icon-filter icon-white"></i>
-							    ${filter.equals('off') ? 'Filter' : 'Clear Filter' }
+							    ${projectFilterButtonText }
 							</button>
 						</div>
                     </fieldset>
@@ -88,7 +110,12 @@
 						</tr>
 					</thead>
 					<tbody>
+					<g:logMsg level="debug">= start looping through projectInstanceList =</g:logMsg>
+					<g:logMsg level="debug">= projectInstanceList: ${projectInstanceList } =</g:logMsg>
+					<g:logMsg level="debug">= projectInstanceTotal: ${projectInstanceTotal } =</g:logMsg>
+
 					<g:each in="${projectInstanceList}" var="projectInstance">
+					   <g:logMsg level="debug">= project ${projectInstance.id } =</g:logMsg>
 						<tr>
 							<td><f:display bean="${projectInstance }" property="id" /></td>
 
@@ -100,7 +127,7 @@
 
 							<td><f:display bean="${projectInstance }" property="externalProjectNumber" /></td>
 
-							<td><f:display bean="${projectInstance }" property="architect" /></td>
+							<td><f:display bean="${projectInstance }" property="architects" /></td>
 
 							<td><f:display bean="${projectInstance }" property="projectManager.name" /></td>
 
@@ -109,10 +136,11 @@
 							</td>
 						</tr>
 					</g:each>
+					<g:logMsg level="debug">= done looping through projects =</g:logMsg>
 					</tbody>
 				</table>
 				<div class="pagination">
-					<bootstrap:paginate total="${projectInstanceTotal}" />
+					<bootstrap:paginate total="${projectInstanceTotal}" params="${params }"/>
 				</div>
 			</div>
 
