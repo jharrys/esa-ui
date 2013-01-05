@@ -41,7 +41,7 @@ class EsaUser
 		accountLocked nullable: true
 		passwordExpired nullable: true
 		version nullable: true
-		party nullable: false
+		party nullable: true
 	}
 	
 	Set<EsaRole> getAuthorities()
