@@ -22,9 +22,9 @@
 					<li <%= request.forwardURI == "${createLink(uri: '/standards/index')}" ? ' class="active"' : '' %>><g:link controller="standards">Standards</g:link></li>
 					<li <%= request.forwardURI == "${createLink(uri: '/exception/index')}" ? ' class="active"' : '' %>><g:link controller="exception">Exceptions</g:link></li>
 					<li <%= request.forwardURI == "${createLink(uri: '/earb')}" ? ' class="disabled"' : 'class="disabled"' %>><g:link controller="earb">EARB</g:link></li>
-					<sec:ifAllGranted roles="ROLE_ESA_ADMIN,ROLE_ESA_ARCHITECT">
+					<sec:ifAnyGranted roles="ROLE_ESA_ADMIN,ROLE_ESA_ARCHITECT">
 					   <li <%= request.forwardURI == "${createLink(uri: '/admin/admin')}" ? ' class="active"' : '' %>><g:link controller="admin">Admin</g:link></li>
-					</sec:ifAllGranted>
+					</sec:ifAnyGranted>
 					<li>
 						<%
 							def aboutString = "Application: " + versionService.getApplicationVersion()
