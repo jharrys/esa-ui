@@ -76,6 +76,8 @@ grails {
  * *****************************************************************************************************************/
 environments {
     development {
+		grails.gorm.failOnError = true
+
         grails.logging.jul.usebridge = true
 
 		// mask out secure fields - keep this off in development. FIXME: create tests for this
@@ -104,6 +106,8 @@ environments {
     }
 
 	test {
+		grails.gorm.failOnError = true
+
 		grails.logging.jul.usebridge = true
 
 		// mask out secure fields
@@ -121,6 +125,9 @@ environments {
 	}
 
     production {
+		// set to false once you are comfortable in production
+		grails.gorm.failOnError = true
+
         grails.logging.jul.usebridge = true
 
 		// mask out secure fields
