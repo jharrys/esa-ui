@@ -5,10 +5,9 @@ import org.ihc.esa.*
 
 class BootStrap
 {
-	// TODO: compatibility matrix: [app 0.5.0-0.8.1 with db 1.1], [app 0.9.0 with db 1.2], [app 1.0 with db 1.3]
-	// FIXME: need to fix how i calculate versions - split into major version & minor version
-	private final double minimumDatabaseVersion = 1.3
-	private final double minimumApplicationVersion = 1.0
+	// compatibility matrix: [app 0.5.0-0.8.1 with db 1.1], [app 0.9.0 with db 1.2], [app 1.0 with db 1.3]
+	private final String minimumDatabaseVersion = "1.3"
+	private final String minimumApplicationVersion = "1.0.0"
 	
 	def grailsApplication
 	def sessionFactory
@@ -20,6 +19,7 @@ class BootStrap
 			{
 				def session = null
 				def connection = null
+				def versionService = null
 				if (grailsApplication.getFlatConfig().get("dataSource.url").startsWith("jdbc:h2"))
 				{
 					//if we are running with the internal H2 database, then execute scripts with H2 specific queries.
@@ -160,11 +160,9 @@ class BootStrap
 				
 				/*-----------------------------------------------------------*/
 				
-				String dbVersion = ConfigurationParameter.findByName('database.version').value
-				String appVersion = ConfigurationParameter.findByName('esaui.version').value
-				
-				assert dbVersion.isDouble() && ((dbVersion as double) >= minimumDatabaseVersion)
-				assert appVersion.isDouble() && ((appVersion as double) >= minimumApplicationVersion)
+				versionService = grailsApplication.getMainContext().getBean("versionService")
+				assert versionService.isCompatibleWithDatabaseVersion(minimumDatabaseVersion)
+				assert versionService.isCompatibleWithApplicationVersion(minimumApplicationVersion)
 				
 			}	// end-development
 			test {
