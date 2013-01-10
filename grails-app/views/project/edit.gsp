@@ -51,7 +51,7 @@
 					<g:form class="form-horizontal" action="edit" id="${projectInstance?.id}" >
 						<g:hiddenField name="version" value="${projectInstance?.version}" />
 						<fieldset>
-							<f:all bean="projectInstance" except="createdBy,updatedBy" />
+							<f:all bean="projectInstance" />
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary">
 									<i class="icon-ok icon-white"></i>
