@@ -102,16 +102,16 @@ class BootStrap
 									 * integer
 									 */
 									def newSQL = (line =~ /\'${name}\'/).replaceAll(newId.toString())
-									log.error("newSQL: " + newSQL)
+									//log.error("newSQL: " + newSQL)
 									
 									s.execute(newSQL)
-									log.error("**************** project saved? " + s.updateCount)
+									//log.error("**************** project saved? " + s.updateCount)
 								}
 							}
 							//s.close()
 						} else if (table.equals("project_architect")) {
 							String line = ""
-							log.error("+++++++++++++++++" + Project.list().size())
+							//log.error("+++++++++++++++++" + Project.list().size())
 							while ((line = reader.readLine()) != null) {
 								
 								/* ------------------------------------------------------------------------------------------------
@@ -130,7 +130,7 @@ class BootStrap
 									if (matchArchitect.size() > 0) {
 										architectName = matchArchitect[0][1]
 										party = Party.findByName(architectName)
-										log.error("party name: " + architectName + " party: " + party?.id)
+										//log.error("party name: " + architectName + " party: " + party?.id)
 									}
 									
 									// look for the third field and capture it (PROJECT_ID field)
@@ -142,14 +142,14 @@ class BootStrap
 									if (matchProject.size() > 0) {
 										projectName = matchProject[0][1]
 										project = Project.findByName(projectName)
-										log.error("project name:: " + projectName + " project: " + project?.id)
+										//log.error("project name:: " + projectName + " project: " + project?.id)
 									}
 									
 									if ((party) && (project)) {
 										ProjectArchitect pa = new ProjectArchitect(party: party, project: project, createdBy: 'tssimpso', updatedBy: 'tssimpso')
 										pa.save(flush: true)
 									} else {
-										log.error("party or project was not found. party: " + architectName + " project: " + projectName)
+										//log.error("party or project was not found. party: " + architectName + " project: " + projectName)
 									}
 								}
 							}
