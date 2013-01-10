@@ -81,9 +81,10 @@ class Party
 	 */
 	static hasMany = [
 		addresses: Address,							//validated
-		items: Item,								//validated
+		items: Item,										//validated
 		partyRelationshipParty: PartyRelationship,
-		partyRelationshipParty1: PartyRelationship
+		partyRelationshipParty1: PartyRelationship,
+		esaUsers: EsaUser
 	]
 
 	static mappedBy = [
@@ -143,19 +144,16 @@ class Party
 	 * @param party to compare to
 	 * @return boolean
 	 */
-	@Override public boolean equals(Party party)
+	@Override public boolean equals(Object party)
 	{
 
-		if (this.is(party)) return true
+		if (!(party instanceof Party)) return false
 
 		if (party == null) return false
 
-		if (party.getClass() != getClass()) return false
+		if (this.is(party)) return true
 
-		if (party.id == this.id)
-		{
-			return true
-		}
+		if (party.id.equals(this.id))	return true
 
 		return false
 	}
