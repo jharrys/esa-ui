@@ -14,6 +14,8 @@ class ProjectController
 
 	def springSecurityService
 
+	def projectService
+
 	def index()
 	{
 		log.debug("***********************************************************************************************")
@@ -56,32 +58,16 @@ class ProjectController
 				params.filter = "on"
 				log.debug("*** param 'mine' found and is 'true' ***")
 				log.debug("*** filter is set to 'on' ***")
-				if (architectId)
-				{
-					log.debug("*** filtering for projects owned by " + architectId)
-					params.max = Math.min(params.max ? params.int('max') : 5, 100)
-					params.offset = params.int('offset')
-
-					def paginationParams = [max: params.max, offset: params.offset, cache: true]
-
-					projectInstanceList = Project.findAllByPartyId(architectId, paginationParams)
-					projectInstanceTotal = Project.countAllByPartyId(architectId)
-					params.filterByArchitect = architectId
-				} else
-				{
-					log.debug("*** although param 'mine' was defined and set to 'true', no architectId <" + architectId + "> was found")
-					log.debug("*** returning an empty list")
-					projectInstanceList = [:]
-					projectInstanceTotal = 0
-				}
+				def result = projectService.findProjectByArchitectId(architectId, params)
+				projectInstanceList = result.projectInstanceList
+				projectInstanceTotal = result.projectInstanceTotal
 			} else
 			{
 				log.debug("*** no filter set, returning full list of projects")
 				params.filter = "off"
-				params.max = Math.min(params.max ? params.int('max') : 5, 100)
-				params.sort = params.sort ?: 'name'
-				projectInstanceList = Project.list(params)
-				projectInstanceTotal = Project.count()
+				def result = projectService.findProjectByArchitectId(null, params)
+				projectInstanceList = result.projectInstanceList
+				projectInstanceTotal = result.projectInstanceTotal
 			}
 
 			log.debug("*** returning the following:")
@@ -327,6 +313,8 @@ class ProjectController
 			}
 
 			userMessage = "ACID " + projectInstance.id + " updated."
+			
+			List<Party> currentParties = ProjectArchitect.where { project == projectInstance }.projections { property('party') }
 
 			if (!architects.empty) {
 				for (Party architect in architects) {
