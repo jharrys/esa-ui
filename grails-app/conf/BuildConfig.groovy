@@ -35,7 +35,6 @@ grails.project.dependency.resolution =
 	{
 		compile ":hibernate:$grailsVersion"
 		compile ":hibernate-search:0.7"
-		compile ":external-config-reload:1.2.2"
 		compile ":joda-time:1.4"
 		compile ":fields:1.3"
 		compile ":jquery:1.8.3"
@@ -49,9 +48,10 @@ grails.project.dependency.resolution =
 		compile ":spring-security-ui:0.2"
 		compile ":jasper:1.6.1"
 		compile ":webxml:1.4.1"
-		compile ":jmx:0.7.2"
-		compile ":twitter-bootstrap:2.2.1"
+		compile ":jmx:0.8"
+		compile ":twitter-bootstrap:2.2.2"
 		
+		runtime ":external-config-reload:1.2.2"
 		runtime ":cache-headers:1.1.5"
 		runtime ":zipped-resources:1.0"
 		runtime ":cached-resources:1.0"
