@@ -8,6 +8,14 @@
  * Author: John Harris
  * *****************************************************************************************************************/
 
+grails.config.locations = [
+                           "classpath: ${appName}-config.groovy",
+                           "file:./${appName}-config.groovy"]
+                        				   
+if (System.properties["${appName}.config.location"]) {
+	grails.config.locations << "file: " + System.properties["${appName}.config.location"]
+}
+
 grails.project.groupId = appName 		// change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true 		// enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
@@ -286,43 +294,12 @@ grails.plugins.springsecurity.ui.register.defaultRoleNames = [] 		//DEPLOY: no r
 //These can be overridden by overriding the springSecurityUI.gsp template and including your CSS file(s).
 
 /* ******************************************************************************************************************
- * externalized configuration files
- * see http://grails.org/doc/latest/guid/conf.html#configExternalized
- * *****************************************************************************************************************/
-
-grails.config.locations = [ "classpath:log4j.properties" ]
-
-def ESA_EXTERNAL_CONFIG = "ESAUI_CONFIG_FILE"
-
-boolean externalLocationSet = false
-
-if(!grails.config.locations || !(grails.config.locations instanceof List)) {
-	grails.config.locations = []
-} else {
-	externalLocationSet = true
-}
-
-if(System.getenv(ESA_EXTERNAL_CONFIG)) {
-	grails.config.locations << "file:" + System.getenv(ESA_EXTERNAL_CONFIG)
-	externalLocationSet = true
-} else if(System.getProperty(ESA_EXTERNAL_CONFIG)) {
-	grails.config.locations << "file:" + System.getProperty(ESA_EXTERNAL_CONFIG)
-	externalLocationSet = true
-}
-
-if (externalLocationSet) {
-	println "grails.config.locations: " + grails.config.locations
-} else {
-	println "grails.config.locations: <not set>"
-}
-
-/* ******************************************************************************************************************
  * external-config-reload settings
  * *****************************************************************************************************************/
 
-grails.plugin.reloadConfig.files = []
+grails.plugins.reloadConfig.files = []
 grails.plugins.reloadConfig.includeConfigLocations = true
 grails.plugins.reloadConfig.interval = 5000
 grails.plugins.reloadConfig.enabled = true
-grails.plugins.reloadConfig.notifyPlugins = ["mail", "external-config-reload", "twitter-bootstrap"]
+grails.plugins.reloadConfig.notifyPlugins = ["mail", "external-config-reload", "twitter-bootstrap", "hibernate", "hibernate-search", "jquery", "fields", "resources"]
 grails.plugins.reloadConfig.automerge = true
