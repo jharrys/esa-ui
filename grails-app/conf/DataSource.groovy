@@ -20,10 +20,12 @@ environments
 		hibernate
 		{
 			cache.use_second_level_cache = true
-			cache.use_query_cache = false
+			cache.use_query_cache = true
+			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
+			
+			// use in conjunction with log4j logging works best (don't use logSql = true, not as nice)
 			format_sql = true
 			use_sql_comments = true
-			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
 			
 			// hibernate-search configuration
 			search.default.directory_provider = 'filesystem'
@@ -46,10 +48,12 @@ environments
 		hibernate
 		{
 			cache.use_second_level_cache = true
-			cache.use_query_cache = false
+			cache.use_query_cache = true
+			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
+			
+			// use in conjunction with log4j logging works best (don't use logSql = true, not as nice)
 			format_sql = true
 			use_sql_comments = true
-			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
 		}
 	}
 	
@@ -69,9 +73,11 @@ environments
 		{
 			cache.use_second_level_cache = true
 			cache.use_query_cache = true
+			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
+			
+			// use in conjunction with log4j logging works best (don't use logSql = true, not as nice)
 			format_sql = false
 			use_sql_comments = false
-			cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
 		}
 	}
 }

@@ -3,6 +3,7 @@
 # web application files
 /web-app/WEB-INF
 _git.gsp
+esa-ui-config.groovy
 
 # IDE support files
 /.classpath

@@ -256,7 +256,10 @@ class ProjectController
 
 			[projectInstance: projectInstance]
 			break
+
 			case 'POST':
+
+			log.debug("*** in POST case of edit method")
 			def projectInstance = Project.get(params.id)
 			String userMessage = ""
 
@@ -271,60 +274,40 @@ class ProjectController
 			 */
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy")
 
-			if (params.architect) {
-				params.architect = Party.get(params.architect)
-			} else {
-				params.remove("architect")
-			}
+			def projectProperties = [:]
 
 			if (params.projectManager) {
-				params.projectManager = Party.get(params.projectManager)
-			} else {
-				params.remove("projectManager")
+				projectProperties.projectManager = Party.get(params.projectManager)
 			}
 
 			if (params.dateStart) {
-				params.dateStart = sdf.parse(params.dateStart)
-			} else {
-				params.remove("dateStart")
+				projectProperties.dateStart = sdf.parse(params.dateStart)
 			}
 
 			if (params.dateCompleted) {
-				params.dateCompleted = sdf.parse(params.dateCompleted)
-			} else {
-				params.remove("dateCompleted")
+				projectProperties.dateCompleted = sdf.parse(params.dateCompleted)
 			}
 
-			List<Party> architects = new ArrayList<Party>()
+			def architects = []
 			if (params.architects) {
 				for (String architectId in params.architects) {
 					architects.add(Party.get(architectId))
 				}
-				params.remove("architects")
-			} else {
-				params.remove("architects")
+
+				projectProperties.architects = architects
 			}
 
-			projectInstance.properties = params
+			projectProperties.createdBy = params.createdBy
+			projectProperties.updatedBy = params.updatedBy
 
-			if (!projectInstance.save(flush: true)) {
+			log.debug("*** calling projectService")
+
+			if (!projectService.updateProject(projectInstance, projectProperties)) {
 				render view: 'edit', model: [projectInstance: projectInstance]
 				return
 			}
 
 			userMessage = "ACID " + projectInstance.id + " updated."
-			
-			List<Party> currentParties = ProjectArchitect.where { project == projectInstance }.projections { property('party') }
-
-			if (!architects.empty) {
-				for (Party architect in architects) {
-					ProjectArchitect pa = new ProjectArchitect(party: architect, project: projectInstance, createdBy: params.createdBy, updatedBy: params.updatedBy)
-					if (!pa.save(flush: true)) {
-						userMessage = ((userMessage) ? userMessage + "<br>Unable to save association to Architect with PARTY_ID <" + architect.id + "> and PROJECT_ID <" +
-						projectInstance.id + ">" : "Unable to save association to Architect with PARTY_ID <" + architect.id + "> and PROJECT_ID <" + projectInstance.id + ">" )
-					}
-				}
-			}
 
 			flash.message = userMessage
 			redirect action: 'show', id: projectInstance.id

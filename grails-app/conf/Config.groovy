@@ -8,14 +8,6 @@
  * Author: John Harris
  * *****************************************************************************************************************/
 
-grails.config.locations = [
-                           "classpath: ${appName}-config.groovy",
-                           "file:./${appName}-config.groovy"]
-                        				   
-if (System.properties["${appName}.config.location"]) {
-	grails.config.locations << "file: " + System.properties["${appName}.config.location"]
-}
-
 grails.project.groupId = appName 		// change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true 		// enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
@@ -175,53 +167,28 @@ log4j =
 		development {
 
 			/*
-			 * 'org.hibernate.SQL'  // sql output
-			 * 'org.hibernate.type' // binding variables for sql output
-			 * 'org.hibernate.type.descriptor.sql.BasicBinder' // better than just org.hibernate.type (with hibernate 3.6) - see http://burtbeckwith.com/blog/?p=1604
-			 * 'org.codehaus.groovy.grails.web.sitemesh' // for Layout debugging
-			 * 'grails.plugins.twitterbootstrap // for the css twitter bootstrap plugin
-			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
+			 * grails.app - most everything to do with grails
+			 * grails.app.{domain,controllers,services,taglib}.org.ihc.esa - my package specific code
+			 * org.hibernate.SQL - for hibernate SQL
+			 * org.hibernate.type - for hibernate parameter bindings
+			 * org.hibernate.type.descriptor.sql.BasicBinder - see http://burtbeckwith.com/blog/?p=1604
+			 * org.codehaus.groovy.grails.web.sitemesh - for Layout debugging
+			 * grails.plugins.twitterbootstrap - for the css twitter bootstrap plugin
+			 * grails.plugins.reloadconfig - for external reload configuration plugin
+			 * grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService - for output from springsecurity.ui plugin
+			 * grails.app.services.org.grails.plugins.console.ConsoleService - for output from the console plugin
 			 */
 
-			debug 	'grails.app.controllers.org.ihc.esa',					//My Controllers
-					'grails.app.domain.org.ihc.esa',						//My Domain
-					'grails.app.taglib.org.ihc.esa',						//My Tag library
-					'org.hibernate.SQL'
+			// debug 	'grails.app'
 
-			trace	'org.hibernate.type.descriptor.sql.BasicBinder'			//with parameter bindings
+			// trace	'org.hibernate.type.descriptor.sql.BasicBinder'
 		}
 
 		test {
-
-			/*
-			 * 'org.hibernate.SQL'  // sql output
-			 * 'org.hibernate.type' // binding variables for sql output
-			 * 'org.hibernate.type.descriptor.sql.BasicBinder' // better than just org.hibernate.type (with hibernate 3.6) - see http://burtbeckwith.com/blog/?p=1604
-			 * 'org.codehaus.groovy.grails.web.sitemesh' // for Layout debugging
-			 * 'grails.plugins.twitterbootstrap // for the css twitter bootstrap plugin
-			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
-			 */
-
-			debug 	'grails.app.controllers.org.ihc.esa',					//My Controllers
-					'grails.app.domain.org.ihc.esa',						//My Domain
-					'grails.app.taglib.org.ihc.esa',						//My Tag library
-					'org.hibernate.SQL'
-
-			trace	'org.hibernate.type.descriptor.sql.BasicBinder',		//with parameter bindings
-					'grails.app.services.grails.plugins.springsecurity'
+			// set appropriate defaults for test environment
 		}
 
 		production {
-
-			/*
-			 * 'org.hibernate.SQL'  // sql output
-			 * 'org.hibernate.type' // binding variables for sql output
-			 * 'org.hibernate.type.descriptor.sql.BasicBinder' // better than just org.hibernate.type (with hibernate 3.6) - see http://burtbeckwith.com/blog/?p=1604
-			 * 'org.codehaus.groovy.grails.web.sitemesh' // for Layout debugging
-			 * 'grails.plugins.twitterbootstrap // for the css twitter bootstrap plugin
-			 * 'grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService'
-			 */
-
 			// FIXME: set appropriate production default logging
 		}
 	}
@@ -303,3 +270,16 @@ grails.plugins.reloadConfig.interval = 5000
 grails.plugins.reloadConfig.enabled = true
 grails.plugins.reloadConfig.notifyPlugins = ["mail", "external-config-reload", "twitter-bootstrap", "hibernate", "hibernate-search", "jquery", "fields", "resources"]
 grails.plugins.reloadConfig.automerge = true
+
+/* ******************************************************************************************************************
+ * application configuration files
+ * *****************************************************************************************************************/
+
+grails.config.locations = [
+	"classpath: ${appName}-config.groovy",
+	"file:./${appName}-config.groovy"]
+
+if (System.properties["${appName}.config.location"]) {
+	grails.config.locations << "file:" + System.properties["${appName}.config.location"]
+	println "JJJJJ -- " + grails.config.locations
+}
