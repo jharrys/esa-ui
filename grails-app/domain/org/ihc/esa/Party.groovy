@@ -100,6 +100,7 @@ class Party
 		id generator:'sequence', params:[sequence:'PARTY_SEQ']
 		table 'PARTY'
 		version false
+		cache true
 
 		externalId column: 'EXTERNAL_ID'
 		type column: 'TYPE'
@@ -115,8 +116,8 @@ class Party
 		updatedBy column: 'UPDATED_BY'
 
 		//validated: addresses, items
-		addresses joinTable: [ name: 'PARTY_ADDRESS', key: 'PARTY_ID', column: 'ADDRESS_ID']
-		items joinTable: [ name: 'ITEM', key: 'VENDOR_PARTY_ID' ]
+		addresses cache:true, joinTable: [ name: 'PARTY_ADDRESS', key: 'PARTY_ID', column: 'ADDRESS_ID']
+		items cache: true, joinTable: [ name: 'ITEM', key: 'VENDOR_PARTY_ID' ]
 
 		partyRelationshipParty joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'PARENT_PARTY_ID']
 		partyRelationshipParty1 joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'CHILD_PARTY_ID']
@@ -141,19 +142,19 @@ class Party
 	/**
 	 * id - because name can be null
 	 *
-	 * @param party to compare to
+	 * @param object to compare to
 	 * @return boolean
 	 */
-	@Override public boolean equals(Object party)
+	@Override public boolean equals(Object object)
 	{
 
-		if (!(party instanceof Party)) return false
+		if (!(object instanceof Party)) return false
 
-		if (party == null) return false
+		if (object == null) return false
 
-		if (this.is(party)) return true
+		if (this.is(object)) return true
 
-		if (party.id.equals(this.id))	return true
+		if (object.id.equals(this.id))	return true
 
 		return false
 	}

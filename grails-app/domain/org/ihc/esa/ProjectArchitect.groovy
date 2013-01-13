@@ -45,6 +45,7 @@ class ProjectArchitect
 		id generator:'sequence', params:[sequence:'PROJECT_ARCHITECT_SEQ']
 		table 'PROJECT_ARCHITECT'
 		version false
+		cache true
 
 		party column: 'PARTY_ID'
 		project column: 'PROJECT_ID'
@@ -67,19 +68,19 @@ class ProjectArchitect
 	/**
 	 * party, project, dateCreated and createdBy
 	 *
-	 * @param projectArchitect to compare to
+	 * @param object to compare to
 	 * @return boolean
 	 */
-	@Override public boolean equals(ProjectArchitect projectArchitect)
+	@Override public boolean equals(Object object)
 	{
 
-		if (this.is(projectArchitect)) return true
+		if (!(object instanceof ProjectArchitect)) return false
 
-		if (projectArchitect == null) return false
+		if (object == null) return false
 
-		if (projectArchitect.getClass() != getClass()) return false
+		if (this.is(object)) return true
 
-		if (projectArchitect.party.equals(this.party) && projectArchitect.project(this.project) && projectArchitect.dateCreated.equals(this.dateCreated) && projectArchitect.createdBy.equals(this.createdBy))
+		if (object.party.equals(this.party) && object.project(this.project) && object.dateCreated.equals(this.dateCreated) && object.createdBy.equals(this.createdBy))
 		{
 			return true
 		}

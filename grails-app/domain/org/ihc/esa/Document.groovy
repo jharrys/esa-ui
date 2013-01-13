@@ -106,8 +106,11 @@ class Document
 		id generator:'sequence', params:[sequence:'DOCUMENT_SEQ']
 		table 'DOCUMENT'
 		version false
+		cache true
 
-		attachments sort: 'name'
+		items cache:true
+		responses cache:true
+		attachments cache:true, sort: 'name'
 
 		form column: 'FORM_ID'
 		dateCreated column: 'DATE_CREATED'
@@ -126,21 +129,36 @@ class Document
 	}
 
 	/**
+	 * Natural order based strictly off of name
+	 * TODO: does compareTo have to satisfy the equals and hashCode? verify ...
+	 */
+	public int compareTo(Document d)
+	{
+		int EQUAL = 0
+
+		if (this.is(d)) return EQUAL
+
+		if (this.equals(d)) return EQUAL
+
+		return this.getTitle().compareToIgnoreCase(d.getTitle())
+	}
+
+	/**
 	 * equality based on id and form
 	 *
-	 * @param c
+	 * @param object
 	 * @return
 	 */
-	@Override public boolean equals(Document o)
+	@Override public boolean equals(Object object)
 	{
 
-		if (this.is(o)) return true
+		if (!(object instanceof Document)) return false
 
-		if (o == null) return false
+		if (object == null) return false
 
-		if (o.getClass() != getClass()) return false
+		if (this.is(object)) return true
 
-		if (o.form.equals(this.form) && o.dateCreated.equals(this.dateCreated) && o.createdBy.equals(this.createdBy)) return true
+		if (object.form.equals(this.form) && object.dateCreated.equals(this.dateCreated) && object.createdBy.equals(this.createdBy)) return true
 
 		return false
 	}
@@ -159,18 +177,4 @@ class Document
 		return this.hashCode
 	}
 
-	/**
-	 * Natural order based strictly off of name
-	 * TODO: does compareTo have to satisfy the equals and hashCode? verify ...
-	 */
-	public int compareTo(Document d)
-	{
-		int EQUAL = 0
-
-		if (this.is(d)) return EQUAL
-
-		if (this.equals(d)) return EQUAL
-
-		return this.getTitle().compareToIgnoreCase(d.getTitle())
-	}
 }

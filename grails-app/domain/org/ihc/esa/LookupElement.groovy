@@ -13,7 +13,7 @@ package org.ihc.esa
  * {@link #value} a value for this element (Required).<br />
  * {@link #display} is a string to render to end-user (Required).<br />
  * </p>
- * 
+ *
  * @author lpjharri
  * @since 1.0
  * @see LookupList
@@ -47,6 +47,7 @@ class LookupElement
 		id generator:'sequence', params:[sequence:'LOOKUP_ELEMENT_SEQ']
 		table 'LOOKUP_ELEMENT'
 		version false
+		cache true
 		
 		lookupList column: 'LOOKUP_LIST_ID'
 		value column: 'VALUE'

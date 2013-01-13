@@ -9,7 +9,7 @@ package org.ihc.esa
  * <p>
  * Category represents a hierarchy of nodes much like a file systems
  * folder/sub-folder structure. Each node may contain other nodes or leaf nodes.
- * The Category container is used to hold object of type {@link Item}. 
+ * The Category container is used to hold object of type {@link Item}.
  * </p>
  * Implements Comparable
  * </p>
@@ -31,33 +31,33 @@ class Category implements Comparable<Category>
 	 * Note parentCategory == this for root nodes.
 	 */
 	Category parentCategory
-	
+
 	/**
 	 * Required. The full string path including the root node and delimiter '/'.
 	 * This is done to avoid a recursive query.
 	 */
 	String parentCategoryPath
-	
+
 	/**
 	 * Name for this node or container.
 	 * Required.
 	 */
 	String name
-	
+
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
-	
+
 	int hashCode = 0
-	
+
 	static transients = ['hashCode']
-	
+
 	static hasMany = [
 		categories: Category,
 		items: Item
 	]
-	
+
 	/**
 	 * Category maps to table CATEGORY
 	 */
@@ -66,9 +66,10 @@ class Category implements Comparable<Category>
 		id generator:'sequence', params:[sequence:'CATEGORY_SEQ']
 		table 'CATEGORY'
 		version false
-		
-		categories sort: 'name'
-		
+		cache true
+
+		categories cache:true, sort: 'name'
+
 		parentCategory column: 'PARENT_CATEGORY_ID'
 		parentCategoryPath column: 'PARENT_CATEGORY_PATH'
 		name column: 'NAME'
@@ -76,12 +77,12 @@ class Category implements Comparable<Category>
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
-		
-		items joinTable: [name: 'ITEM_CATEGORY',
+
+		items cache:true, joinTable: [name: 'ITEM_CATEGORY',
 							key: 'CATEGORY_ID',
 							column: 'ITEM_ID']
 	}
-	
+
 	static constraints =
 	{
 		parentCategory nullable: false
@@ -92,54 +93,54 @@ class Category implements Comparable<Category>
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
 	}
-	
+
 	/**
 	 * Natural order based strictly off of name
 	 */
 	public int compareTo(Category c)
 	{
 		int EQUAL = 0
-		
+
 		if (this.is(c)) return EQUAL
-		
+
 		if (this.equals(c)) return EQUAL
-		
+
 		int r1 = this.parentCategoryPath.compareToIgnoreCase(c.parentCategoryPath)
-		
+
 		if (r1 == 0)
 		{
 			return this.name.compareToIgnoreCase(c.name)
 		}
-		
+
 		return r1
 	}
-	
+
 	/**
 	 * Should only have one Category with String Abc==aBC
-	 * 
-	 * @param c
+	 *
+	 * @param object
 	 * @return
 	 */
-	@Override public boolean equals(Category o)
+	@Override public boolean equals(Object object)
 	{
-		
-		if (o == null) return false
-		
-		if (this.is(o)) return true
-		
-		if (o.getClass() != getClass()) return false
-		
-		if (this.name.equalsIgnoreCase(o.name))
+
+		if (!(object instanceof Category)) return false
+
+		if (object == null) return false
+
+		if (this.is(object)) return true
+
+		if (this.name.equalsIgnoreCase(object.name))
 		{
-			if (this.parentCategory.id.equals(o.parentCategory.id))
+			if (this.parentCategory.id.equals(object.parentCategory.id))
 			{
 				return true
 			}
 		}
-		
+
 		return false
 	}
-	
+
 	@Override public int hashCode()
 	{
 
@@ -149,7 +150,7 @@ class Category implements Comparable<Category>
 			result = (37*result) + this.parentCategory.id.hashCode()
 			this.hashCode = result
 		}
-		
+
 		return this.hashCode
 	}
 }

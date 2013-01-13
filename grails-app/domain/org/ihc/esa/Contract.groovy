@@ -45,6 +45,9 @@ class Contract
 		id generator:'sequence', params:[sequence:'CONTRACT_SEQ']
 		table 'CONTRACT'
 		version false
+		cache true
+		
+		items cache:true
 		
 		contractNumber column: 'CONTRACT_NUMBER'
 		dateCreated column: 'DATE_CREATED'

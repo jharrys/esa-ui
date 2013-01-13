@@ -124,6 +124,7 @@ class Project
 		id generator:'sequence', params:[sequence:'PROJECT_SEQ']
 		table 'PROJECT'
 		version false
+		cache true
 
 		name column: 'NAME'
 		type column: 'TYPE'
@@ -137,7 +138,7 @@ class Project
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
 
-		architects joinTable: [ name: 'PROJECT_ARCHITECT', key: 'PROJECT_ID', column: 'PARTY_ID' ]
+		architects cache:true, joinTable: [ name: 'PROJECT_ARCHITECT', key: 'PROJECT_ID', column: 'PARTY_ID' ]
 	}
 
 	static constraints =
@@ -158,21 +159,21 @@ class Project
 	/**
 	 * name, type, status, dateStart, dateCreated and createdBy
 	 *
-	 * @param project to compare to
+	 * @param object to compare to
 	 * @return boolean
 	 */
-	@Override public boolean equals(Project project)
+	@Override public boolean equals(Object object)
 	{
 
-		if (this.is(project)) return true
+		if (!(object instanceof Project)) return false
 
-		if (project == null) return false
+		if (object == null) return false
 
-		if (project.getClass() != getClass()) return false
+		if (this.is(object)) return true
 
-		if (project.name.equalsIgnoreCase(this.name) && project.type(this.type) && project.status.equals(this.status) && project.dateStart.equals(this.dateStart))
+		if (object.name.equalsIgnoreCase(this.name) && object.type(this.type) && object.status.equals(this.status) && object.dateStart.equals(this.dateStart))
 		{
-			if (project.dateCreated.equals(this.dateCreated) && project.createdBy.equalsIgnoreCase(this.createdBy))
+			if (object.dateCreated.equals(this.dateCreated) && object.createdBy.equalsIgnoreCase(this.createdBy))
 			{
 				return true
 			}
@@ -223,10 +224,10 @@ class Project
 		}
 		return result
 	}
-	
+
 	/**
 	 * Return count
-	 * 
+	 *
 	 * @param partyId
 	 * @return
 	 */

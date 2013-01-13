@@ -33,105 +33,105 @@ class FormField
 	 * Required.
 	 */
 	Form form
-	
+
 	/**
 	 * Optional field for rendering presentation.
 	 * FIXME: Correct number type
 	 */
 	BigDecimal pageNumber
-	
+
 	/**
 	 * A required field for rendering presentation.
 	 * FIXME: Correct number type
 	 */
 	BigDecimal sectionNumber
-	
+
 	/**
 	 * An optional field for rendering presentation.
 	 * FIXME: Correct number type
 	 */
 	BigDecimal orderNumber
-	
+
 	/**
 	 * Tells rendering system whether this FormField requires a response.
 	 * Default "N".
 	 */
 	String required = "N"
-	
+
 	/**
 	 * Tells rendering system whether this FormField should be rendered to basic end-user.
 	 * Default "N".
 	 */
 	String internalOnly = "N"
-	
+
 	/**
 	 * Required FormField. The question to render.
 	 */
 	String question
-	
+
 	/**
 	 * Optional. Not sure what it's use is for.
 	 */
 	String searchListing
-	
+
 	/**
 	 * Optional. Expresses the type of data for response.
 	 */
 	String dataType
-	
+
 	/**
 	 * Tells rendering system whether {@link #lookupList} is multi-select or not.
 	 * Default "N".
 	 */
 	String multiSelect
-	
+
 	/**
 	 * The default value for a String type.
 	 * Optional.
 	 */
 	String defaultValueString
-	
+
 	/**
 	 * The default value for a Float type.
 	 * Optional.
 	 * FIXME: Correct number type
 	 */
 	BigDecimal defaultValueFloat
-	
+
 	/**
 	 * The default value for a Date type.
 	 * Optional.
 	 */
 	Date defaultValueDate
-	
+
 	/**
 	 * Optional {@link LookupList} to render to the end-user.
 	 */
 	LookupList lookupList
-	
+
 	/**
 	 * Optional input type to render to the end-user.
 	 */
 	String formInputType
-	
+
 	/**
 	 * Optional css class for web rendering systems.
 	 */
 	String cssClass
-	
+
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
-	
+
 	int hashCode = 0
-	
+
 	/**
 	 * A derived field to ease computation of value, since value
 	 * can be of three different types.
 	 */
 	def defaultValue = null
-	
+
 	def getDefaultValue() {
 		if (this.defaultValue == null) {
 			if (defaultValueString != null) {
@@ -142,18 +142,18 @@ class FormField
 				this.defaultValue = defaultValueFloat
 			}
 		}
-		
+
 		return this.defaultValue
 	}
-	
+
 	static transients = ['defaultValue', 'hashCode']
-	
+
 	static hasMany = [
 		responseToQuestion: QuestionResponse
 	]
-	
+
 	static belongsTo = Form
-	
+
 	/**
 	 * FormField maps to table FORM_FIELD
 	 */
@@ -162,7 +162,10 @@ class FormField
 		id generator:'sequence', params:[sequence:'FORM_FIELD_SEQ']
 		table 'FORM_FIELD'
 		version false
-		
+		cache true
+
+		responseToQuestion cache:true
+
 		form column: 'FORM_ID'
 		pageNumber column: 'PAGE_NUMBER'
 		sectionNumber column: 'SECTION_NUMBER'
@@ -184,7 +187,7 @@ class FormField
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
 	}
-	
+
 	static constraints =
 	{
 		form nullable: false
@@ -194,7 +197,7 @@ class FormField
 		required nullable: true, inList: ["Y","N"], blank: false, size: 1..1
 		internalOnly nullable: true, inList: ["Y","N"], blank: false, size: 1..1
 		question nullable: false, blank: false, size: 1..4000
-		searchListing nullable: true, inList:["Y","N"], blank: false, size: 1..1 
+		searchListing nullable: true, inList:["Y","N"], blank: false, size: 1..1
 		dataType nullable: true, blank: false, size: 1..20
 		multiSelect nullable: true, inList: ["Y","N"], blank: false, size: 1..1
 		defaultValueString nullable: true, blank: false, size: 1..4000
@@ -208,28 +211,28 @@ class FormField
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
 	}
-	
+
 	/**
 	 * equality tests
 	 *
-	 * @param c
+	 * @param object
 	 * @return
 	 */
-	@Override public boolean equals(FormField o)
+	@Override public boolean equals(Object object)
 	{
-		
-		if (this.is(o)) return true
 
-		if (o == null) return false
-		
-		if (o.getClass() != getClass()) return false
-		
-		if (o.form.equals(this.form) && o.question.equalsIgnoreCase(this.question) && o.dataType?.equalsIgnoreCase(this.dataType) 
-			&& o.dateCreated.equals(this.dateCreated)) return true
-		
+		if (!(object instanceof FormField)) return false
+
+		if (object == null) return false
+
+		if (this.is(object)) return true
+
+		if (object.form.equals(this.form) && object.question.equalsIgnoreCase(this.question) && object.dataType?.equalsIgnoreCase(this.dataType)
+			&& object.dateCreated.equals(this.dateCreated)) return true
+
 		return false
 	}
-	
+
 	@Override public int hashCode()
 	{
 
@@ -241,7 +244,7 @@ class FormField
 			result = (37*result) + this.dateCreated.hashCode()
 			this.hashCode = result
 		}
-		
+
 		return this.hashCode
 	}
 }

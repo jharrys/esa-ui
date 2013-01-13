@@ -12,7 +12,7 @@ package org.ihc.esa
  * <p>
  * Note the derived field {@link #value}
  * </p>
- * 
+ *
  * @author lpjharri
  * @since 1.0
  * @see FormField
@@ -24,46 +24,46 @@ class QuestionResponse
 	 * Required. The owning {@link FormField} or question for this specific answer.
 	 */
 	FormField formField
-	
+
 	/**
 	 * Required. The owning {@link Document} that displays this particular answer.
 	 */
 	Document document
-	
+
 	/**
 	 * Optional value of type String.
 	 * Note that one of stringValue, {@link #floatValue} and {@link #dateValue} is required.
 	 */
 	String stringValue
-	
+
 	/**
 	 * FIXME: Choose better type
 	 * Optional value of type {@link BigDecimal}.
 	 * Note that one of {@link #stringValue}, floatValue and {@link #dateValue} is required.
 	 */
 	BigDecimal floatValue
-	
+
 	/**
 	 * Optional value of type Date.
 	 * Note that one of {@link #stringValue}, {@link #floatValue} and dateValue is required.
 	 */
 	Date dateValue
-	
+
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
-	
+
 	int hashCode = 0
-	
+
 	/**
 	 * This value is derived from the getter {@link #getValue()}
 	 */
 	def value = null
-	
+
 	/**
 	 * getter method for derived field {@link #value}
-	 * 
+	 *
 	 * @return the string, float or date value
 	 */
 	def getValue() {
@@ -78,56 +78,57 @@ class QuestionResponse
 				this.errors.reject("${id} does not have a value set")
 			}
 		}
-		
+
 		return this.value
 	}
-	
+
 	private Form form = null
-	
+
 	/**
 	 * cache the form for easy access
-	 * 
+	 *
 	 * @return the {@link Form} tied to this QuestionResponse
 	 */
 	public Form getForm() {
 		if (this.form == null) {
 			this.form = document.form
 		}
-		
+
 		return this.form
 	}
-	
+
 	static private Map<Form,List<FormField>> formFieldCacheMap = new HashMap<Form,List<FormField>>()
-	
+
 	/**
 	 * Retrieve the list of {@link FormField}'s for a give {@link Form}. Cache them statically when found.
-	 * 
+	 *
 	 * FIXME: Need to handle changes to the FormField list without having to bounce the webapp
-	 * 
+	 *
 	 * @param the Form the requested FormFields are linked to
 	 * @return a {@link java.util.List} of {@link FormField} used by this {@link Form}
 	 */
 	static public List<FormField> getAllFormFieldsOfForm(Form form) {
 		List<FormField> list = formFieldCacheMap.get(form)
-		
+
 		if (list == null) {
 			list = FormField.findAllByForm(form)
 			if (list) formFieldCacheMap.put(form, list)
 		}
-		
+
 		return list
 	}
-	
+
 	static transients = ['value', 'form', 'hashCode', 'formFieldCacheMap']
-	
+
 	static belongsTo = [ Document, FormField ]
-	
+
 	static mapping =
 	{
 		id generator:'sequence', params:[sequence:'QUESTION_RESPONSE_SEQ']
 		table 'QUESTION_RESPONSE'
 		version false
-		
+		cache true
+
 		formField column: 'FORM_FIELD_ID'
 		document column: 'DOCUMENT_ID'
 		stringValue column: 'STRING_VALUE'
@@ -138,7 +139,7 @@ class QuestionResponse
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
 	}
-	
+
 	// FIXME: add my own validator to make sure one of stringValue, floatValue and dateValue is specified.
 	static constraints =
 	{
@@ -152,46 +153,41 @@ class QuestionResponse
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
 	}
-	
+
 	/**
 	 * equality tests
 	 *
-	 * @param c
+	 * @param object
 	 * @return
 	 */
-	@Override public boolean equals(QuestionResponse o)
+	@Override public boolean equals(Object object)
 	{
-		
-		if (this.is(o)) return true
 
-		if (o == null) return false
-		
-		if (o.getClass() != getClass()) return false
-		
-		if (!o.formField.equals(this.formField)) return false
+		if (!(object instanceof QuestionResponse)) return false
 
-		if (!o.document.equals(this.document)) return false
-		
-		if (o.getValue().equals(this.getValue())) return true
-		
+		if (object == null) return false
+
+		if (this.is(object)) return true
+
+		if (!object.formField.equals(this.formField)) return false
+
+		if (!object.document.equals(this.document)) return false
+
+		if (object.getValue().equals(this.getValue())) return true
+
 		return false
 	}
-	
+
 	@Override public int hashCode()
 	{
 		if (this.hashCode==0) {
-			log.debug("attempting to calculate hashCode...")
 			int result = 17
-			log.debug("hashing formField")
 			result = (37*result) + this.formField.hashCode()
-			log.debug("hashing document")
 			result = (37*result) + this.document.hashCode()
-			log.debug("hashing getValue()")
 			result = (37*result) + this.getValue().hashCode()
 			this.hashCode = result
-			log.debug("calculated " + result)
 		}
-		
+
 		return this.hashCode
 	}
 }

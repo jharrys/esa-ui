@@ -7,7 +7,7 @@ package org.ihc.esa
 
 /**
  * <p>
- * Represents the join table between {@link Item} and {@link Category} 
+ * Represents the join table between {@link Item} and {@link Category}
  * </p>
  * @author lpjharri
  * @since 1.0
@@ -21,32 +21,31 @@ class ItemCategory
 	 * Required. The Item of this relationship.
 	 */
 	Item item
-	
+
 	/**
 	 * Required. The category that item falls into.
 	 */
 	Category category
-	
+
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
-	
+
 	int hashCode = 0
-	
+
 	static transients = ['hashCode']
-	
+
 	/**
 	 * Category maps to table ITEM_CATEGORY
 	 */
 	static mapping =
 	{
-		cache true
-		
 		id generator:'sequence', params:[sequence:'ITEM_CATEGORY_SEQ']
 		table 'ITEM_CATEGORY'
 		version false
-		
+		cache true
+
 		item column: 'ITEM_ID'
 		category column: 'CATEGORY_ID'
 		dateCreated column: 'DATE_CREATED'
@@ -54,7 +53,7 @@ class ItemCategory
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
 	}
-	
+
 	static constraints =
 	{
 		item nullable: false
@@ -64,29 +63,29 @@ class ItemCategory
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
 	}
-	
+
 	/**
 	 * equality tests
 	 *
-	 * @param c
+	 * @param object
 	 * @return
 	 */
-	@Override public boolean equals(ItemCategory o)
+	@Override public boolean equals(Object object)
 	{
-		
-		if (this.is(o)) return true
 
-		if (o == null) return false
-		
-		if (o.getClass() != getClass()) return false
-		
-		if (!o.item.equals(this.item)) return false
+		if (!(object instanceof ItemCategory)) return false
 
-		if (!o.category.equals(this.category)) return false
-		
+		if (object == null) return false
+
+		if (this.is(object)) return true
+
+		if (object.item.equals(this.item)) return true
+
+		if (object.category.equals(this.category)) return true
+
 		return false
 	}
-	
+
 	@Override public int hashCode()
 	{
 
@@ -96,7 +95,7 @@ class ItemCategory
 			result = (37*result) + this.category.hashCode()
 			this.hashCode = result
 		}
-		
+
 		return this.hashCode
 	}
 }

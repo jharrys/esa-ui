@@ -35,27 +35,27 @@ class Form
 	 * Required.
 	 */
 	String name
-	
+
 	/**
 	 * Description of this form type.
 	 * Not required.
 	 */
 	String description
-	
+
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
-	
+
 	int hashCode = 0
-	
+
 	static transients = ['hashCode']
-	
+
 	static hasMany = [
 		anInstanceOfForm: Document,
 		formFields: FormField
 	]
-	
+
 	/**
 	 * Form maps to table FORM
 	 */
@@ -65,7 +65,11 @@ class Form
 		table 'FORM'
 		version false
 		autoTimestamp true
-		
+		cache true
+
+		anInstanceOfForm cache:true
+		formFields cache:true
+
 		name column: 'NAME'
 		description column: 'DESCRIPTION'
 		dateCreated column: 'DATE_CREATED'
@@ -73,7 +77,7 @@ class Form
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
 	}
-	
+
 	static constraints =
 	{
 		name nullable: false
@@ -83,27 +87,27 @@ class Form
 		lastUpdated nullable: true
 		updatedBy nullable: false, size: 1..40
 	}
-	
+
 	/**
 	 * equality based on id and name (case ignored)
 	 *
-	 * @param c
+	 * @param object
 	 * @return
 	 */
-	@Override public boolean equals(Form o)
+	@Override public boolean equals(Object object)
 	{
-		
-		if (this.is(o)) return true
 
-		if (o == null) return false
-		
-		if (o.getClass() != getClass()) return false
-		
-		if (o.dateCreated.equals(this.dateCreated) && o.name.equalsIgnoreCase(this.name)) return true
-		
+		if (!(object instanceof Form)) return false
+
+		if (object == null) return false
+
+		if (this.is(object)) return true
+
+		if (object.dateCreated.equals(this.dateCreated) && object.name.equalsIgnoreCase(this.name)) return true
+
 		return false
 	}
-	
+
 	@Override public int hashCode()
 	{
 
@@ -113,7 +117,7 @@ class Form
 			result = (37*result) + this.dateCreated.hashCode()
 			this.hashCode = result
 		}
-		
+
 		return this.hashCode
 	}
 }

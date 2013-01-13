@@ -48,6 +48,10 @@ class Note
 	Date lastUpdated
 	String updatedBy
 
+	int hashCode = 0
+
+	static transients = ['hashCode']
+
 	/*
 	 * Many Item(s) to One Note (Parent: Item, Child: Note) (Many - One relationship)
 	 * Many Project(s) to One Note (Parent: Project, Child: Note) (Many - One relationship)
@@ -62,6 +66,7 @@ class Note
 		id generator:'sequence', params:[sequence:'NOTE_SEQ']
 		table 'NOTE'
 		version false
+		cache true
 
 		item column: 'ITEM_ID'
 		project column: 'PROJECT_ID'
@@ -83,5 +88,39 @@ class Note
 		createdBy nullable: false, size: 1..40
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
+	}
+
+	/**
+	 * equality
+	 *
+	 * @param object to compare to
+	 * @return boolean
+	 */
+	@Override public boolean equals(Object object)
+	{
+
+		if (!(object instanceof Note)) return false
+
+		if (object == null) return false
+
+		if (this.is(object)) return true
+
+		if (object.text.equalsIgnoreCase(this.text) && object.id.equals(this.id))	return true
+
+		return false
+	}
+
+	@Override public int hashCode()
+	{
+
+		if (this.hashCode==0)
+		{
+			int result = 17
+			result = (37*result) + this.text.toLowerCase().hashCode()
+			result = (37*result) + this.id.hashCode()
+			this.hashCode = result
+		}
+
+		return this.hashCode
 	}
 }

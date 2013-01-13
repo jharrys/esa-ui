@@ -283,6 +283,7 @@ class Item
 		id generator:'sequence', params:[sequence:'ITEM_SEQ']
 		table 'ITEM'
 		version false
+		cache true
 
 		externalId column: 'EXTERNAL_ID'
 		sourceSystem column: 'SOURCE_SYSTEM'
@@ -319,11 +320,11 @@ class Item
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
 
-		categories joinTable: [name: 'ITEM_CATEGORY',
+		categories cache:true, joinTable: [name: 'ITEM_CATEGORY',
 			key: 'ITEM_ID',
 			column: 'CATEGORY_ID']
 
-		catalogs joinTable: [name: 'CATALOG_ITEM',
+		catalogs cache:true, joinTable: [name: 'CATALOG_ITEM',
 			key: 'ITEM_ID',
 			column: 'CATALOG_ID']
 	}
@@ -369,22 +370,22 @@ class Item
 	/**
 	 * name, standard, exception, deviation, inService, exceptionRequired, dateCreated and createdBy
 	 *
-	 * @param
+	 * @param object
 	 * @return boolean
 	 */
-	@Override public boolean equals(Item item)
+	@Override public boolean equals(Object object)
 	{
 
-		if (this.is(item)) return true
+		if (!(object instanceof Item)) return false
 
-		if (item == null) return false
+		if (object == null) return false
 
-		if (item.getClass() != getClass()) return false
+		if (this.is(object)) return true
 
-		if (item.name.equalsIgnoreCase(this.name) && item.standard.equalsIgnoreCase(this.standard) && item.standardType.equals(this.standardType) && item.exception.equalsIgnoreCase(this.exception)) {
-			if (item.deviation.equalsIgnoreCase(this.deviation) && item.inService.equalsIgnoreCase(this.inService)) {
-				if (item.exceptionRequired.equalsIgnoreCase(this.exceptionRequired)) {
-					if (item.createdBy.equalsIgnoreCase(this.createdBy)) {
+		if (object.name.equalsIgnoreCase(this.name) && object.standard.equalsIgnoreCase(this.standard) && object.standardType.equals(this.standardType) && object.exception.equalsIgnoreCase(this.exception)) {
+			if (object.deviation.equalsIgnoreCase(this.deviation) && object.inService.equalsIgnoreCase(this.inService)) {
+				if (object.exceptionRequired.equalsIgnoreCase(this.exceptionRequired)) {
+					if (object.createdBy.equalsIgnoreCase(this.createdBy)) {
 						return true
 					}
 				}
