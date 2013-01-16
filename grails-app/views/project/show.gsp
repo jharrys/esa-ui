@@ -80,7 +80,7 @@
 					<g:if test="${projectInstance?.projectManager}">
 						<dt><g:message code="project.projectManager.label" default="Project Manager" /></dt>
 
-							<dd><g:link controller="party" action="show" id="${projectInstance?.projectManager?.id}">${projectInstance?.projectManager?.encodeAsHTML()}</g:link></dd>
+							<dd><g:link controller="party" action="show" id="${projectInstance?.projectManager?.id}">${projectInstance?.projectManager?.name?.encodeAsHTML()}</g:link></dd>
 
 					</g:if>
 
