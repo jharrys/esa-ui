@@ -50,8 +50,8 @@ grails.project.dependency.resolution =
 		compile ":webxml:1.4.1"
 		compile ":jmx:0.8"
 		compile ":twitter-bootstrap:2.2.2"
+		compile ":external-config-reload:1.2.2"
 		
-		runtime ":external-config-reload:1.2.2"
 		runtime ":cache-headers:1.1.5"
 		runtime ":zipped-resources:1.0"
 		runtime ":cached-resources:1.0"
