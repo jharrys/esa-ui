@@ -281,5 +281,4 @@ grails.config.locations = [
 
 if (System.properties["${appName}.config.location"]) {
 	grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-	println "JJJJJ -- " + grails.config.locations
 }
