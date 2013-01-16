@@ -53,22 +53,27 @@ class ProjectController
 			case 'GET':
 			log.debug("*** in GET method ***")
 
+			def result = null
+
+			// Set max, offset. sort & order parameters for resultset
+			params.sort = "lastUpdated"
+			params.order = "desc"
+
 			if (params.mine && params.mine.equals('true'))
 			{
 				params.filter = "on"
 				log.debug("*** param 'mine' found and is 'true' ***")
 				log.debug("*** filter is set to 'on' ***")
-				def result = projectService.findProjectByArchitectId(architectId, params)
-				projectInstanceList = result.projectInstanceList
-				projectInstanceTotal = result.projectInstanceTotal
+				result = projectService.findProjectByArchitectId(architectId, params)
 			} else
 			{
 				log.debug("*** no filter set, returning full list of projects")
 				params.filter = "off"
-				def result = projectService.findProjectByArchitectId(null, params)
-				projectInstanceList = result.projectInstanceList
-				projectInstanceTotal = result.projectInstanceTotal
+				result = projectService.findProjectByArchitectId(null, params)
 			}
+
+			projectInstanceList = result.projectInstanceList
+			projectInstanceTotal = result.projectInstanceTotal
 
 			log.debug("*** returning the following:")
 			log.debug("*** projectInstanceList: " + projectInstanceList)
@@ -87,7 +92,7 @@ class ProjectController
 
 			if (params.setFilter.equals('off')) {
 				log.debug("*** start clear filter ***")
-				params.max = Math.min(params.max ? params.int('max') : 5, 100)
+				params.max = Math.min(params.max ? params.int('max') : 10, 100)
 				params.remove('filterByType')
 				params.remove('filterByStatus')
 				params.remove('filterByArchitect')
@@ -98,7 +103,7 @@ class ProjectController
 			} else {
 				log.debug("*** adding filter")
 				params.filter = "on"
-				params.max = Math.min(params.max ? params.int('max') : 5, 100)
+				params.max = Math.min(params.max ? params.int('max') : 10, 100)
 
 				List<Long> projectListForArchitect = new ArrayList<Long>()
 				if (params.filterByArchitect) {
@@ -161,6 +166,8 @@ class ProjectController
 
 	def show() {
 		def projectInstance = Project.get(params.id)
+		// I'm not using/configuring 2nd level cache correctly - I shouldn't have to do this?
+		projectInstance.refresh()
 		if (!projectInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.id])
 			redirect action: 'list'

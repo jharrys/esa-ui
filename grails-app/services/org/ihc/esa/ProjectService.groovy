@@ -12,9 +12,9 @@ class ProjectService
 		Integer projectInstanceTotal = 0
 		Map pagination = new HashMap()
 		
-		pagination.max = Math.min(params.max ? params.int('max') : 5, 100)
+		pagination.max = Math.min(params.max ? params.int('max') : 10, 100)
 		pagination.offset = params.int('offset')
-		pagination.cache = true
+		//pagination.cache = true
 		
 		if (architectId)
 		{
@@ -24,7 +24,9 @@ class ProjectService
 		} else
 		{
 			log.debug("*** architectId is null or 0 so returning the full list")
-			projectInstanceList = Project.listOrderByLastUpdated(pagination)
+			if (params.sort) { pagination.sort = params.sort }
+			if (params.order) { pagination.order = params.order }
+			projectInstanceList = Project.list(pagination)
 			projectInstanceTotal = Project.count()
 		}
 		
@@ -38,13 +40,14 @@ class ProjectService
 		def attr = [createdBy: props.createdBy, updatedBy: props.updatedBy]
 		
 		result = updateProjectArchitects(project, props.architects, attr)
+		log.debug("*** updateProjectArchitects resulted in ${result}")
 		
 		return result
 	}
 	
 	private boolean updateProjectArchitects(Project project, List<Party> architectsToAdd, def attr)
 	{
-		boolean result = false
+		boolean success = true
 		
 		List<Party> allCurrentArchitects = ProjectArchitect.where
 						{ project == project }.projections
@@ -76,8 +79,10 @@ class ProjectService
 				ProjectArchitect pa = new ProjectArchitect(party: architect, project: project, createdBy: attr.createdBy, updatedBy: attr.updatedBy)
 				if (pa.save(flush: true))
 				{
-					log.debug("*** new projectarchitect saved with ${architect.name}")
-					result = true
+					log.debug("*** new association between ${project.name} and ${architect.name} has been saved correctly.")
+				} else {
+					log.error("*** unable to save a new association between ${project.name} and ${architect.name}.")
+					success = false
 				}
 			}
 		}
@@ -86,15 +91,36 @@ class ProjectService
 		{
 			for (Party architect in architectsToRemove)
 			{
-				ProjectArchitect pa = new ProjectArchitect(party: architect, project: project, createdBy: attr.createdBy, updatedBy: attr.updatedBy)
-				if (pa.save(flush: true))
-				{
-					log.debug("*** removed projectarchitect with ${architect.name}")
-					result = true
+				ProjectArchitect pa = ProjectArchitect.findByProjectAndParty(project, architect)
+				String logPaInfo = (pa ? "pa object exists" : "pa object does not exist")
+				String logPaAttached = pa.isAttached()
+				String logPaId = pa?.id.toString()
+				String logPaProjectId = pa?.project.id.toString()
+				String logPaPartyId = pa?.party.id.toString()
+				
+				if (pa) {
+					try {
+						// gonna go ahead and make sure we're attached to object
+						pa.attach()
+						pa.delete()
+					} catch (java.lang.Throwable e) {
+						log.error(e.getMessage())
+						log.error("*** error occurred trying to delete ProjectArchitect ${logPaId} of Project (${project.name}) association with architect (${architect.name})")
+						log.error("*** the domain class instance pa (ProjectArchitect):")
+						log.error("*** id: ${logPaId}")
+						log.error("*** projectId: ${logPaProjectId}")
+						log.error("*** partyId: ${logPaPartyId}")
+						log.error("*** pa is attached: ${logPaAttached}")
+						log.error("*** null test returned:  ${logPaInfo}")
+						// this isn't a deal breaker. the user can try again later. so keeping success flag true
+					}
+				} else {
+					log.error("*** error occurred trying to delete ProjectArchitect (${project.name}) association with architect (${architect.name}); no row found")
 				}
 			}
-			
-			return result
 		}
-	}
+		
+		log.debug("*** returning to caller with result set to ${success}")
+		return success
+	} //close updateProjectArchitects
 }

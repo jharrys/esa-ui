@@ -219,7 +219,7 @@ class Project
 		namedParams['party'] = Party.get(partyId)
 
 		List<Project> result = new ArrayList<Project>()
-		findAll ('from ProjectArchitect where party=:party order by lastUpdated', namedParams).each {
+		findAll ('from ProjectArchitect where party=:party order by lastUpdated desc', namedParams).each {
 			result.add(it.project)
 		}
 		return result
