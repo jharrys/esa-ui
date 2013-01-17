@@ -72,7 +72,7 @@ class ProjectService
 		
 		log.debug("*** architects to remove from ${project.id} are ${architectsToRemove}")
 		
-		if (!architectsToAdd.empty)
+		if (!architectsToAdd?.empty)
 		{
 			for (Party architect in architectsToAdd)
 			{
@@ -87,7 +87,7 @@ class ProjectService
 			}
 		}
 		
-		if (!architectsToRemove.empty)
+		if (!architectsToRemove?.empty)
 		{
 			for (Party architect in architectsToRemove)
 			{

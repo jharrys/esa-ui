@@ -214,13 +214,18 @@ class ProjectController
 
 			List<Party> architects = new ArrayList<Party>()
 			if (params.architects) {
-				for (String architectId in params.architects) {
-					architects.add(Party.get(architectId))
+				if (params.architects instanceof String) {
+					log.debug("*** only one architect id passed in ${params.architects}")
+					architects.add(Party.load(params.architects))
+				} else {
+					for (String architectId in params.architects) {
+						log.debug("*** multiple architects; adding architect id ${architectId}")
+						architects.add(Party.get(architectId))
+					}
 				}
-				params.remove("architects")
-			} else {
-				params.remove("architects")
 			}
+
+			params.remove("architects")
 
 			def projectInstance = new Project(params)
 			if (!projectInstance.save(flush: true)) {
@@ -297,8 +302,14 @@ class ProjectController
 
 			def architects = []
 			if (params.architects) {
-				for (String architectId in params.architects) {
-					architects.add(Party.get(architectId))
+				if (params.architects instanceof String) {
+					log.debug("*** only one architect id passed in ${params.architects}")
+					architects.add(Party.load(params.architects))
+				} else {
+					for (String architectId in params.architects) {
+						log.debug("*** multiple architects; adding architect id ${architectId}")
+						architects.add(Party.get(architectId))
+					}
 				}
 
 				projectProperties.architects = architects
