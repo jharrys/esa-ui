@@ -4,7 +4,6 @@ import grails.converters.JSON
 import javax.servlet.http.HttpServletResponse
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
 import org.springframework.security.authentication.DisabledException
@@ -51,12 +50,17 @@ class LoginController
 		
 		if (springSecurityService.isLoggedIn())
 		{
+			log.debug("*** isLoggedIn, redirecting to uri: ${config.successHandler.defaultTargetUrl}")
 			redirect uri: config.successHandler.defaultTargetUrl
 			return
 		}
 		
 		String view = 'auth'
 		String postUrl = "${request.contextPath}${config.apf.filterProcessesUrl}"
+		
+		log.debug("*** not logged in: set view to ${view} and postUrl to ${postUrl}")
+		log.debug("*** not logged in: now rendering to set view and postUrl")
+		
 		render view: view, model: [postUrl: postUrl,
 							rememberMeParameter: config.rememberMe.parameter]
 	}
