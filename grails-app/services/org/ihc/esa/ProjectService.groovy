@@ -18,12 +18,12 @@ class ProjectService
 		
 		if (architectId)
 		{
-			log.debug("*** filtering for projects owned by " + architectId)
+			log.debug("--- filtering for projects owned by " + architectId)
 			projectInstanceList = Project.findAllByPartyId(architectId, pagination)
 			projectInstanceTotal = Project.countAllByPartyId(architectId)
 		} else
 		{
-			log.debug("*** architectId is null or 0 so returning the full list")
+			log.debug("--- architectId is null or 0 so returning the full list")
 			if (params.sort) { pagination.sort = params.sort }
 			if (params.order) { pagination.order = params.order }
 			projectInstanceList = Project.list(pagination)
@@ -33,27 +33,116 @@ class ProjectService
 		return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal]
 	}
 	
-	boolean updateProject(Project project, def props)
+	Map executeFilterQuery(def params, def previousQuery) {
+		log.debug("***********************************************************************************************")
+		log.debug("executeFilterQuery(def params, def previousQuery) method called with architectId: '${previousQuery}', params: '${params}'")
+		log.debug("***********************************************************************************************")
+		
+		
+		log.debug("--- executeFilterQuery called with params: ${params}")
+		log.debug("--- previousQuery: " + previousQuery)
+		
+		// initialize query string
+		def query = "FROM Project"
+		
+		if (params.filterByType) {
+			query = query + " WHERE type = '${params.filterByType}'"
+			log.debug("--- query after type filter: " + query)
+		}
+		
+		if (params.filterByStatus) {
+			query = query + (params.filterByType ? " AND " : " WHERE ") + "status = '${params.filterByStatus}'"
+			log.debug("--- query after status filter: " + query)
+		}
+		
+		if (params.filterByArchitect) {
+			
+			log.debug("--- start querying project_architect by architect ---")
+			Party architect = Party.get(params.filterByArchitect)
+			boolean first = true
+			StringBuilder projectList = new StringBuilder("(")
+			ProjectArchitect.findAllByParty(architect).each { pa ->
+				def pId = pa.project.id
+				log.debug("pId: " + pId)
+				(!first) ? projectList.append(",") : (first = false)
+				projectList.append(pId)
+			}
+			projectList.append(")")
+			
+			log.debug("--- finished querying project_architect by architect ---")
+			
+			query = query + ((params.filterByType || params.filterByStatus) ? " AND " : " WHERE ") + "id in ${projectList.toString()}"
+			log.debug("--- query after architect filter: " + query)
+		}
+		
+		log.debug("--- final query: " + query)
+		
+		def projectInstanceTotal = 0
+		def projectInstanceList = null
+		
+		if (!previousQuery.equals(query)) {
+			projectInstanceTotal = Project.findAll(query, [cache: true]).size()
+			log.debug("--- executed findAll on query for return count (projectInstanceTotal) is '${projectInstanceTotal}'")
+		} else {
+			projectInstanceTotal = -1
+			log.debug("--- set projectInstanceTotal to '${projectInstanceTotal}")
+		}
+		params.offset = params.offset ? params.int('offset') : 0
+		projectInstanceList = Project.findAll(query, [max: params.max, offset: params.offset, cache: true])
+		
+		log.debug([projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, projectControllerPreviousQuery: query, params: params])
+		return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, projectControllerPreviousQuery: query, params: params]
+	}
+	
+	boolean updateProject(Project project, Map props)
 	{
+		log.debug("--- updateProject called with project ${project.name} and props: ${props}")
 		boolean result = false
 		
-		def attr = [createdBy: props.createdBy, updatedBy: props.updatedBy]
+		if (props.architects) {
+			log.debug("--- calling updateProjectArchitects with ${project.name} and architects: ${props.architects} and '${props.createdBy}' and '${props.updatedBy}'")
+			result = updateProjectArchitects(project, props.architects, [createdBy: props.createdBy, updatedBy: props.updatedBy])
+			
+			if (result) {
+				log.debug("--- result came back ${result}")
+				project.lastUpdated = new Date()
+			}
+			
+			props.remove('architects')
+			log.debug("--- removed 'architects' from props map")
+		}
 		
-		result = updateProjectArchitects(project, props.architects, attr)
-		log.debug("*** updateProjectArchitects resulted in ${result}")
+		if (!props.empty) {
+			project.properties = props
+			log.debug("--- bound ${project.name} to ${props}")
+		}
+		
+		if (project.isDirty()) {
+			if (project.save()) {
+				log.debug("--- project saved successfully")
+				result = true
+			} else {
+				log.debug("--- project did not save successfully")
+			}
+		}
+		
+		log.debug("--- updateProjectArchitects returning with result set to ${result}")
 		
 		return result
 	}
 	
 	private boolean updateProjectArchitects(Project project, List<Party> architectsToAdd, def attr)
 	{
+		log.debug("--- updateProjectArchitects called with project ${project.name} and attr: ${attr}")
+		log.debug("--- architectsToAdd: ${architectsToAdd}")
+		log.debug("--- attr: ${attr}")
 		boolean success = true
 		
 		List<Party> allCurrentArchitects = ProjectArchitect.where
 						{ project == project }.projections
 						{ property('party') }.list()
 		
-		log.debug("*** current architects for ${project.id} are ${allCurrentArchitects}")
+		log.debug("--- current architects for ${project.id} are ${allCurrentArchitects}")
 		
 		List<Party> architectsToRemove = new ArrayList<Party>()
 		
@@ -70,18 +159,19 @@ class ProjectService
 			}
 		}
 		
-		log.debug("*** architects to remove from ${project.id} are ${architectsToRemove}")
+		log.debug("--- architects to remove from ${project.id} are ${architectsToRemove}")
 		
 		if (!architectsToAdd?.empty)
 		{
 			for (Party architect in architectsToAdd)
 			{
-				ProjectArchitect pa = new ProjectArchitect(party: architect, project: project, createdBy: attr.createdBy, updatedBy: attr.updatedBy)
+				// note createdBy is the same as updatedBy - this is intentional since this is an association table and will only do inserts or del no updates
+				ProjectArchitect pa = new ProjectArchitect(party: architect, project: project, createdBy: attr.updatedBy, updatedBy: attr.updatedBy)
 				if (pa.save(flush: true))
 				{
-					log.debug("*** new association between ${project.name} and ${architect.name} has been saved correctly.")
+					log.debug("--- new association between ${project.name} and ${architect.name} has been saved correctly.")
 				} else {
-					log.error("*** unable to save a new association between ${project.name} and ${architect.name}.")
+					log.error("--- unable to save a new association between ${project.name} and ${architect.name}.")
 					success = false
 				}
 			}
@@ -105,22 +195,22 @@ class ProjectService
 						pa.delete()
 					} catch (java.lang.Throwable e) {
 						log.error(e.getMessage())
-						log.error("*** error occurred trying to delete ProjectArchitect ${logPaId} of Project (${project.name}) association with architect (${architect.name})")
-						log.error("*** the domain class instance pa (ProjectArchitect):")
-						log.error("*** id: ${logPaId}")
-						log.error("*** projectId: ${logPaProjectId}")
-						log.error("*** partyId: ${logPaPartyId}")
-						log.error("*** pa is attached: ${logPaAttached}")
-						log.error("*** null test returned:  ${logPaInfo}")
+						log.error("--- error occurred trying to delete ProjectArchitect ${logPaId} of Project (${project.name}) association with architect (${architect.name})")
+						log.error("--- the domain class instance pa (ProjectArchitect):")
+						log.error("--- id: ${logPaId}")
+						log.error("--- projectId: ${logPaProjectId}")
+						log.error("--- partyId: ${logPaPartyId}")
+						log.error("--- pa is attached: ${logPaAttached}")
+						log.error("--- null test returned:  ${logPaInfo}")
 						// this isn't a deal breaker. the user can try again later. so keeping success flag true
 					}
 				} else {
-					log.error("*** error occurred trying to delete ProjectArchitect (${project.name}) association with architect (${architect.name}); no row found")
+					log.error("--- error occurred trying to delete ProjectArchitect (${project.name}) association with architect (${architect.name}); no row found")
 				}
 			}
 		}
 		
-		log.debug("*** returning to caller with result set to ${success}")
+		log.debug("--- returning to caller with result set to ${success}")
 		return success
 	} //close updateProjectArchitects
 }

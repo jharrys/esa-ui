@@ -13,6 +13,23 @@
 	</head>
 	<body>
 
+	   <r:script>
+	       function toggleFilterOn() {
+	           var filterByType = $('#filterByType').val()
+	           var filterByStatus = $('#filterByStatus').val()
+	           var filterByArchitect = $('#filterByArchitect').val()
+
+	           if (filterByType || filterByStatus || filterByArchitect) {
+		           var projectFilter = $('#projectFilter')
+	               projectFilter.val('on')
+	               projectFilter.removeClass('btn-danger')
+	               projectFilter.addClass('btn-primary')
+	               pfHtml = projectFilter.html()
+	               projectFilter.html(pfHtml.replace(/Clear Filter/,'Filter'))
+	           }
+	       };
+	   </r:script>
+
 		<div class="row-fluid">
 
 			<div class="span2">
@@ -73,9 +90,9 @@
 						<div class="page-header">
 							<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 							<g:field type="hidden" name="filter" value="${params.filter }" />
-                            <g:select from="${Project.ProjectType }" name="filterByType"  optionKey="key" noSelection="['':'-Project Type-']"  value="${filterByType }"/>
-                            <g:select from="${Project.ProjectStatus }" name="filterByStatus"  optionKey="key" noSelection="['':'-Project Status-']"  value="${filterByStatus }"/>
-                            <g:select from="${Party.listArchitects }" name="filterByArchitect"  optionKey="id" optionValue="name" noSelection="['':'-Architect-']"  value="${filterByArchitect }"/>
+                            <g:select from="${Project.ProjectType }" name="filterByType"  optionKey="key" noSelection="['':'-Project Type-']"  value="${filterByType }" onchange="toggleFilterOn();" />
+                            <g:select from="${Project.ProjectStatus }" name="filterByStatus"  optionKey="key" noSelection="['':'-Project Status-']"  value="${filterByStatus }" onchange="toggleFilterOn();" />
+                            <g:select from="${Party.listArchitects }" name="filterByArchitect"  optionKey="id" optionValue="name" noSelection="['':'-Architect-']"  value="${filterByArchitect }" onchange="toggleFilterOn();" />
 							<button id="projectFilter" type="submit" class="${projectFilterClass }" name="setFilter" value="${projectFilterNewValue }" >
 							    <i class="icon-filter icon-white"></i>
 							    ${projectFilterButtonText }

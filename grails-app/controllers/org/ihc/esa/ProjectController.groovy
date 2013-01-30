@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat
 
 import org.springframework.dao.DataIntegrityViolationException
 
-@Secured(['ROLE_ESA_ARCHITECT', 'IS_AUTHENTICATED_REMEMBERED'])
 class ProjectController
 {
 
@@ -20,10 +19,12 @@ class ProjectController
 	{
 		log.debug("***********************************************************************************************")
 		log.debug("index() in project controller called with params: " + params)
-		log.debug("redirecting to list")
 		log.debug("***********************************************************************************************")
 
-		redirect action: 'list', params: params
+		//redirect action: 'list', params: params
+		log.debug("*** [index] redirecting to list")
+		redirect action: 'list'
+		log.debug("*** [index] back from list")
 	}
 
 	def list()
@@ -32,136 +33,130 @@ class ProjectController
 		log.debug("list() in project controller called with params: " + params)
 		log.debug("***********************************************************************************************")
 
+			if (params.mine && params.mine.equals('true'))
+			{
+				log.debug("*** [list] param 'mine' found and is 'true'")
+				log.debug("*** [list] redirecting to filter")
+				redirect action: 'filter', params: params
+				log.debug("*** [list] back from filter")
+			} else
+			{
+				log.debug("*** [list] param 'mine' not set or not 'true'")
+
+				if ((!params.setFilter) || params.setFilter.equals('off')) {
+					log.debug("*** [list] setFilter is: '${params.setFilter}'")
+					log.debug("*** [list] executing a simple projectService.findProjectByArchitectId")
+
+					// set local vars
+					def filterResult = null
+					def projectInstanceTotal
+					def projectInstanceList
+
+					// clear filter and find All projects
+					log.debug("*** [list] start clear filter")
+
+					params.filter = "off"
+					params.max = Math.min(params.max ? params.int('max') : 10, 100)
+					params.remove('filterByType')
+					params.remove('filterByStatus')
+					params.remove('filterByArchitect')
+
+					// calling service with cleared filter settings
+					log.debug("*** [list] calling projectService.findProjectByArchitectId(null, ${params})")
+					filterResult = projectService.findProjectByArchitectId(null, params)
+					log.debug("*** [list] finished clear filter")
+
+					// set instance vars
+					projectInstanceList = filterResult.projectInstanceList
+					projectInstanceTotal = filterResult.projectInstanceTotal
+
+					log.debug("*** [list] returning the following:")
+					log.debug("*** [list] projectInstanceList: " + projectInstanceList)
+					log.debug("*** [list] projectInstanceTotal: " + projectInstanceTotal)
+
+					log.debug("*** [list] finished post method")
+					log.debug("*** [list] passing torch over to viewer")
+
+					return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, filterByType: params.filterByType,
+					        filterByStatus: params.filterByStatus, filterByArchitect: params.filterByArchitect, filter: params.filter]
+
+				} else {
+					log.debug("*** [list] setFilter is on")
+					log.debug("*** [list] calling filter")
+					log.debug("*** [list] redirecting to filter")
+					redirect action: 'filter', params: params
+					log.debug("*** [list] back from filter")
+				}
+			}
+	}
+
+	@Secured(['ROLE_ESA_ARCHITECT', 'IS_AUTHENTICATED_REMEMBERED'])
+	def filter(def params) {
+
+		log.debug("***********************************************************************************************")
+		log.debug("filter() method called with params: ${params}")
+		log.debug("***********************************************************************************************")
+
+		// set params.filter to on
+		// Set max, offset. sort & order parameters for resultset
+		params.filter = "on"
+		log.debug("*** [filter] set params.filter to '${params.filter}'")
+
+		params.sort = "lastUpdated"
+		log.debug("*** [filter] set params.sort to '${params.sort}'")
+
+		params.order = "desc"
+		log.debug("*** [filter] set params.order to '${params.order}'")
+
+		params.max = Math.min(params.max ? params.int('max'): 10, 100)
+		log.debug("*** [filter] set params.max to '${params.max}'")
+
+		// figure out architect
 		def architectId = null
 		if (session['architectId'])
 		{
 			architectId = session['architectId']
-			log.debug("*** architectId value from session is <" + architectId + "> ***")
+			log.debug("*** [filter] architectId value from session is '${architectId}'")
 		} else
 		{
 			architectId = springSecurityService.currentUser.party.id
 			session['architectId'] = architectId
-			log.debug("*** architectId value from springSecurityService is <" + architectId + "> ***")
-			log.debug("*** placed architectId into session ***")
+			log.debug("*** [filter] architectId value from springSecurityService is '${architectId}'")
+			log.debug("*** [filter] placed architectId into session")
 		}
 
-		List<Project> projectInstanceList = null
-		int projectInstanceTotal = 0
+		// variable to hold final resultsets
+		def result = null
 
-		switch (request.method)
-		{
-			case 'GET':
-			log.debug("*** in GET method ***")
+		/*
+		 * Simple 'mine' query just call projectService.findProjectByArchitectId directly
+		 */
+		log.debug("*** [filter params.mine is '${params.mine}'")
+		if (params.mine)	 {
+			log.debug("*** [filter] requested my projects, so do a simple find")
+			result = projectService.findProjectByArchitectId(architectId, params)
+		} else {
+			log.debug("*** [filter] more complex filter query")
+			result = projectService.executeFilterQuery(params, flash.projectControllerPreviousQuery ?: "")
 
-			def result = null
+			log.debug("*** [filter] flash.projectControllerProjectInstanceTotal before update is '${flash.projectControllerProjectInstanceTotal}'")
+			flash.projectControllerProjectInstanceTotal = (result.projectInstanceTotal == -1 ? flash.projectControllerProjectInstanceTotal : result.projectInstanceTotal)
+			log.debug("*** [filter] set flash.projectControllerProjectInstanceTotal to '${flash.projectControllerPorjectInstanceTotal}'")
 
-			// Set max, offset. sort & order parameters for resultset
-			params.sort = "lastUpdated"
-			params.order = "desc"
+			log.debug("*** [filter] flash.projectControllerPreviousQuery before update is '${flash.projectControllerPreviousQuery}'")
+			flash.projectControllerPreviousQuery = result.projectControllerPreviousQuery
+			log.debug("*** [filter] set flash.projectControllerPreviousQuery to '${flash.projectControllerPreviousQuery}'")
+		}
 
-			if (params.mine && params.mine.equals('true'))
-			{
-				params.filter = "on"
-				log.debug("*** param 'mine' found and is 'true' ***")
-				log.debug("*** filter is set to 'on' ***")
-				result = projectService.findProjectByArchitectId(architectId, params)
-			} else
-			{
-				log.debug("*** no filter set, returning full list of projects")
-				params.filter = "off"
-				result = projectService.findProjectByArchitectId(null, params)
-			}
+		log.debug("*** [filter] returning the following:")
+		log.debug("*** [filter] projectInstanceList: '${result.projectInstanceList}'")
+		log.debug("*** [filter] projectInstanceTotal: '${result.projectInstanceTotal}'")
 
-			projectInstanceList = result.projectInstanceList
-			projectInstanceTotal = result.projectInstanceTotal
+		log.debug("*** [filter] finished get method")
+		log.debug("*** [filter] passing torch over to viewer")
 
-			log.debug("*** returning the following:")
-			log.debug("*** projectInstanceList: " + projectInstanceList)
-			log.debug("*** projectInstanceTotal: " + projectInstanceTotal)
-
-			log.debug("*** finished get method ***")
-			log.debug("*** passing torch over to viewer ***")
-			return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, params: params]
-
-			break		// end GET
-
-			case 'POST':
-			log.debug("*** in POST method ***")
-			String previousQuery = flash.projectControllerPreviousQuery ?: ""
-			log.debug("*** previousQuery: " + previousQuery)
-
-			if (params.setFilter.equals('off')) {
-				log.debug("*** start clear filter ***")
-				params.max = Math.min(params.max ? params.int('max') : 10, 100)
-				params.remove('filterByType')
-				params.remove('filterByStatus')
-				params.remove('filterByArchitect')
-				params.filter = "off"
-				projectInstanceList = Project.list(params)
-				projectInstanceTotal = Project.count()
-				log.debug("*** finished clear filter ***")
-			} else {
-				log.debug("*** adding filter")
-				params.filter = "on"
-				params.max = Math.min(params.max ? params.int('max') : 10, 100)
-
-				List<Long> projectListForArchitect = new ArrayList<Long>()
-				if (params.filterByArchitect) {
-					log.debug("*** start querying project_architect by architect ***")
-					Party architect = Party.get(params.filterByArchitect)
-					ProjectArchitect.findAllByParty(architect).each { projectListForArchitect.add(it.project.id) }
-					log.debug("*** finished querying project_architect by architect ***")
-				} else {
-					log.debug("*** filterByArchitect not set, skipping...")
-				}
-
-				def query = "FROM Project"
-
-				if (params.filterByType) {
-					query = query + " WHERE type = '${params.filterByType}'"
-					log.debug("*** query after type filter: " + query)
-				}
-
-				if (params.filterByStatus) {
-					query = query + (params.filterByType ? " AND " : " ") + "status = ${params.filterByStatus}"
-					log.debug("*** query after status filter: " + query)
-				}
-
-				if (params.filterByArchitect) {
-					query = query + ((params.filterByType || params.filterByStatus) ? " AND " : " ") + "id in ${projectListForArchitect}"
-					log.debug("*** query after architect filter: " + query)
-				}
-
-				log.debug("*** final query: " + query)
-
-				flash.projectControllerPreviousQuery = query
-
-				if (!previousQuery.equals(query)) {
-					projectInstanceTotal = Project.findAll(query, [cache: true]).size()
-					flash.projectControllerProjectInstanceTotal
-					log.debug("*** executed findAll on query")
-				} else {
-					projectInstanceTotal = flash.projectControllerProjectInstanceTotal
-				}
-				params.offset = params.offset ? params.int('offset') : 0
-				projectInstanceList = Project.findAll(query, [max: params.max, offset: params.offset, cache: true])
-
-			}
-
-			log.debug("*** returning the following:")
-			log.debug("*** projectInstanceList: " + projectInstanceList)
-			log.debug("*** projectInstanceTotal: " + projectInstanceTotal)
-
-			log.debug("*** finished post method ***")
-			log.debug("*** passing torch over to viewer ***")
-
-			return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, filterByType: params.filterByType,
-				filterByStatus: params.filterByStatus, filterByArchitect: params.filterByArchitect, filter: params.filter]
-
-			break	// end POST
-
-		} // end switch
-
+		//return [projectInstanceList: result.projectInstanceList, projectInstanceTotal: result.projectInstanceTotal, params: params]
+		render view: 'list', model: [projectInstanceList: result.projectInstanceList, projectInstanceTotal: result.projectInstanceTotal, params: params]
 	}
 
 	def show() {
@@ -177,6 +172,7 @@ class ProjectController
 		[projectInstance: projectInstance]
 	}
 
+	@Secured(['ROLE_ESA_ARCHITECT', 'IS_AUTHENTICATED_REMEMBERED'])
 	def create() {
 
 		log.debug("====================================================================================")
@@ -215,11 +211,11 @@ class ProjectController
 			List<Party> architects = new ArrayList<Party>()
 			if (params.architects) {
 				if (params.architects instanceof String) {
-					log.debug("*** only one architect id passed in ${params.architects}")
+					log.debug("*** [create] only one architect id passed in ${params.architects}")
 					architects.add(Party.load(params.architects))
 				} else {
 					for (String architectId in params.architects) {
-						log.debug("*** multiple architects; adding architect id ${architectId}")
+						log.debug("*** [create] multiple architects; adding architect id ${architectId}")
 						architects.add(Party.get(architectId))
 					}
 				}
@@ -251,6 +247,7 @@ class ProjectController
 		}
 	}
 
+	@Secured(['ROLE_ESA_ARCHITECT', 'IS_AUTHENTICATED_REMEMBERED'])
 	def edit() {
 
 		log.debug("====================================================================================")
@@ -271,7 +268,7 @@ class ProjectController
 
 			case 'POST':
 
-			log.debug("*** in POST case of edit method")
+			log.debug("*** [edit] in POST case of edit method")
 			def projectInstance = Project.get(params.id)
 			String userMessage = ""
 
@@ -286,28 +283,49 @@ class ProjectController
 			 */
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy")
 
-			def projectProperties = [:]
+			Map projectProperties = [:]
 
-			if (params.projectManager) {
-				projectProperties.projectManager = Party.get(params.projectManager)
+			if (params.name && (!params.name.equalsIgnoreCase(projectInstance.name))) {
+				projectProperties.name = params.name
+				log.debug("*** set projectProperties.name to ${projectProperties.name}")
 			}
 
-			if (params.dateStart) {
+			if (params.type && (!params.type.equals(projectInstance.type))) {
+				projectProperties.type = Project.ProjectType."${params.type}"
+				log.debug("*** set projectProperties.type to ${projectProperties.type}")
+			}
+
+			if (params.status && (!params.status.equals(projectInstance.status))) {
+				projectProperties.status = Project.ProjectStatus."${params.status}"
+				log.debug("*** set projectProperties.status to ${projectProperties.status}")
+			}
+
+			if (params.externalProjectNumber && (!params.externalProjectNumber.equals(projectInstance.externalProjectNumber))) {
+				projectProperties.externalProjectNumber = params.externalProjectNumber
+				log.debug("*** set projectProperties.externalProjectNumber to ${projectProperties.externalProjectNumber}")
+			}
+
+			if (params.projectManager && (!params.projectManager.equals(projectInstance.projectManager))) {
+				projectProperties.projectManager = Party.get(params.projectManager)
+				log.debug("*** set projectProperties.projectManager to ${projectProperties.projectManager}")
+			}
+
+			if (params.dateStart && (!params.dateStart.equals(projectInstance.dateStart))) {
 				projectProperties.dateStart = sdf.parse(params.dateStart)
 			}
 
-			if (params.dateCompleted) {
+			if (params.dateCompleted && (!params.dateCompleted.equals(projectInstance.dateCompleted))) {
 				projectProperties.dateCompleted = sdf.parse(params.dateCompleted)
 			}
 
 			def architects = []
 			if (params.architects) {
 				if (params.architects instanceof String) {
-					log.debug("*** only one architect id passed in ${params.architects}")
+					log.debug("*** [edit] only one architect id passed in ${params.architects}")
 					architects.add(Party.load(params.architects))
 				} else {
 					for (String architectId in params.architects) {
-						log.debug("*** multiple architects; adding architect id ${architectId}")
+						log.debug("*** [edit] multiple architects; adding architect id ${architectId}")
 						architects.add(Party.get(architectId))
 					}
 				}
@@ -315,10 +333,9 @@ class ProjectController
 				projectProperties.architects = architects
 			}
 
-			projectProperties.createdBy = params.createdBy
 			projectProperties.updatedBy = params.updatedBy
 
-			log.debug("*** calling projectService")
+			log.debug("*** [edit] calling projectService")
 
 			if (!projectService.updateProject(projectInstance, projectProperties)) {
 				render view: 'edit', model: [projectInstance: projectInstance]
@@ -333,6 +350,7 @@ class ProjectController
 		}
 	}
 
+	@Secured(['ROLE_ESA_ARCHITECT', 'IS_AUTHENTICATED_REMEMBERED'])
 	def delete() {
 		def projectInstance = Project.get(params.id)
 		if (!projectInstance) {
