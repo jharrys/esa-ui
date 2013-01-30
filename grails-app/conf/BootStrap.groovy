@@ -29,6 +29,7 @@ class BootStrap
 				
 				if (connection != null)
 				{
+					// ATTN! non-portable code belowwww!
 					Statement s = connection.createStatement()
 					s.execute("CREATE ALIAS TO_TIMESTAMP AS \$\$ " +
 									"java.sql.Date toTimestamp(String one, String two) throws Exception " +
@@ -40,6 +41,32 @@ class BootStrap
 									"java.util.Date date = null;" +
 									"try { date = sdf1.parse(one); } catch (java.text.ParseException pe) { date = sdf2.parse(one); }" +
 									"return new java.sql.Date(date.getTime()); } \$\$")
+					
+					s.execute("alter sequence address_seq restart with 1000")
+					s.execute("alter sequence attachment_seq restart with 1000")
+					s.execute("alter sequence catalog_seq restart with 1000")
+					s.execute("alter sequence category_seq restart with 1000")
+					s.execute("alter sequence configuration_catalog_seq restart with 1000")
+					s.execute("alter sequence configuration_parameter_seq restart with 1000")
+					s.execute("alter sequence contract_seq restart with 1000")
+					s.execute("alter sequence document_seq restart with 1000")
+					s.execute("alter sequence esa_role_seq restart with 1000")
+					s.execute("alter sequence esa_user_seq restart with 1000")
+					s.execute("alter sequence form_seq restart with 1000")
+					s.execute("alter sequence form_field_seq restart with 1000")
+					s.execute("alter sequence item_seq restart with 1000")
+					s.execute("alter sequence item_category_seq restart with 1000")
+					s.execute("alter sequence item_units_conversion_seq restart with 1000")
+					s.execute("alter sequence item_version_seq restart with 1000")
+					s.execute("alter sequence lookup_element_seq restart with 1000")
+					s.execute("alter sequence lookup_list_seq restart with 1000")
+					s.execute("alter sequence note_seq restart with 1000")
+					s.execute("alter sequence party_seq restart with 1000")
+					s.execute("alter sequence party_relationship_seq restart with 1000")
+					s.execute("alter sequence project_seq restart with 1000")
+					s.execute("alter sequence project_architect_seq restart with 1000")
+					s.execute("alter sequence question_response_seq restart with 1000")
+					s.execute("alter sequence replacement_item_seq restart with 1000")
 					
 					Reader reader = null
 					
@@ -161,7 +188,7 @@ class BootStrap
 						def realCount = Class.forName("org.ihc.esa." + table.tokenize("_").collect
 										{ it.capitalize() }.join(''), false, this.class.getClassLoader()).count()
 						assert realCount == expectedCount
-						s.execute("ALTER SEQUENCE " + table + "_seq RESTART WITH " + (expectedCount + 1))
+						//s.execute("ALTER SEQUENCE " + table + "_seq RESTART WITH " + (expectedCount + 1))
 					}
 				}
 				
@@ -182,23 +209,23 @@ class BootStrap
 				// role for testing
 				def bogusRole = new EsaRole(authority: 'ROLE_ESA_BOGUS').save(flush: true)
 				
-				Party party = Party.get(1)
+				Party party = Party.first()
 				def manager = new EsaUser(username: 'manager', email_address: 'john.harris@imail.org', enabled: true, password: 'esa', party: party)
-				party = Party.get(5)
+				party = Party.findByNameIlike('%harris%')
 				def user = new EsaUser(username: 'lpjharri', email_address: 'john.harris@imail.org', enabled: true, password: 'esa', party: party)
-				party = Party.get(8)
+				party = Party.findByNameIlike('%simpson%')
 				def user1 = new EsaUser(username: 'tssimpso', email_address: 'stuart.simpson@imail.org', enabled: true, password: 'esa', party: party)
-				party = Party.get(7)
+				party = Party.findByNameIlike('%gopal%')
 				def user2 = new EsaUser(username: 'gknarra', email_address: 'gopal.narra@imail.org', enabled: true, password: 'esa', party: party)
-				party = Party.get(6)
+				party = Party.findByNameIlike('%curry%')
 				def user3 = new EsaUser(username: 'ldsgrove', email_address: 'sara.curry@imail.org', enabled: true, password: 'esa', party: party)
-				party = Party.get(9)
+				party = Party.findByNameIlike('%shipley%')
 				def user4 = new EsaUser(username: 'tshipley', email_address: 'tim.shipley@imail.org', enabled: true, password: 'esa', party: party)
-				party = Party.get(4)
+				party = Party.findByNameIlike('%buchanan%')
 				def user5 = new EsaUser(username: 'lbuchanan', email_address: 'lonnie.buchanan@imail.org', enabled: true, password: 'esa', party: party)
-				party = Party.get(10)
-				def user6 = new EsaUser(username: 'eisa', email_address: 'eisa-repository-notify@imail.org', enabled: true, password: 'esa', party: party)
-				party = Party.get(11)
+				party = Party.findByNameIlike('%klaus%')
+				def user6 = new EsaUser(username: 'kschulz', email_address: 'klaus.schulz@imail.org', enabled: true, password: 'esa', party: party)
+				party = Party.findByNameIlike('%intermountain%')
 				def user7 = new EsaUser(username: 'donottrust', email_address: 'john.harris@ihc.com', enabled: false, password: 'esa', party: party)
 				manager.save(flush: true)
 				user.save(flush: true)
@@ -233,52 +260,7 @@ class BootStrap
 				
 			}	// end-development
 			test {
-				// real roles
-				def adminRole = new EsaRole(authority: 'ROLE_ESA_ADMIN').save(flush: true)
-				def userRole = new EsaRole(authority: 'ROLE_ESA_USER').save(flush: true)
-				def earbContributorRole = new EsaRole(authority: 'ROLE_ESA_EARB_CONTRIBUTOR').save(flush: true)
-				def earbMemberRole = new EsaRole(authority: 'ROLE_ESA_EARB_MEMBER').save(flush: true)
-				def earbAdminRole = new EsaRole(authority: 'ROLE_ESA_EARB_ADMIN').save(flush: true)
-				def exceptionContributorRole = new EsaRole(authority: 'ROLE_ESA_EXCEPTION_CONTRIBUTOR').save(flush: true)
-				def exceptionAdminRole = new EsaRole(authority: 'ROLE_ESA_EXCEPTION_ADMIN').save(flush: true)
-				def contentContributorRole = new EsaRole(authority: 'ROLE_ESA_CONTENT_CONTRIBUTOR').save(flush: true)
-				def contentAdminRole = new EsaRole(authority: 'ROLE_ESA_CONTENT_ADMIN').save(flush: true)
-				
-				// role for testing
-				def bogusRole = new EsaRole(authority: 'ROLE_ESA_BOGUS').save(flush: true)
-				
-				def manager = new EsaUser(username: 'manager', email_address: 'john.harris@imail.org', enabled: true, password: 'esa')
-				def user = new EsaUser(username: 'lpjharri', email_address: 'john.harris@imail.org', enabled: true, password: 'esa')
-				def user1 = new EsaUser(username: 'tssimpso', email_address: 'stuart.simpson@imail.org', enabled: true, password: 'esa')
-				def user2 = new EsaUser(username: 'gknarra', email_address: 'gopal.narra@imail.org', enabled: true, password: 'esa')
-				def user3 = new EsaUser(username: 'ldsgrove', email_address: 'sara.curry@imail.org', enabled: true, password: 'esa')
-				def user4 = new EsaUser(username: 'tshipley', email_address: 'tim.shipley@imail.org', enabled: true, password: 'esa')
-				def user5 = new EsaUser(username: 'lbuchanan', email_address: 'lonnie.buchanan@imail.org', enabled: true, password: 'esa')
-				def user6 = new EsaUser(username: 'eisa', email_address: 'eisa-repository-notify@imail.org', enabled: true, password: 'esa')
-				def user7 = new EsaUser(username: 'donottrust', email_address: 'john.harris@ihc.com', enabled: false, password: 'esa')
-				manager.save(flush: true)
-				user.save(flush: true)
-				user1.save(flush: true)
-				user2.save(flush: true)
-				user3.save(flush: true)
-				user4.save(flush: true)
-				user5.save(flush: true)
-				user6.save(flush: true)
-				user7.save(flush: true)
-				
-				EsaUserEsaRole.create manager, adminRole, true
-				EsaUserEsaRole.create user, userRole, true
-				EsaUserEsaRole.create user1, userRole, true
-				EsaUserEsaRole.create user2, userRole, true
-				EsaUserEsaRole.create user3, userRole, true
-				EsaUserEsaRole.create user4, userRole, true
-				EsaUserEsaRole.create user5, userRole, true
-				EsaUserEsaRole.create user6, bogusRole, true
-				EsaUserEsaRole.create user7, bogusRole, true
-				
-				assert EsaUser.count() >= 9
-				assert EsaRole.count() >= 10
-				assert EsaUserEsaRole.count() >= 9
+				// no code for test right now.
 			} // end-test
 			production {
 				// no code for production right now.
