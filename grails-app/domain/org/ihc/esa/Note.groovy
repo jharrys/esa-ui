@@ -68,6 +68,8 @@ class Note
 		version false
 		cache true
 
+		sort lastUpdated: 'desc'
+
 		item column: 'ITEM_ID'
 		project column: 'PROJECT_ID'
 		noteType column: 'NOTE_TYPE'

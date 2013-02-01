@@ -112,7 +112,7 @@ class Project
 
 	static transients = ['hashCode']
 
-	static hasMany = [architects: Party]
+	static hasMany = [architects: Party, notes: Note]
 
 	static fetchMode = [architects: 'eager']
 
@@ -125,6 +125,8 @@ class Project
 		table 'PROJECT'
 		version false
 		cache true
+
+		notes sort: 'lastUpdated', order: 'desc', cache: true
 
 		name column: 'NAME'
 		type column: 'TYPE'
