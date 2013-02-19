@@ -60,6 +60,7 @@ class ProjectController
 					params.remove('filterByType')
 					params.remove('filterByStatus')
 					params.remove('filterByArchitect')
+					params.remove('filterByName')
 
 					// calling service with cleared filter settings
 					log.debug("*** [list] calling projectService.findProjectByArchitectId(null, ${params})")

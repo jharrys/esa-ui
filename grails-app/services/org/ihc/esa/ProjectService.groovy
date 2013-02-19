@@ -75,6 +75,12 @@ class ProjectService
 			log.debug("--- query after architect filter: " + query)
 		}
 		
+		if (params.filterByName) {
+			
+			query = query + ((params.filterByType || params.filterByStatus || params.filterByArchitect) ? " AND " : " WHERE ") + "lower(name) LIKE '%${params.filterByName}%'"
+			log.debug("--- query after name filter: " + query)
+		}
+		
 		log.debug("--- final query: " + query)
 		
 		def projectInstanceTotal = 0
