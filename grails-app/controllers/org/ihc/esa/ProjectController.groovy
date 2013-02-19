@@ -160,10 +160,17 @@ class ProjectController
 	}
 
 	def show() {
+
+		log.debug("***********************************************************************************************")
+		log.debug("show() method called with params: ${params}")
+		log.debug("***********************************************************************************************")
+
 		def projectInstance = Project.get(params.id)
-		// I'm not using/configuring 2nd level cache correctly - I shouldn't have to do this?
-		projectInstance.refresh()
-		if (!projectInstance) {
+
+		if (projectInstance) {
+			// I'm not using/configuring 2nd level cache correctly - I shouldn't have to do this?
+			projectInstance.refresh()
+		} else {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.id])
 			redirect action: 'list'
 			return
@@ -223,6 +230,23 @@ class ProjectController
 
 			params.remove("architects")
 
+			/*
+			 * parse through notes, if defined
+			 */
+
+			def paramsNote = [:]
+			if (params.newNote) {
+				paramsNote.text = params.newNote.trim()
+				paramsNote.createdBy = params.createdBy
+				paramsNote.updatedBy = params.updatedBy
+			}
+
+			params.remove("newNote")
+
+			/*
+			 * create new project instance
+			 */
+
 			def projectInstance = new Project(params)
 			if (!projectInstance.save(flush: true)) {
 				render view: 'create', model: [projectInstance: projectInstance]
@@ -238,6 +262,20 @@ class ProjectController
 						userMessage = ((userMessage) ? userMessage + "<br>Unable to save association to Architect with PARTY_ID <" + architect.id + "> and PROJECT_ID <" +
 						projectInstance.id + ">" : "Unable to save association to Architect with PARTY_ID <" + architect.id + "> and PROJECT_ID <" + projectInstance.id + ">" )
 					}
+				}
+			}
+
+			/*
+			 * create new note instance
+			 */
+
+			if (paramsNote) {
+				paramsNote.project = projectInstance
+				def noteInstance = new Note(paramsNote)
+				if (!noteInstance.save(flush: true)) {
+					log.error('Unable to save note for ${projectInstance.name}, with text: "${paramsNote.text}"')
+				} else {
+					log.debug("Successfully saved note id ${noteInstance.id}")
 				}
 			}
 
@@ -283,39 +321,44 @@ class ProjectController
 			 */
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy")
 
-			Map projectProperties = [:]
+			Map paramsProject = [:]
 
 			if (params.name && (!params.name.equalsIgnoreCase(projectInstance.name))) {
-				projectProperties.name = params.name
-				log.debug("*** set projectProperties.name to ${projectProperties.name}")
+				paramsProject.name = params.name
+				log.debug("*** set projectProperties.name to ${paramsProject.name}")
 			}
 
 			if (params.type && (!params.type.equals(projectInstance.type))) {
-				projectProperties.type = Project.ProjectType."${params.type}"
-				log.debug("*** set projectProperties.type to ${projectProperties.type}")
+				paramsProject.type = Project.ProjectType."${params.type}"
+				log.debug("*** set projectProperties.type to ${paramsProject.type}")
 			}
 
 			if (params.status && (!params.status.equals(projectInstance.status))) {
-				projectProperties.status = Project.ProjectStatus."${params.status}"
-				log.debug("*** set projectProperties.status to ${projectProperties.status}")
+				paramsProject.status = Project.ProjectStatus."${params.status}"
+				log.debug("*** set projectProperties.status to ${paramsProject.status}")
 			}
 
 			if (params.externalProjectNumber && (!params.externalProjectNumber.equals(projectInstance.externalProjectNumber))) {
-				projectProperties.externalProjectNumber = params.externalProjectNumber
-				log.debug("*** set projectProperties.externalProjectNumber to ${projectProperties.externalProjectNumber}")
+				paramsProject.externalProjectNumber = params.externalProjectNumber
+				log.debug("*** set projectProperties.externalProjectNumber to ${paramsProject.externalProjectNumber}")
 			}
 
 			if (params.projectManager && (!params.projectManager.equals(projectInstance.projectManager))) {
-				projectProperties.projectManager = Party.get(params.projectManager)
-				log.debug("*** set projectProperties.projectManager to ${projectProperties.projectManager}")
+				paramsProject.projectManager = Party.get(params.projectManager)
+				log.debug("*** set projectProperties.projectManager to ${paramsProject.projectManager}")
 			}
 
 			if (params.dateStart && (!params.dateStart.equals(projectInstance.dateStart))) {
-				projectProperties.dateStart = sdf.parse(params.dateStart)
+				paramsProject.dateStart = sdf.parse(params.dateStart)
 			}
 
 			if (params.dateCompleted && (!params.dateCompleted.equals(projectInstance.dateCompleted))) {
-				projectProperties.dateCompleted = sdf.parse(params.dateCompleted)
+				paramsProject.dateCompleted = sdf.parse(params.dateCompleted)
+			}
+
+			if (params.notes && (!params.notes.equals(projectInstance.notes))) {
+				paramsProject.notes = params.notes
+				log.debug("*** set projectProperties.notes to ${paramsProject.notes}")
 			}
 
 			def architects = []
@@ -330,14 +373,32 @@ class ProjectController
 					}
 				}
 
-				projectProperties.architects = architects
+				paramsProject.architects = architects
 			}
 
-			projectProperties.updatedBy = params.updatedBy
+			paramsProject.updatedBy = params.updatedBy
+
+			/*
+			 * handle new notes
+			 */
+
+			def paramsNote = [:]
+			if (params.newNote) {
+				log.debug("*** [edit] params.newNote defined - creating paramsNote for adding a note")
+				paramsNote.project = projectInstance
+				paramsNote.text = params.newNote.trim()
+				paramsNote.createdBy = params.createdBy
+				paramsNote.updatedBy = params.updatedBy
+
+				params.remove("newNote")
+			}
 
 			log.debug("*** [edit] calling projectService")
 
-			if (!projectService.updateProject(projectInstance, projectProperties)) {
+			log.debug("*** [edit] projectInstance is ${projectInstance.id} ")
+			log.debug("*** [edit] paramsProject is ${paramsProject} ")
+			log.debug("*** [edit] paramsNote is ${paramsNote} ")
+			if (!projectService.updateProject(projectInstance, paramsProject, paramsNote)) {
 				render view: 'edit', model: [projectInstance: projectInstance]
 				return
 			}
@@ -352,6 +413,7 @@ class ProjectController
 
 	@Secured(['ROLE_ESA_ARCHITECT', 'IS_AUTHENTICATED_REMEMBERED'])
 	def delete() {
+		// TODO: delete associated notes and other associations not handled by cascades
 		def projectInstance = Project.get(params.id)
 		if (!projectInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.id])

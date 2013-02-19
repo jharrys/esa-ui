@@ -94,27 +94,39 @@ class ProjectService
 		return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, projectControllerPreviousQuery: query, params: params]
 	}
 	
-	boolean updateProject(Project project, Map props)
+	boolean updateProject(Project project, Map paramsProject, Map paramsNote)
 	{
-		log.debug("--- updateProject called with project ${project.name} and props: ${props}")
+		log.debug("--- updateProject called with project ${project.name} and props: ${paramsProject}")
 		boolean result = false
 		
-		if (props.architects) {
-			log.debug("--- calling updateProjectArchitects with ${project.name} and architects: ${props.architects} and '${props.createdBy}' and '${props.updatedBy}'")
-			result = updateProjectArchitects(project, props.architects, [createdBy: props.createdBy, updatedBy: props.updatedBy])
+		if (paramsProject.architects) {
+			log.debug("--- calling updateProjectArchitects with ${project.name} and architects: ${paramsProject.architects} and '${paramsProject.createdBy}' and '${paramsProject.updatedBy}'")
+			result = updateProjectArchitects(project, paramsProject.architects, [createdBy: paramsProject.createdBy, updatedBy: paramsProject.updatedBy])
 			
 			if (result) {
 				log.debug("--- result came back ${result}")
 				project.lastUpdated = new Date()
 			}
 			
-			props.remove('architects')
+			paramsProject.remove('architects')
 			log.debug("--- removed 'architects' from props map")
 		}
 		
-		if (!props.empty) {
-			project.properties = props
-			log.debug("--- bound ${project.name} to ${props}")
+		if (paramsProject.notes) {
+			log.debug("--- got notes changes to update")
+			log.debug("--- ${paramsProject.notes}")
+			for (Note note in notes) {
+				note.save()
+				project.lastUpdated = new Date()
+			}
+			
+			paramsProject.remove('notes')
+			log.debug("--- removed 'notest' props map")
+		}
+		
+		if (!paramsProject.empty) {
+			project.properties = paramsProject
+			log.debug("--- bound ${project.name} to ${paramsProject}")
 		}
 		
 		if (project.isDirty()) {
@@ -124,6 +136,19 @@ class ProjectService
 			} else {
 				log.debug("--- project did not save successfully")
 			}
+		}
+		
+		if (paramsNote) {
+			log.debug("--- paramsNote set, adding note")
+			Note note = new Note(paramsNote)
+			
+			if (!note.save(flush: true)) {
+				log.error('--- Unable to save note for ${projectInstance.name}, with text: "${paramsNote.text}"')
+			} else {
+				log.debug("--- Successfully saved note id ${note.id}")
+			}
+		} else {
+			log.debug("--- New note was not submitted")
 		}
 		
 		log.debug("--- updateProjectArchitects returning with result set to ${result}")

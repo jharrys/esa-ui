@@ -2,6 +2,10 @@
 <g:logMsg level="debug">= params: ${params } =</g:logMsg>
 <%@ page import="org.ihc.esa.Project" %>
 <%@ page import="org.ihc.esa.Party" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%
+SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy")
+ %>
 
 <!doctype html>
 <html>
@@ -33,27 +37,33 @@
 		<div class="row-fluid">
 
 			<div class="span2">
-				<div class="well">
-					<ul class="nav nav-pills nav-stacked">
-						<li class="nav-header">${entityName}</li>
-						<li class="active">
-							<g:link action="list">
-								<g:message code="default.list.label" args="[entityName]" />
-							</g:link>
-						</li>
-						<li>
-							<g:link action="list" params="[mine: 'true']">
-								My Project List
-							</g:link>
-						</li>
-						<li>
-							<g:link action="create">
-								<g:message code="default.create.label" args="[entityName]" />
-							</g:link>
-						</li>
-					</ul>
-				</div>
-			</div>
+                <div class="well">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li class="nav-header">${entityName}</li>
+                        <li <%= request.forwardURI == "${createLink(uri: '/project/list')}" ? ' class="active"' : '' %>>
+                            <g:link action="list">
+                                <g:message code="default.list.label" args="[entityName]" />
+                            </g:link>
+                        </li>
+                        <li <%= request.forwardURI.contains("filter") ? ' class="active"' : '' %>>
+                            <g:link action="list" params="[mine: 'true']">
+                                My Project List
+                            </g:link>
+                        </li>
+                        <li <%= request.forwardURI == "${createLink(uri: '/project/create')}" ? ' class="active"' : '' %>>
+                            <g:link action="create">
+                                <g:message code="default.create.label" args="[entityName]" />
+                            </g:link>
+                        </li>
+                        <li>
+                            <form class="form-inline" action="show">
+                                <input name="id" type="text" class="input-small search-query" placeholder="acid #">
+                                <button type="submit" class="btn btn-small">Search</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
 			<div class="span9">
 
@@ -134,7 +144,30 @@
 					<g:each in="${projectInstanceList}" var="projectInstance">
 					   <g:logMsg level="debug">= project ${projectInstance.id } =</g:logMsg>
 						<tr>
-							<td><f:display bean="${projectInstance }" property="id" /></td>
+							<td>
+							     <g:if test="${projectInstance.notes }">
+                                     <%
+                                        def noteId = ""
+                                        String fullNoteText = ""
+                                        for (note in projectInstance.notes) {
+                                            noteId = note.id
+                                            fullNoteText = (fullNoteText ? "${fullNoteText}<br><hr>" : "")
+                                            fullNoteText = "${fullNoteText} <b><small>${sdf.format(note.lastUpdated)}</small></b><br>${note.text.trim()}"
+                                        }
+                                      %>
+                                     <a href="#" id="note_${noteId }" rel="tooltip" data-content="${fullNoteText }" >
+                                         <span class="label label-warning"><f:display bean="${projectInstance }" property="id" /></span>
+                                     </a>
+                                     <script>
+                                        $(function() {
+                                            $('#note_${noteId}').popover({trigger: 'hover', placement: 'top', html: true})
+                                        });
+                                    </script>
+                                 </g:if>
+                                 <g:else>
+                                     <f:display bean="${projectInstance }" property="id" />
+                                 </g:else>
+                            </td>
 
 							<td><f:display bean="${projectInstance }" property="name" /></td>
 
@@ -150,6 +183,10 @@
 
 							<td class="link">
 								<g:link action="show" id="${projectInstance.id}" class="btn btn-small">Show &raquo;</g:link>
+								<g:link class="btn btn-small" action="edit" id="${projectInstance?.id}">
+                                    <i class="icon-pencil"></i>
+                                    <g:message code="default.button.edit.label" default="Edit" />
+                                </g:link>
 							</td>
 						</tr>
 					</g:each>
