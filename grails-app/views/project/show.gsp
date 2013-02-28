@@ -30,10 +30,10 @@
                             </g:link>
                         </li>
                         <li>
-                            <form class="form-inline" action="show">
+                            <g:form class="form-inline" controller="project" action="show">
                                 <input name="id" type="text" class="input-small search-query" placeholder="acid #">
                                 <button type="submit" class="btn btn-small">Search</button>
-                            </form>
+                            </g:form>
                         </li>
                     </ul>
                 </div>
