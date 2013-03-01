@@ -35,7 +35,7 @@ class ProjectService
 	
 	Map executeFilterQuery(def params, def previousQuery) {
 		log.debug("***********************************************************************************************")
-		log.debug("executeFilterQuery(def params, def previousQuery) method called with architectId: '${previousQuery}', params: '${params}'")
+		log.debug("executeFilterQuery(def params, def previousQuery) method called with previousQuery: '${previousQuery}', params: '${params}'")
 		log.debug("***********************************************************************************************")
 		
 		
@@ -63,7 +63,7 @@ class ProjectService
 			StringBuilder projectList = new StringBuilder("(")
 			ProjectArchitect.findAllByParty(architect).each { pa ->
 				def pId = pa.project.id
-				log.debug("pId: " + pId)
+				log.debug("architect: '${architect.id}, ${architect.name}' has project Id: '${pId}'")
 				(!first) ? projectList.append(",") : (first = false)
 				projectList.append(pId)
 			}
@@ -86,17 +86,14 @@ class ProjectService
 		def projectInstanceTotal = 0
 		def projectInstanceList = null
 		
-		if (!previousQuery.equals(query)) {
-			projectInstanceTotal = Project.findAll(query, [cache: true]).size()
-			log.debug("--- executed findAll on query for return count (projectInstanceTotal) is '${projectInstanceTotal}'")
-		} else {
-			projectInstanceTotal = -1
-			log.debug("--- set projectInstanceTotal to '${projectInstanceTotal}")
-		}
+		// Run query to get total number of rows returned by query
+		projectInstanceTotal = Project.findAll(query, [cache: true]).size()
+		log.debug("--- executed findAll on query for return count (projectInstanceTotal) is '${projectInstanceTotal}'")
+		
+		// Run query with offset (for pagination) results for viewing
 		params.offset = params.offset ? params.int('offset') : 0
 		projectInstanceList = Project.findAll(query, [max: params.max, offset: params.offset, cache: true])
 		
-		log.debug([projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, projectControllerPreviousQuery: query, params: params])
 		return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, projectControllerPreviousQuery: query, params: params]
 	}
 	

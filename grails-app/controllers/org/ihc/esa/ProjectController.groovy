@@ -138,11 +138,8 @@ class ProjectController
 			result = projectService.findProjectByArchitectId(architectId, params)
 		} else {
 			log.debug("*** [filter] more complex filter query")
+			log.debug("*** [filter] flash.projectControllerPreviousQuery is '${flash.projectControllerPreviousQuery}'")
 			result = projectService.executeFilterQuery(params, flash.projectControllerPreviousQuery ?: "")
-
-			log.debug("*** [filter] flash.projectControllerProjectInstanceTotal before update is '${flash.projectControllerProjectInstanceTotal}'")
-			flash.projectControllerProjectInstanceTotal = (result.projectInstanceTotal == -1 ? flash.projectControllerProjectInstanceTotal : result.projectInstanceTotal)
-			log.debug("*** [filter] set flash.projectControllerProjectInstanceTotal to '${flash.projectControllerPorjectInstanceTotal}'")
 
 			log.debug("*** [filter] flash.projectControllerPreviousQuery before update is '${flash.projectControllerPreviousQuery}'")
 			flash.projectControllerPreviousQuery = result.projectControllerPreviousQuery
