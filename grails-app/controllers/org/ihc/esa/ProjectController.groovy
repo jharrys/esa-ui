@@ -91,7 +91,6 @@ class ProjectController
 			}
 	}
 
-	@Secured(['ROLE_ESA_ARCHITECT', 'IS_AUTHENTICATED_REMEMBERED'])
 	def filter(def params) {
 
 		log.debug("***********************************************************************************************")
