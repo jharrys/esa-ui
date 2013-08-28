@@ -6,10 +6,9 @@ class ProjectService
 	
 	static transactional = false
 	
-	Map<String, Object> findProjectByArchitectId(Long architectId, def params)
+	Map<String, Object> findProjectByArchitectId(Long architectId, def params, Integer projectInstanceTotal)
 	{
 		List<Project> projectInstanceList = new ArrayList<Project>()
-		Integer projectInstanceTotal = 0
 		Map pagination = new HashMap()
 		
 		pagination.max = Math.min(params.max ? params.int('max') : 10, 100)
@@ -19,8 +18,11 @@ class ProjectService
 		if (architectId)
 		{
 			log.debug("--- filtering for projects owned by " + architectId)
-			projectInstanceList = Project.findAllByPartyId(architectId, pagination)
-			projectInstanceTotal = Project.countAllByPartyId(architectId)
+			def resultMap = Project.findAllActiveByPartyId(architectId, pagination, projectInstanceTotal)
+			projectInstanceList = resultMap['result']
+			projectInstanceTotal = resultMap['resultSize']
+			log.debug("--- projectInstanceList: ${projectInstanceList}")
+			log.debug("--- projectInstanceTotal: ${projectInstanceTotal}")
 		} else
 		{
 			log.debug("--- architectId is null or 0 so returning the full list")
@@ -50,6 +52,7 @@ class ProjectService
 			log.debug("--- query after type filter: " + query)
 		}
 		
+		// if filterByStatus is null, then default to string 'ACTIVE'
 		if (params.filterByStatus) {
 			query = query + (params.filterByType ? " AND " : " WHERE ") + "status = '${params.filterByStatus}'"
 			log.debug("--- query after status filter: " + query)

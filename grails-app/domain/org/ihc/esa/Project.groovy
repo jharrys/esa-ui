@@ -228,6 +228,48 @@ class Project
 	}
 
 	/**
+	 * Get a list of Active Projects owned by a specific partyId.
+	 *
+	 * @param architect as a partyId (note this is the integer id not the object)
+	 * @param namedParams
+	 * @return list of Projects
+	 */
+	static Map<List<Project>, Integer> findAllActiveByPartyId(long partyId, Map namedParams, Integer resultSize) {
+
+		namedParams.offset = namedParams.offset ?: 0
+
+		// CAUTION - brittle code below
+		Logger staticLogger = Logger.getLogger("grails.app.domain.org.ihc.esa.Project")
+		staticLogger.debug("called with partyId: " + partyId)
+		staticLogger.debug("called with namedParams: " + namedParams)
+
+		namedParams['party'] = Party.get(partyId)
+
+		List<Project> result = new ArrayList<Project>()
+
+		if (null == resultSize) {
+			staticLogger.debug("resultSize is null will only search for ACTIVE projects")
+			HashMap partyParams = new HashMap()
+			partyParams['party'] = Party.get(partyId)
+			resultSize = findAll ("from ProjectArchitect as pa where pa.party=:party and pa.project.status='ACTIVE'", partyParams).size()
+			staticLogger.debug("resultSize is ${resultSize}")
+		}
+
+		findAll ("from ProjectArchitect as pa where pa.party=:party and pa.project.status='ACTIVE' order by lastUpdated desc", namedParams).each {
+			staticLogger.debug("adding ${it.project} to result...")
+			result.add(it.project)
+		}
+
+		def map = new HashMap()
+		map.put("result", result)
+		map.put("resultSize", resultSize)
+
+		staticLogger.debug("result: ${result}")
+		staticLogger.debug("resultSize: ${resultSize}")
+		return map
+	}
+
+	/**
 	 * Return count
 	 *
 	 * @param partyId

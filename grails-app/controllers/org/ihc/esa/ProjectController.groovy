@@ -49,7 +49,7 @@ class ProjectController
 
 					// set local vars
 					def filterResult = null
-					def projectInstanceTotal
+					def projectInstanceTotal = (params.projectInstanceTotal ?: null)
 					def projectInstanceList
 
 					// clear filter and find All projects
@@ -64,7 +64,7 @@ class ProjectController
 
 					// calling service with cleared filter settings
 					log.debug("*** [list] calling projectService.findProjectByArchitectId(null, ${params})")
-					filterResult = projectService.findProjectByArchitectId(null, params)
+					filterResult = projectService.findProjectByArchitectId(null, params, projectInstanceTotal)
 					log.debug("*** [list] finished clear filter")
 
 					// set instance vars
@@ -91,6 +91,7 @@ class ProjectController
 			}
 	}
 
+	@Secured(['ROLE_ESA_ARCHITECT', 'IS_AUTHENTICATED_REMEMBERED'])
 	def filter(def params) {
 
 		log.debug("***********************************************************************************************")
@@ -127,15 +128,18 @@ class ProjectController
 
 		// variable to hold final resultsets
 		def result = null
+		def resultTotal = (params.projectInstanceTotal ? params.int('projectInstanceTotal'): null)
 
 		/*
 		 * Simple 'mine' query just call projectService.findProjectByArchitectId directly
 		 */
-		log.debug("*** [filter params.mine is '${params.mine}'")
+		log.debug("*** [filter] params.mine is '${params.mine}'")
 		if (params.mine)	 {
 			log.debug("*** [filter] requested my projects, so do a simple find")
-			result = projectService.findProjectByArchitectId(architectId, params)
+			result = projectService.findProjectByArchitectId(architectId, params, resultTotal)
+			params['filterByArchitect'] = architectId
 		} else {
+			log.debug("*** [filter] ${params}")
 			log.debug("*** [filter] more complex filter query")
 			log.debug("*** [filter] flash.projectControllerPreviousQuery is '${flash.projectControllerPreviousQuery}'")
 			result = projectService.executeFilterQuery(params, flash.projectControllerPreviousQuery ?: "")
@@ -151,6 +155,8 @@ class ProjectController
 
 		log.debug("*** [filter] finished get method")
 		log.debug("*** [filter] passing torch over to viewer")
+
+		log.debug("*** [filter] params: ${params}")
 
 		//return [projectInstanceList: result.projectInstanceList, projectInstanceTotal: result.projectInstanceTotal, params: params]
 		render view: 'list', model: [projectInstanceList: result.projectInstanceList, projectInstanceTotal: result.projectInstanceTotal, params: params]

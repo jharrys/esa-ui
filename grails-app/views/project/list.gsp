@@ -101,10 +101,10 @@ SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy")
 						<div class="page-header">
 							<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 							<g:field type="hidden" name="filter" value="${params.filter }" />
-                            <g:select from="${Project.ProjectType }" name="filterByType"  optionKey="key" noSelection="['':'-Project Type-']"  value="${filterByType }" onchange="toggleFilterOn();" />
-                            <g:select from="${Project.ProjectStatus }" name="filterByStatus"  optionKey="key" noSelection="['':'-Project Status-']"  value="${filterByStatus }" onchange="toggleFilterOn();" />
-                            <g:select from="${Party.listArchitects }" name="filterByArchitect"  optionKey="id" optionValue="name" noSelection="['':'-Architect-']"  value="${filterByArchitect }" onchange="toggleFilterOn();" />
-                            <g:textField name="filterByName"  onchange="toggleFilterOn();"  placeholder="filter by text in name of project"/>
+                            <g:select from="${Project.ProjectType }" name="filterByType"  optionKey="key" noSelection="['':'-Project Type-']"  value="${params.filterByType }" onchange="toggleFilterOn();" />
+                            <g:select from="${Project.ProjectStatus }" name="filterByStatus"  optionKey="key" noSelection="['':'-Project Status-']"  value="${params.filterByStatus }" onchange="toggleFilterOn();" />
+                            <g:select from="${Party.listArchitects }" name="filterByArchitect"  optionKey="id" optionValue="name" noSelection="['':'-Architect-']"  value="${params.filterByArchitect }" onchange="toggleFilterOn();" />
+                            <g:textField name="filterByName"  onchange="toggleFilterOn();"  placeholder="filter by text in name of project" value="${params.filterByName }"/>
 							<button id="projectFilter" type="submit" class="${projectFilterClass }" name="setFilter" value="${projectFilterNewValue }" >
 							    <i class="icon-filter icon-white"></i>
 							    ${projectFilterButtonText }
@@ -179,7 +179,7 @@ SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy")
 
 							<td><f:display bean="${projectInstance }" property="externalProjectNumber" /></td>
 
-							<td><f:display bean="${projectInstance }" property="architects" /></td>
+							<td><f:display bean="${projectInstance }" property="architects"  /></td>
 
 							<td><f:display bean="${projectInstance }" property="projectManager.name" /></td>
 
@@ -196,6 +196,9 @@ SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy")
 					</tbody>
 				</table>
 				<div class="pagination">
+				    <%
+					params['projectInstanceTotal'] = projectInstanceTotal
+					 %>
 					<bootstrap:paginate total="${projectInstanceTotal}" params="${params }"/>
 				</div>
 			</div>

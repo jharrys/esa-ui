@@ -18,7 +18,7 @@
 			<div class="nav-collapse">
 				<ul class="nav">
 					<li <%= request.forwardURI == "${createLink(uri: '/')}" ? ' class="active"' : '' %>><a href="${createLink(uri: '/')}">Home</a></li>
-					<li <%= request.forwardURI == "${createLink(uri: '/project/index')}" ? ' class="active"' : '' %>><g:link controller="project">Projects</g:link></li>
+					<li <%= request.forwardURI == "${createLink(uri: '/project/filter?mine=true')}" ? ' class="active"' : '' %>><g:link controller="project" action="filter" params="[mine: 'true']">Projects</g:link></li>
 					<li <%= request.forwardURI == "${createLink(uri: '/standards/index')}" ? ' class="active"' : '' %>><g:link controller="standards">Standards</g:link></li>
 					<li <%= request.forwardURI == "${createLink(uri: '/exception/index')}" ? ' class="active"' : '' %>><g:link controller="exception">Exceptions</g:link></li>
 					<li <%= request.forwardURI == "${createLink(uri: '/earb')}" ? ' class="disabled"' : 'class="disabled"' %>><g:link controller="earb">EARB</g:link></li>
