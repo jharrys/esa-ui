@@ -198,6 +198,11 @@ class BootStrap
 				def architectRole = new EsaRole(authority: 'ROLE_ESA_ARCHITECT').save(flush: true)
 				def adminRole = new EsaRole(authority: 'ROLE_ESA_ADMIN').save(flush: true)
 				def userRole = new EsaRole(authority: 'ROLE_ESA_USER').save(flush: true)
+				def userProjectFullRole = new EsaRole(authority: 'ROLE_ESA_PROJECT_FULL').save(flush: true)
+				def userProjectCreateRole = new EsaRole(authority: 'ROLE_ESA_PROJECT_CREATE').save(flush: true)
+				def userProjectUpdateRole = new EsaRole(authority: 'ROLE_ESA_PROJECT_UPDATE').save(flush: true)
+				def userProjectDeleteRole = new EsaRole(authority: 'ROLE_ESA_PROJECT_DELETE').save(flush: true)
+				def userProjectRoRole = new EsaRole(authority: 'ROLE_ESA_PROJECT_RO').save(flush: true)
 				def earbContributorRole = new EsaRole(authority: 'ROLE_ESA_EARB_CONTRIBUTOR').save(flush: true)
 				def earbMemberRole = new EsaRole(authority: 'ROLE_ESA_EARB_MEMBER').save(flush: true)
 				def earbAdminRole = new EsaRole(authority: 'ROLE_ESA_EARB_ADMIN').save(flush: true)
@@ -211,31 +216,59 @@ class BootStrap
 				
 				Party party = Party.first()
 				def manager = new EsaUser(username: 'manager', email_address: 'john.harris@imail.org', enabled: true, password: 'esa', party: party)
+				manager.save(flush: true)
+				
 				party = Party.findByNameIlike('%harris%')
 				def user = new EsaUser(username: 'lpjharri', email_address: 'john.harris@imail.org', enabled: true, password: 'esa', party: party)
+				user.save(flush: true)
+				
 				party = Party.findByNameIlike('%simpson%')
 				def user1 = new EsaUser(username: 'tssimpso', email_address: 'stuart.simpson@imail.org', enabled: true, password: 'esa', party: party)
+				user1.save(flush: true)
+				
 				party = Party.findByNameIlike('%gopal%')
 				def user2 = new EsaUser(username: 'gknarra', email_address: 'gopal.narra@imail.org', enabled: true, password: 'esa', party: party)
+				user2.save(flush: true)
+				
 				party = Party.findByNameIlike('%curry%')
 				def user3 = new EsaUser(username: 'ldsgrove', email_address: 'sara.curry@imail.org', enabled: true, password: 'esa', party: party)
+				user3.save(flush: true)
+				
 				party = Party.findByNameIlike('%shipley%')
 				def user4 = new EsaUser(username: 'tshipley', email_address: 'tim.shipley@imail.org', enabled: true, password: 'esa', party: party)
+				user4.save(flush: true)
+				
 				party = Party.findByNameIlike('%buchanan%')
 				def user5 = new EsaUser(username: 'lbuchanan', email_address: 'lonnie.buchanan@imail.org', enabled: true, password: 'esa', party: party)
+				user5.save(flush: true)
+				
 				party = Party.findByNameIlike('%klaus%')
 				def user6 = new EsaUser(username: 'kschulz', email_address: 'klaus.schulz@imail.org', enabled: true, password: 'esa', party: party)
+				user6.save(flush: true)
+				
 				party = Party.findByNameIlike('%intermountain%')
 				def user7 = new EsaUser(username: 'donottrust', email_address: 'john.harris@ihc.com', enabled: false, password: 'esa', party: party)
-				manager.save(flush: true)
-				user.save(flush: true)
-				user1.save(flush: true)
-				user2.save(flush: true)
-				user3.save(flush: true)
-				user4.save(flush: true)
-				user5.save(flush: true)
-				user6.save(flush: true)
 				user7.save(flush: true)
+				
+				party = Party.findByNameIlike('%dell%')
+				def user8 = new EsaUser(username: 'projectfull', email_address: 'john.harris@ihc.com', enabled: true, password: 'esa', party: party)
+				user8.save(flush: true)
+				
+				party = Party.findByNameIlike('%vlcm%')
+				def user9 = new EsaUser(username: 'projectcreate', email_address: 'john.harris@ihc.com', enabled: true, password: 'esa', party: party)
+				user9.save(flush: true)
+				
+				party = Party.findByNameIlike('%softchoice%')
+				def user10 = new EsaUser(username: 'projectupdate', email_address: 'john.harris@ihc.com', enabled: true, password: 'esa', party: party)
+				user10.save(flush: true)
+				
+				party = Party.findByNameIlike('%marshal%')
+				def user11 = new EsaUser(username: 'projectdelete', email_address: 'john.harris@ihc.com', enabled: true, password: 'esa', party: party)
+				user11.save(flush: true)
+				
+				party = Party.findByNameIlike('%transcription%')
+				def user12 = new EsaUser(username: 'projectro', email_address: 'john.harris@ihc.com', enabled: true, password: 'esa', party: party)
+				user12.save(flush: true)
 				
 				EsaUserEsaRole.create manager, adminRole, true
 				EsaUserEsaRole.create user, userRole, true
@@ -247,10 +280,15 @@ class BootStrap
 				EsaUserEsaRole.create user5, userRole, true
 				EsaUserEsaRole.create user6, bogusRole, true
 				EsaUserEsaRole.create user7, bogusRole, true
+				EsaUserEsaRole.create user8, userProjectFullRole, true
+				EsaUserEsaRole.create user9, userProjectCreateRole, true
+				EsaUserEsaRole.create user10, userProjectUpdateRole, true
+				EsaUserEsaRole.create user11, userProjectDeleteRole, true
+				EsaUserEsaRole.create user12, userProjectRoRole, true
 				
-				assert EsaUser.count() == 9
-				assert EsaRole.count() == 11
-				assert EsaUserEsaRole.count() == 10
+				assert EsaUser.count() == 14
+				assert EsaRole.count() == 16
+				assert EsaUserEsaRole.count() == 15
 				
 				/*-----------------------------------------------------------*/
 				
