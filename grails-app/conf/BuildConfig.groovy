@@ -29,7 +29,10 @@ grails.project.dependency.resolution =
 	}
 	
 	dependencies
-	{ compile "org.jadira.usertype:usertype.jodatime:1.9" }
+	{ 
+		compile "org.jadira.usertype:usertype.jodatime:1.9" 
+		test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
+	}
 	
 	plugins
 	{
@@ -56,7 +59,9 @@ grails.project.dependency.resolution =
 		runtime ":zipped-resources:1.0"
 		runtime ":cached-resources:1.0"
 		
-		test ":spock:0.7"
+		test (":spock:0.7") {
+			exclude "spock-grails-support"
+		}
 		
 		build ":tomcat:$grailsVersion"
 	}
