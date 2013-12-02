@@ -9,7 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException
 class ProjectController
 {
 	
-	static allowedMethods = [index: 'GET', list: ['GET', 'POST']]
+	static allowedMethods = [index: 'GET', list: ['GET', 'POST'], deleteNote: 'POST']
 	
 	def springSecurityService
 	
@@ -455,6 +455,26 @@ class ProjectController
 				redirect action: 'show', id: projectInstance.id
 				break
 		}
+	}
+	
+	@Secured([
+		'ROLE_ESA_PROJECT_FULL',
+		'ROLE_ESA_PROJECT_UPDATE',
+		'IS_AUTHENTICATED_REMEMBERED'
+	])
+	def deleteNote() {
+		
+		log.debug("====================================================================================")
+		log.debug("deleteNote() in project controller called with params: " + params)
+		log.debug("====================================================================================")
+		
+		log.debug("*** [deleteNote] hydrating note with id of ${params.id}")
+		Note note = Note.get(params.int('id'))
+		
+		log.debug("*** [deleteNote] deleting note...")
+		note.delete(flush: true)
+		
+		render "succeeded"
 	}
 	
 	@Secured([
