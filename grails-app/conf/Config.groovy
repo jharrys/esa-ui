@@ -11,28 +11,42 @@
 grails.project.groupId = appName 		// change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true 		// enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
-grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
-                      xml: ['text/xml', 'application/xml'],
-                      text: 'text/plain',
-                      js: 'text/javascript',
-                      rss: 'application/rss+xml',
-                      atom: 'application/atom+xml',
-                      css: 'text/css',
-                      csv: 'text/csv',
-                      all: '*/*',
-                      json: ['application/json','text/json'],
-                      form: 'application/x-www-form-urlencoded',
-                      multipartForm: 'multipart/form-data'
-                    ]
+grails.mime.types = [ html: [
+		'text/html',
+		'application/xhtml+xml'
+	],
+	xml: [
+		'text/xml',
+		'application/xml'
+	],
+	text: 'text/plain',
+	js: 'text/javascript',
+	rss: 'application/rss+xml',
+	atom: 'application/atom+xml',
+	css: 'text/css',
+	csv: 'text/csv',
+	all: '*/*',
+	json: [
+		'application/json',
+		'text/json'
+	],
+	form: 'application/x-www-form-urlencoded',
+	multipartForm: 'multipart/form-data'
+]
 
 // URL Mapping Cache Max Size, defaults to 5000
 //grails.urlmapping.cache.maxsize = 1000
 
 // What URL patterns should be processed by the resources plugin
-grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
+grails.resources.adhoc.patterns = [
+	'/images/*',
+	'/css/*',
+	'/js/*',
+	'/plugins/*'
+]
 
 // The default codec used to encode data with ${}
-grails.views.default.codec = "none" // none, html, base64
+grails.views.default.codec = "html" // none, html, base64
 grails.views.gsp.encoding = "UTF-8"
 grails.converters.encoding = "UTF-8"
 
@@ -75,25 +89,25 @@ grails {
  * Environment specific settings
  * *****************************************************************************************************************/
 environments {
-    development {
+	development {
 		grails.gorm.failOnError = true
-
-        grails.logging.jul.usebridge = true
-
+		
+		grails.logging.jul.usebridge = true
+		
 		// mask out secure fields - keep this off in development. FIXME: create tests for this
 		// grails.exceptionresolver.params.exclude = ['password', 'creditCard']
-
+		
 		/* *****************************************************************************
 		 * spring-security settings
 		 * for details about service see conf/spring/resources.groovy
 		 * the full DN will be equivalent to "cn=${username},${userDnBase}"
 		 * ****************************************************************************/
-
+		
 		//	grails.plugins.springsecurity.ipRestrictions = [ '/**': ['127.0.0.0/8', '::1/128'] ]
 		grails.plugins.springsecurity.ldap.active = false
 		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = false
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
-
+		
 		// hibernate-search plugin configuration
 		grails.plugins.hibernatesearch = {
 			rebuildIndexOnStart true
@@ -103,46 +117,46 @@ environments {
 			//threadsForIndexWriter 3
 			//cacheMode CacheMode.NORMAL
 		}
-    }
-
+	}
+	
 	test {
 		grails.gorm.failOnError = true
-
+		
 		grails.logging.jul.usebridge = true
-
+		
 		// mask out secure fields
 		grails.exceptionresolver.params.exclude = ['password', 'creditCard']
-
+		
 		/* *****************************************************************************
 		 * spring-security settings
 		 * for details about service see conf/spring/resources.groovy
 		 * the full DN will be equivalent to "cn=${username},${userDnBase}"
 		 * ****************************************************************************/
-
+		
 		grails.plugins.springsecurity.ldap.active = false
 		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = false
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
 	}
-
-    production {
+	
+	production {
 		// set to false once you are comfortable in production
 		grails.gorm.failOnError = true
-
-        grails.logging.jul.usebridge = true
-
+		
+		grails.logging.jul.usebridge = true
+		
 		// mask out secure fields
 		grails.exceptionresolver.params.exclude = ['password', 'creditCard']
-
+		
 		/* *****************************************************************************
 		 * spring-security settings
 		 * for details about service see conf/spring/resources.groovy
 		 * the full DN will be equivalent to "cn=${username},${userDnBase}"
 		 * ****************************************************************************/
-
+		
 		grails.plugins.springsecurity.ldap.active = false
 		grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = false
 		grails.plugins.springsecurity.ldap.usernameMapper.userDnDBase = false
-    }
+	}
 }
 
 /* ******************************************************************************************************************
@@ -156,16 +170,16 @@ log4j =
 	if (!catalinaBase) catalinaBase = '.'
 	def logDirectory = "${catalinaBase}/logs"
 	def logFile = "${logDirectory}/esaui.log"
-
+	
 	appenders {
 		console		name: 'stdout'
 		file		name: 'file', file: logFile, append: true
 	}
-
+	
 	environments {
-
+		
 		development {
-
+			
 			/*
 			 * grails.app - most everything to do with grails
 			 * grails.app.{domain,controllers,services,taglib}.org.ihc.esa - my package specific code
@@ -178,16 +192,16 @@ log4j =
 			 * grails.app.services.grails.plugins.springsecurity.ui.SpringSecurityUiService - for output from springsecurity.ui plugin
 			 * grails.app.services.org.grails.plugins.console.ConsoleService - for output from the console plugin
 			 */
-
+			
 			// debug 	'grails.app'
-
+			
 			// trace	'org.hibernate.type.descriptor.sql.BasicBinder'
 		}
-
+		
 		test {
 			// set appropriate defaults for test environment
 		}
-
+		
 		production {
 			// FIXME: set appropriate production default logging
 		}
@@ -234,8 +248,7 @@ grails.plugins.springsecurity.controllerAnnotations.staticRules = [
 	'/user/**': ['ROLE_ESA_ADMIN'],
 	'/role/**': ['ROLE_ESA_ADMIN'],
 	'/registrationCode/**': ['ROLE_ESA_ADMIN'],
-	'/securityInfo/**': ['ROLE_ESA_ADMIN']
-]
+	'/securityInfo/**': ['ROLE_ESA_ADMIN']]
 
 // springsecurity Login Config Settings; authenticationProcessingFilter
 grails.plugins.springsecurity.apf.allowSessionCreation = true
@@ -268,7 +281,16 @@ grails.plugins.reloadConfig.files = []
 grails.plugins.reloadConfig.includeConfigLocations = true
 grails.plugins.reloadConfig.interval = 5000
 grails.plugins.reloadConfig.enabled = true
-grails.plugins.reloadConfig.notifyPlugins = ["mail", "external-config-reload", "twitter-bootstrap", "hibernate", "hibernate-search", "jquery", "fields", "resources"]
+grails.plugins.reloadConfig.notifyPlugins = [
+	"mail",
+	"external-config-reload",
+	"twitter-bootstrap",
+	"hibernate",
+	"hibernate-search",
+	"jquery",
+	"fields",
+	"resources"
+]
 grails.plugins.reloadConfig.automerge = true
 
 /* ******************************************************************************************************************
@@ -277,7 +299,8 @@ grails.plugins.reloadConfig.automerge = true
 
 grails.config.locations = [
 	"classpath: ${appName}-config.groovy",
-	"file:./${appName}-config.groovy"]
+	"file:./${appName}-config.groovy"
+]
 
 if (System.properties["${appName}.config.location"]) {
 	grails.config.locations << "file:" + System.properties["${appName}.config.location"]
