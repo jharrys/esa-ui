@@ -67,4 +67,9 @@ class EsaUser
 	{
 		password = springSecurityService.encodePassword(password)
 	}
+	
+	public String toString()
+	{
+		return "${this.id} : ${this.username}"
+	}
 }

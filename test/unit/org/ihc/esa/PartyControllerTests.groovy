@@ -11,7 +11,7 @@ class PartyControllerTests {
 
     def populateValidParams(params) {
         assert params != null
-        // TESTME: Populate valid properties like...
+        // TODO: Populate valid properties like...
         //params["name"] = 'someValidName'
     }
 
@@ -101,7 +101,7 @@ class PartyControllerTests {
 
         // test invalid parameters in update
         params.id = party.id
-        //TESTME: add invalid values to params object
+        //TODO: add invalid values to params object
 
         controller.update()
 
