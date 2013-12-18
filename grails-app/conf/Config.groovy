@@ -303,5 +303,17 @@ grails.config.locations = [
 ]
 
 if (System.properties["${appName}.config.location"]) {
+	println System.properties["${appName}.config.location"]
 	grails.config.locations << "file:" + System.properties["${appName}.config.location"]
+	
+	File f = new File(System.properties["${appName}.config.location"])
+	
+	
+	println "config's location is: ${f.getCanonicalFile()}"
+	
+	if (f.exists()) {
+		println "config file exists at location."
+	} else {
+		println "file does NOT exist at location."
+	}
 }
