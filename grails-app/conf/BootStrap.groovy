@@ -73,7 +73,7 @@ class BootStrap
 					def map = [:]
 					
 					map['form'] = 4
-					map['party'] = 92
+					map['party'] = 94
 					map['configuration_parameter'] = 2
 					map['lookup_list'] = 14
 					map['lookup_element'] = 69

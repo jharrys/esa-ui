@@ -24,56 +24,56 @@ class Party
 	 * Can be nullable.
 	 */
 	String externalId
-
+	
 	/**
 	 * Describes the type of relationship we have with the vendor.
 	 * Required field.
 	 */
 	String type
-
+	
 	/**
 	 * Vendor name.
 	 * Can be nullable.
 	 */
 	String name
-
+	
 	/**
 	 * Valid email address.
 	 * Can be nullable.
 	 */
 	String emailAddress
-
+	
 	String mobilePhoneNumber
 	String workPhoneNumber
 	String homePhoneNumber
-
+	
 	/**
 	 * Valid URL for vendor's website.
 	 * Can be nullable.
 	 */
 	String webSiteUrl
-
+	
 	Date dateCreated
 	String createdBy
 	Date lastUpdated
 	String updatedBy
-
+	
 	int hashCode = 0
-
+	
 	static transients = ['hashCode']
-
+	
 	/**
 	 * Return list of architects
 	 */
-	static listArchitects = where
-	{ type == 'architect' }
-
+	static listEnterpriseArchitects = where
+	{ type == 'architect_enterprise' || type == 'architect_operational' }
+	
 	/**
 	 * Return list of persons
 	 */
 	static listPersons = where
 	{ type == 'person' || type == 'architect'}
-
+	
 	/**
 	 * Party can have many of type {@link Item}
 	 * Party can have many of type {@link Address}; join table is PARTY_ADDRESS
@@ -86,12 +86,12 @@ class Party
 		partyRelationshipParty1: PartyRelationship,
 		esaUsers: EsaUser
 	]
-
+	
 	static mappedBy = [
 		partyRelationshipParty:"parentParty",
 		partyRelationshipParty1:"childParty"
 	]
-
+	
 	/**
 	 * Party maps to table PARTY
 	 */
@@ -101,7 +101,7 @@ class Party
 		table 'PARTY'
 		version false
 		cache true
-
+		
 		externalId column: 'EXTERNAL_ID'
 		type column: 'TYPE'
 		name column: 'NAME'
@@ -114,15 +114,15 @@ class Party
 		createdBy column: 'CREATED_BY'
 		lastUpdated column: 'LAST_UPDATED'
 		updatedBy column: 'UPDATED_BY'
-
+		
 		//validated: addresses, items
 		addresses cache:true, joinTable: [ name: 'PARTY_ADDRESS', key: 'PARTY_ID', column: 'ADDRESS_ID']
 		items cache: true, joinTable: [ name: 'ITEM', key: 'VENDOR_PARTY_ID' ]
-
+		
 		partyRelationshipParty joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'PARENT_PARTY_ID']
 		partyRelationshipParty1 joinTable: [ name: 'PARTY_RELATIONSHIP', key: 'CHILD_PARTY_ID']
 	}
-
+	
 	static constraints =
 	{
 		externalId nullable: true, blank: false, size: 1..128
@@ -138,7 +138,7 @@ class Party
 		lastUpdated nullable: true, display: false, format: 'yyyy-MM-dd'
 		updatedBy nullable: false, size: 1..40
 	}
-
+	
 	/**
 	 * id - because name can be null
 	 *
@@ -147,28 +147,28 @@ class Party
 	 */
 	@Override public boolean equals(Object object)
 	{
-
+		
 		if (!(object instanceof Party)) return false
-
+		
 		if (object == null) return false
-
+		
 		if (this.is(object)) return true
-
+		
 		if (object.id.equals(this.id))	return true
-
+		
 		return false
 	}
-
+	
 	@Override public int hashCode()
 	{
-
+		
 		if (this.hashCode==0)
 		{
 			int result = 17
 			result = (37*result) + this.id.hashCode()
 			this.hashCode = result
 		}
-
+		
 		return this.hashCode
 	}
 }

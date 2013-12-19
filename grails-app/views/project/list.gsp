@@ -103,7 +103,7 @@ SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy")
 							<g:field type="hidden" name="filter" value="${params.filter }" />
                             <g:select from="${Project.ProjectType }" name="filterByType"  optionKey="key" noSelection="['':'-Project Type-']"  value="${params.filterByType }" onchange="toggleFilterOn();" />
                             <g:select from="${Project.ProjectStatus }" name="filterByStatus"  optionKey="key" noSelection="['':'-Project Status-']"  value="${params.filterByStatus }" onchange="toggleFilterOn();" />
-                            <g:select from="${Party.listArchitects }" name="filterByArchitect"  optionKey="id" optionValue="name" noSelection="['':'-Architect-']"  value="${params.filterByArchitect }" onchange="toggleFilterOn();" />
+                            <g:select from="${Party.listEnterpriseArchitects }" name="filterByArchitect"  optionKey="id" optionValue="name" noSelection="['':'-Architect-']"  value="${params.filterByArchitect }" onchange="toggleFilterOn();" />
                             <g:textField name="filterByName"  onchange="toggleFilterOn();"  placeholder="filter by text in name of project" value="${params.filterByName }"/>
 							<button id="projectFilter" type="submit" class="${projectFilterClass }" name="setFilter" value="${projectFilterNewValue }" >
 							    <i class="icon-filter icon-white"></i>
