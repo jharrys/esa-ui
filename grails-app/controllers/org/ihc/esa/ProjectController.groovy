@@ -4,6 +4,7 @@ import grails.plugins.springsecurity.Secured
 
 import java.text.SimpleDateFormat
 
+import org.ihc.esa.Project.ProjectStatus
 import org.springframework.dao.DataIntegrityViolationException
 
 class ProjectController
@@ -121,7 +122,7 @@ class ProjectController
 		params.filter = "on"
 		log.debug("*** [filter] set params.filter to '${params.filter}'")
 		
-		params.sort = "lastUpdated"
+		params.sort = params.sort ? params.sort : "lastUpdated"
 		log.debug("*** [filter] set params.sort to '${params.sort}'")
 		
 		params.order = "desc"
@@ -455,6 +456,32 @@ class ProjectController
 				redirect action: 'show', id: projectInstance.id
 				break
 		}
+	}
+	
+	@Secured([
+		'ROLE_ESA_PROJECT_FULL',
+		'ROLE_ESA_PROJECT_UPDATE',
+		'IS_AUTHENTICATED_REMEMBERED'
+	])
+	def close() {
+		
+		log.debug("====================================================================================")
+		log.debug("close() in project controller called with params: " + params)
+		log.debug("====================================================================================")
+		
+		Project project = Project.get(params.id)
+		
+		if (project) {
+			Date d = new Date()
+			project.status = ProjectStatus.CLOSED
+			project.dateCompleted = d
+			project.save()
+			flash.message = "ACID ${params.id} was marked closed with date of ${d}."
+		} else {
+			flash.message = "ACID ${params.id} was not found."
+		}
+		
+		redirect action: 'list', params: params
 	}
 	
 	@Secured([

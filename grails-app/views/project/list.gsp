@@ -1,10 +1,18 @@
 <g:logMsg level="debug">= begin rendering of project/list view =</g:logMsg>
 <g:logMsg level="debug">= params: ${params } =</g:logMsg>
 <%@ page import="org.ihc.esa.Project" %>
+<%@ page import="org.ihc.esa.Project.ProjectStatus" %>
 <%@ page import="org.ihc.esa.Party" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%
 SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy")
+def jparams = [:]
+jparams['mine'] = params.mine
+jparams['setFilter'] = params.filter
+jparams['filterByArchitect'] = params.filterByArchitect
+jparams['filterByStatus'] = params.filterByStatus
+jparams['filterByType'] = params.filterByType
+jparams['filterByName'] = params.filterByName
  %>
 
 <!doctype html>
@@ -117,23 +125,23 @@ SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy")
 				<bootstrap:alert class="alert-info">${flash.message}</bootstrap:alert>
 				</g:if>
 
-				<table class="table table-striped">
+				<table class="table">
 					<thead>
 						<tr>
 
-							<g:sortableColumn property="id" title="${message(code: 'project.id.label', default: 'ACID')}" />
+							<g:sortableColumn action="list" property="id" params="${jparams }" title="${message(code: 'project.id.label', default: 'ACID')}" />
 
-							<g:sortableColumn property="name" title="${message(code: 'project.name.label', default: 'Name')}" />
+							<g:sortableColumn action="list" property="name" params="${jparams }" title="${message(code: 'project.name.label', default: 'Name')}" />
 
-							<g:sortableColumn property="type" title="${message(code: 'project.type.label', default: 'Type')}" />
+							<g:sortableColumn action="list" property="type" params="${jparams }" title="${message(code: 'project.type.label', default: 'Type')}" />
 
-							<g:sortableColumn property="status" title="${message(code: 'project.status.label', default: 'Status')}" />
-
-							<g:sortableColumn property="externalProjectNumber" title="${message(code: 'project.externalProjectNumber.label', default: 'External Project Number')}" />
+							<g:sortableColumn action="list" property="status" params="${jparams }" title="${message(code: 'project.status.label', default: 'Status')}" />
 
 							<th class="header"><g:message code="project.architect.label" default="Architect" /></th>
 
 							<th class="header"><g:message code="project.projectManager.label" default="Project Manager" /></th>
+							
+							<th class="header">Last Updated</th>
 
 							<th></th>
 						</tr>
@@ -144,30 +152,36 @@ SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy")
 					<g:logMsg level="debug">= projectInstanceTotal: ${projectInstanceTotal } =</g:logMsg>
 
 					<g:each in="${projectInstanceList}" var="projectInstance">
-					   <g:logMsg level="debug">= project ${projectInstance.id } =</g:logMsg>
-						<tr>
+						    <g:logMsg level="debug">= project ${projectInstance.id } =</g:logMsg>
+						    <g:if test="${((new Date()) - projectInstance.lastUpdated) > 90}">
+						       <tr class="error">
+	                        </g:if>
+	                        <g:elseif test="${((new Date()) - projectInstance.lastUpdated) > 30}">
+	                            <tr class="warning">
+	                        </g:elseif>
+	                        <g:else>
+	                            <tr>
+	                        </g:else>
 							<td>
 							     <g:if test="${projectInstance.notes }">
                                      <%
-                                        def noteId = ""
-                                        String fullNoteText = ""
-                                        for (note in projectInstance.notes) {
-                                            noteId = note.id
-                                            fullNoteText = (fullNoteText ? "${fullNoteText}<br><hr>" : "")
-                                            fullNoteText = "${fullNoteText} <b><small>${sdf.format(note.lastUpdated)}</small></b><br>${note.text.trim()}"
-                                        }
+									    def note = projectInstance.notes.last()
+                                        def noteId = note.id
+                                        String fullNoteText = "<b><small>${sdf.format(note.lastUpdated)}</small></b><br>${note.text.trim()}"
                                       %>
-                                     <a href="#" id="note_${noteId }" rel="tooltip" data-content="${fullNoteText }" >
+                                     <g:link action="show" id="${projectInstance.id }" elementId="${projectInstance.id }"  rel="tooltip" data-content="${fullNoteText }" >
                                          <span class="label label-warning"><f:display bean="${projectInstance }" property="id" /></span>
-                                     </a>
+                                     </g:link>
                                      <script>
                                         $(function() {
-                                            $('#note_${noteId}').popover({trigger: 'hover', placement: 'top', html: true})
+                                            $('#${projectInstance.id}').popover({trigger: 'hover', placement: 'top', title: 'Most Recent Note', html: true})
                                         });
                                     </script>
                                  </g:if>
                                  <g:else>
-                                     <f:display bean="${projectInstance }" property="id" />
+                                     <g:link action="show" id="${projectInstance.id }">
+                                         <span><f:display bean="${projectInstance }" property="id" /></span>
+                                     </g:link>
                                  </g:else>
                             </td>
 
@@ -177,18 +191,36 @@ SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy")
 
 							<td><f:display bean="${projectInstance }" property="status" /></td>
 
-							<td><f:display bean="${projectInstance }" property="externalProjectNumber" /></td>
-
 							<td><f:display bean="${projectInstance }" property="architects"  /></td>
 
 							<td><f:display bean="${projectInstance }" property="projectManager.name" /></td>
+							
+							<td>
+							     <%
+						              Date today = new Date()
+						              if ((today - projectInstance.lastUpdated) > 90) {
+						                  out << "> 90 days"
+						              } else if ((today - projectInstance.lastUpdated) > 30) {
+						                  out << "> 30 days"
+						              } else {
+						                  out << "< 30 days"
+						              }
+						           %>
+							</td>
 
 							<td class="link">
-								<g:link action="show" id="${projectInstance.id}" class="btn btn-small">Show &raquo;</g:link>
-								<g:link class="btn btn-small" action="edit" id="${projectInstance?.id}">
-                                    <i class="icon-pencil"></i>
-                                    <g:message code="default.button.edit.label" default="Edit" />
-                                </g:link>
+							    <g:if test="${(projectInstance.status == ProjectStatus.CLOSED) }">
+                                    <g:link class="btn btn-small" action="edit" id="${projectInstance?.id}">
+                                        <i class="icon-edit"></i>
+                                        <g:message code="default.button.edit.label" default="Edit" />
+                                    </g:link>
+							    </g:if>
+							    <g:else>
+							        <g:link class="btn btn-small" action="close" id="${projectInstance?.id}">
+                                        <i class="icon-check"></i>
+                                        <g:message code="default.button.close.label" default="Close" />
+                                    </g:link>
+                                </g:else>
 							</td>
 						</tr>
 					</g:each>

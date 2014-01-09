@@ -13,6 +13,7 @@ class ProjectService
 		
 		pagination.max = Math.min(params.max ? params.int('max') : 10, 100)
 		pagination.offset = params.int('offset')
+		pagination.sort = params.sort
 		//pagination.cache = true
 		
 		if (architectId)
@@ -84,6 +85,12 @@ class ProjectService
 			log.debug("--- query after name filter: " + query)
 		}
 		
+		if (params.sort) {
+			
+			query = query + " ORDER BY ${params.sort} asc"
+			log.debug("--- query after adding sort: " + query)
+		}
+		
 		log.debug("--- final query: " + query)
 		
 		def projectInstanceTotal = 0
@@ -97,6 +104,7 @@ class ProjectService
 		params.offset = params.offset ? params.int('offset') : 0
 		projectInstanceList = Project.findAll(query, [max: params.max, offset: params.offset, cache: true])
 		
+		log.debug("--- params: ${params}")
 		return [projectInstanceList: projectInstanceList, projectInstanceTotal: projectInstanceTotal, projectControllerPreviousQuery: query, params: params]
 	}
 	
