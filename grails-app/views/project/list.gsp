@@ -153,10 +153,10 @@ jparams['filterByName'] = params.filterByName
 
 					<g:each in="${projectInstanceList}" var="projectInstance">
 						    <g:logMsg level="debug">= project ${projectInstance.id } =</g:logMsg>
-						    <g:if test="${((new Date()) - projectInstance.lastUpdated) > 90}">
+						    <g:if test="${(projectInstance.status != ProjectStatus.CLOSED) && ((new Date()) - projectInstance.lastUpdated) > 90}">
 						       <tr class="error">
 	                        </g:if>
-	                        <g:elseif test="${((new Date()) - projectInstance.lastUpdated) > 30}">
+	                        <g:elseif test="${(projectInstance.status != ProjectStatus.CLOSED) && ((new Date()) - projectInstance.lastUpdated) > 30}">
 	                            <tr class="warning">
 	                        </g:elseif>
 	                        <g:else>
