@@ -11,7 +11,6 @@
 	    <script>
 	       $(function() {
 	           $('#${property }').datepicker({format: 'mm/dd/yyyy'});
-	           $('.datepicker').css('z-index', 9999);  // the 'dropdown-menu' class sets z-index lower than modal box, so datepicker was hidden
 	           });
 	    </script>
     </div>
