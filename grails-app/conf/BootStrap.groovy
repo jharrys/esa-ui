@@ -271,6 +271,8 @@ class BootStrap
 				user12.save(flush: true)
 				
 				EsaUserEsaRole.create manager, adminRole, true
+				EsaUserEsaRole.create manager, userProjectFullRole, true
+				EsaUserEsaRole.create user, userProjectFullRole, true
 				EsaUserEsaRole.create user, userRole, true
 				EsaUserEsaRole.create user, architectRole, true
 				EsaUserEsaRole.create user1, userRole, true
@@ -288,7 +290,7 @@ class BootStrap
 				
 				assert EsaUser.count() == 14
 				assert EsaRole.count() == 16
-				assert EsaUserEsaRole.count() == 15
+				assert EsaUserEsaRole.count() == 17
 				
 				/*-----------------------------------------------------------*/
 				
