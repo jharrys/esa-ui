@@ -141,7 +141,7 @@
                     <g:if test="${projectInstance?.notes }">
                         <dt>Notes:</dt>
 						<g:each in="${projectInstance.notes }" var="note">
-						       <em>for <g:formatDate date="${note.lastUpdated }" format="MMM dd, yyyy" /> </em>
+						       <em>for <g:formatDate date="${note.dateCreated }" format="MMM dd, yyyy" /> </em>
 						       <dd>
 	                            ${note.text.trim()}
 	                            </dd>

@@ -6,7 +6,7 @@
 
 <g:each in="${bean.notes }" var="note">
 	<div class="control-group ${invalid ? 'error' : ''}" id="cg_note_${note.id }">
-	    <label class="control-label" for="note_${note.id}">Note from <g:formatDate date="${note.lastUpdated }" format="MMM dd, yyyy" /></label>
+	    <label class="control-label" for="note_${note.id}">Note from <g:formatDate date="${note.dateCreated }" format="MMM dd, yyyy" /></label>
 	    <div class="controls">
 	        <g:textArea name="note_${note.id }">${note.text.trim() }</g:textArea>
 	        <g:if test="${invalid}"><span class="help-inline">${errors.join('<br>')}</span></g:if>

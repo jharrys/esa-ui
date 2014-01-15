@@ -170,7 +170,7 @@ jparams['filterByName'] = params.filterByName
                                      <%
                                         def note = projectInstance.notes.last()
                                         def noteId = note.id
-                                        String fullNoteText = "<b><small>${sdf.format(note.lastUpdated)}</small></b><br>${note.text.trim()}"
+                                        String fullNoteText = "<b><small>${sdf.format(note.dateCreated)}</small></b><br>${note.text.trim()}"
                                       %>
                                      <i id="note_${projectInstance.id }" class="icon-comment" rel="tooltip" data-content="${fullNoteText }"></i>
                                      <script>
@@ -247,7 +247,7 @@ jparams['filterByName'] = params.filterByName
                     data: {notetext: result, project_id: projectId, createdBy: '${sec.loggedInUserInfo(field:'username') }', updatedBy: '${sec.loggedInUserInfo(field:'username') }'},
                     success: function(results) {
                         var elementId = "#project_" + projectId
-                        var noteContent = "<b><small>" + results.note.lastUpdated + "</small></b><br>" + results.note.text
+                        var noteContent = "<b><small>" + results.note.dateCreated + "</small></b><br>" + results.note.text
                         $(elementId).removeClass();
                         $(elementId + " .projectlastupdated").html('< 30 days');
 

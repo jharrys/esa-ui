@@ -126,7 +126,7 @@ class Project
 		version false
 		cache true
 		
-		notes sort: 'lastUpdated', order: 'asc', cache: true
+		notes sort: 'dateCreated', order: 'asc', cache: true
 		
 		name column: 'NAME'
 		type column: 'TYPE'
