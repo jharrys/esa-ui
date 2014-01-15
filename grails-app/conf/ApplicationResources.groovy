@@ -9,6 +9,7 @@ modules =
 		resource url:'js/application.js'
 		resource url:'js/spin.js'
 		resource url:'js/bootstrap-datepicker.js'
+		resource url:'js/bootbox.js'
 	}
 	
 	utils

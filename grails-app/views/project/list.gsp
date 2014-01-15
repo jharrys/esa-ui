@@ -125,9 +125,11 @@ jparams['filterByName'] = params.filterByName
 				<bootstrap:alert class="alert-info">${flash.message}</bootstrap:alert>
 				</g:if>
 
-				<table class="table">
-					<thead>
+				<table class="table" id="project">
+					<thead id="projecth">
 						<tr>
+						
+						     <th class="header"></th> 
 
 							<g:sortableColumn action="list" property="id" params="${jparams }" title="${message(code: 'project.id.label', default: 'ACID')}" />
 
@@ -146,7 +148,7 @@ jparams['filterByName'] = params.filterByName
 							<th></th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="projectb">
 					<g:logMsg level="debug">= start looping through projectInstanceList =</g:logMsg>
 					<g:logMsg level="debug">= projectInstanceList: ${projectInstanceList } =</g:logMsg>
 					<g:logMsg level="debug">= projectInstanceTotal: ${projectInstanceTotal } =</g:logMsg>
@@ -154,48 +156,47 @@ jparams['filterByName'] = params.filterByName
 					<g:each in="${projectInstanceList}" var="projectInstance">
 						    <g:logMsg level="debug">= project ${projectInstance.id } =</g:logMsg>
 						    <g:if test="${(projectInstance.status != ProjectStatus.CLOSED) && ((new Date()) - projectInstance.lastUpdated) > 90}">
-						       <tr class="error">
+						       <tr id="project_${projectInstance.id }" class="error">
 	                        </g:if>
 	                        <g:elseif test="${(projectInstance.status != ProjectStatus.CLOSED) && ((new Date()) - projectInstance.lastUpdated) > 30}">
-	                            <tr class="warning">
+	                            <tr id="project_${projectInstance.id }" class="warning">
 	                        </g:elseif>
 	                        <g:else>
-	                            <tr>
+	                            <tr id="project_${projectInstance.id }" >
 	                        </g:else>
-							<td>
-							     <g:if test="${projectInstance.notes }">
+	                        <td class="projectflag">
+	                             <a class="modalnote" href="#" id="newnote_${projectInstance.id }" ><i class="icon-plus"></i></a>
+	                             <g:if test="${projectInstance.notes }">
                                      <%
-									    def note = projectInstance.notes.last()
+                                        def note = projectInstance.notes.last()
                                         def noteId = note.id
                                         String fullNoteText = "<b><small>${sdf.format(note.lastUpdated)}</small></b><br>${note.text.trim()}"
                                       %>
-                                     <g:link action="show" id="${projectInstance.id }" elementId="${projectInstance.id }"  rel="tooltip" data-content="${fullNoteText }" >
-                                         <span class="label label-warning"><f:display bean="${projectInstance }" property="id" /></span>
-                                     </g:link>
+                                     <i id="note_${projectInstance.id }" class="icon-comment" rel="tooltip" data-content="${fullNoteText }"></i>
                                      <script>
                                         $(function() {
-                                            $('#${projectInstance.id}').popover({trigger: 'hover', placement: 'top', title: 'Most Recent Note', html: true})
+                                            $('.icon-comment').popover({trigger: 'hover', placement: 'top', title: 'Most Recent Note', html: true})
                                         });
                                     </script>
                                  </g:if>
-                                 <g:else>
-                                     <g:link action="show" id="${projectInstance.id }">
-                                         <span><f:display bean="${projectInstance }" property="id" /></span>
-                                     </g:link>
-                                 </g:else>
+                            </td>
+							<td class="projectid">
+                                 <g:link action="show" id="${projectInstance.id }">
+                                     <span><f:display bean="${projectInstance }" property="id" /></span>
+                                 </g:link>
                             </td>
 
-							<td><f:display bean="${projectInstance }" property="name" /></td>
+							<td class="projectname"><f:display bean="${projectInstance }" property="name" /></td>
 
-							<td><f:display bean="${projectInstance }" property="type" /></td>
+							<td class="projecttype"><f:display bean="${projectInstance }" property="type" /></td>
 
-							<td><f:display bean="${projectInstance }" property="status" /></td>
+							<td class="projectstatus"><f:display bean="${projectInstance }" property="status" /></td>
 
-							<td><f:display bean="${projectInstance }" property="architects"  /></td>
+							<td class="projectarchitects"><f:display bean="${projectInstance }" property="architects"  /></td>
 
-							<td><f:display bean="${projectInstance }" property="projectManager.name" /></td>
+							<td class="projectprojectmanager"><f:display bean="${projectInstance }" property="projectManager.name" /></td>
 							
-							<td>
+							<td class="projectlastupdated">
 							     <%
 						              Date today = new Date()
 						              if ((today - projectInstance.lastUpdated) > 90) {
@@ -216,10 +217,10 @@ jparams['filterByName'] = params.filterByName
                                     </g:link>
 							    </g:if>
 							    <g:else>
-							        <g:link class="btn btn-small" action="close" id="${projectInstance?.id}">
+							        <button class="btn btn-small projectclosebtn" id="${projectInstance?.id}">
                                         <i class="icon-check"></i>
                                         <g:message code="default.button.close.label" default="Close" />
-                                    </g:link>
+                                    </button>
                                 </g:else>
 							</td>
 						</tr>
@@ -236,5 +237,46 @@ jparams['filterByName'] = params.filterByName
 			</div>
 
 		</div>
+		
+		<script>
+        $(document).on("click", ".modalnote", function(e) {
+              var projectId = this.id.split("_")[1]
+              bootbox.prompt("Enter your note:", function(result) {
+                $.ajax({
+                    url: '/esa-ui/project/ajaxAddNote',
+                    data: {notetext: result, project_id: projectId, createdBy: '${sec.loggedInUserInfo(field:'username') }', updatedBy: '${sec.loggedInUserInfo(field:'username') }'},
+                    success: function(results) {
+                        var elementId = "#project_" + projectId
+                        var noteContent = "<b><small>" + results.note.lastUpdated + "</small></b><br>" + results.note.text
+                        $(elementId).removeClass();
+                        $(elementId + " .projectlastupdated").html('< 30 days');
+
+                        if($("#note_" + projectId).length == 0) {
+	                        $(elementId + " .projectflag").append('<i id="note_' + projectId + '" class="icon-comment" rel="tooltip" data-content="' + noteContent + '"></i>');
+	                        elementId = "#note_" + projectId
+	                        $(function() {
+	                            $('.icon-comment').popover({trigger: 'hover', placement: 'top', title: 'Most Recent Note', html: true})
+	                            });
+	                        } else {
+		                        $("#note_" + projectId).attr("data-content", noteContent);    
+		                    }
+                        }
+                    });
+                });
+            });
+
+        $(document).on("click", ".projectclosebtn", function(e) {
+            var projectId = this.id
+            $.ajax({
+                url: '/esa-ui/project/ajaxClose',
+                data: {project_id: projectId},
+                success: function(results) {
+                    var elementId = "#project_" + projectId
+                    $(elementId).remove();
+                    }
+                });
+            });
+    </script>
+		
 	</body>
 </html>

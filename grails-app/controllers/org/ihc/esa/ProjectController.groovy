@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat
 import org.ihc.esa.Project.ProjectStatus
 import org.springframework.dao.DataIntegrityViolationException
 
+
 class ProjectController
 {
 	
@@ -408,6 +409,19 @@ class ProjectController
 					log.debug("*** set projectProperties.notes to ${paramsProject.notes}")
 				}
 			
+			// check existing notes
+				for (entry in params) {
+					if (entry.key.startsWith("note_")	) {
+						def noteId = entry.key.split(/_/)[1]
+						def note = Note.get(noteId)
+						if (!entry.value.equals(note.text)) {
+							log.debug("*** note (${entry}) is not the same, so updating...")
+							note.text = entry.value
+							note.save()
+						}
+					}
+				}
+			
 				def architects = []
 				if (params.architects) {
 					if (params.architects instanceof String) {
@@ -463,25 +477,26 @@ class ProjectController
 		'ROLE_ESA_PROJECT_UPDATE',
 		'IS_AUTHENTICATED_REMEMBERED'
 	])
-	def close() {
+	def ajaxClose() {
 		
 		log.debug("====================================================================================")
-		log.debug("close() in project controller called with params: " + params)
+		log.debug("ajaxClose() in project controller called with params: " + params)
 		log.debug("====================================================================================")
 		
-		Project project = Project.get(params.id)
+		Project project = Project.get(params.project_id)
 		
 		if (project) {
+			log.debug("*** [ajaxClose] Found project <${project.id}>")
 			Date d = new Date()
 			project.status = ProjectStatus.CLOSED
 			project.dateCompleted = d
 			project.save()
-			flash.message = "ACID ${params.id} was marked closed with date of ${d}."
+			log.debug("*** [ajaxClose] Project <${project.id}> closed.")
 		} else {
-			flash.message = "ACID ${params.id} was not found."
+			log.debug("*** [ajaxClose] Project <${params.project_id}> not found.")
 		}
 		
-		redirect action: 'list', params: params
+		render "succeeded"
 	}
 	
 	@Secured([
@@ -538,4 +553,42 @@ class ProjectController
 			redirect action: 'show', id: params.id
 		}
 	}
+	
+	def ajaxAddNote() {
+		
+		log.debug("====================================================================================")
+		log.debug("ajaxAddNote() in project controller called with params: " + params)
+		log.debug("====================================================================================")
+		
+		if (params.notetext) {
+			log.debug("*** [ajaxAddNote] found a notetext to add to this project.")
+			def projectId = params.project_id
+			Project currentProject = null
+			Note note = null
+			
+			if (projectId) {
+				currentProject = Project.get(projectId)
+				log.debug("*** [ajaxAddNote] found project for id <${projectId}>.")
+				
+				note = new Note()
+				note.project = currentProject
+				note.text = params.notetext.trim().encodeAsHTML()
+				note.createdBy = params.createdBy
+				note.updatedBy = params.updatedBy
+				currentProject.updatedBy = note.updatedBy
+				
+				if (note.save(flush: true)) {
+					log.debug("*** [ajaxAddNote] Note for project<${currentProject.id}> saved, updating related project's updatedby field.")
+					currentProject.save()
+				} else {
+					log.debug("*** [ajaxAddNote] unable to save Note for project <${currentProject.id}> with text: ${note.text} created by user: ${note.createdBy}")
+				}
+			}
+			
+			render(contentType: "application/json") { [project: currentProject, note: note] }
+		} else {
+			log.debug("*** [ajaxAddNote] no notetext found, so exiting.")
+		}
+	}
+	
 }
