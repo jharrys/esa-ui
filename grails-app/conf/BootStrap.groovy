@@ -7,7 +7,7 @@ class BootStrap
 {
 	// compatibility matrix: [app 0.5.0-0.8.1 with db 1.1], [app 0.9.0 with db 1.2], [app 1.0 with db 1.3], [app 1.1 with db 1.5], [app 1.1.1-1.1.2 with db 1.6]
 	private final String minimumDatabaseVersion = "1.6"
-	private final String minimumApplicationVersion = "1.2.0"
+	private final String minimumApplicationVersion = "1.2.5"
 	
 	def grailsApplication
 	def sessionFactory
