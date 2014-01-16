@@ -576,12 +576,17 @@ class ProjectController
 				note.createdBy = params.createdBy
 				note.updatedBy = params.updatedBy
 				currentProject.updatedBy = note.updatedBy
+				currentProject.lastUpdated = new Date()
 				
 				if (note.save(flush: true)) {
-					log.debug("*** [ajaxAddNote] Note for project<${currentProject.id}> saved, updating related project's updatedby field.")
-					currentProject.save()
+					log.debug("*** [ajaxAddNote] Note for project <${currentProject.id}> saved, updating related project's updatedby field.")
+					if(currentProject.save(flush: true)) {
+						log.debug("*** [ajaxAddNote] project <${currentProject.id}> saved.")
+					} else {
+						log.error("*** [ajaxAddNote] project with id projectId could not be saved.")
+					}
 				} else {
-					log.debug("*** [ajaxAddNote] unable to save Note for project <${currentProject.id}> with text: ${note.text} created by user: ${note.createdBy}")
+					log.error("*** [ajaxAddNote] unable to save Note for project <${currentProject.id}> with text: ${note.text} created by user: ${note.createdBy}")
 				}
 			}
 			
