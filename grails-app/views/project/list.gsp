@@ -66,8 +66,8 @@ jparams['filterByName'] = params.filterByName
                         </li>
                         <li>
                             <g:form class="form-inline" controller="project" action="show">
-                                <input name="id" type="text" class="input-small search-query" placeholder="acid #">
-                                <button type="submit" class="btn btn-small">Search</button>
+                                <input name="id" type="text" class="input-mini search-query" placeholder="acid">
+                                <button type="submit" class="btn btn-mini">Search</button>
                             </g:form>
                         </li>
                     </ul>
